@@ -1,9 +1,7 @@
 import Hero from "@/components/Hero";
 import LuxuryDrinks from "@/components/LuxuryDrinks";
-import LuxuryMenu from "@/components/LuxuryMenu";
 import Testimonials from "@/components/Testimonials";
 import VerticalMenu from "@/components/VerticalMenu";
-import { menu, menuCategories, drinks, drinkCategories } from "@/lib/data/menu";
 import { Utensils, Wine, Clock, Users } from "lucide-react";
 
 export default function RestauracePage() {
