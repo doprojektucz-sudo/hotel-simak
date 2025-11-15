@@ -69,9 +69,7 @@ export default function UbytovaniPage() {
                                     className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
                                 >
                                     {/* Image placeholder */}
-                                    <div className="aspect-video bg-gradient-to-br from-primary-200 to-primary-300 flex items-center justify-center">
-                                        <Bed className="w-16 h-16 text-primary-600" />
-                                    </div>
+                                    <img className="object-cover aspect-video w-full max-h-64" src={room.href} alt={room.href} />
 
                                     <div className="p-6">
                                         <div className="flex items-start justify-between mb-4">
@@ -142,9 +140,7 @@ export default function UbytovaniPage() {
                                     className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
                                 >
                                     {/* Image placeholder */}
-                                    <div className="aspect-video bg-gradient-to-br from-secondary-200 to-secondary-300 flex items-center justify-center">
-                                        <Bed className="w-16 h-16 text-secondary-600" />
-                                    </div>
+                                    <img className="object-cover aspect-video w-full max-h-64" src={room.href} alt={room.href} />
 
                                     <div className="p-6">
                                         <div className="flex items-start justify-between mb-4">

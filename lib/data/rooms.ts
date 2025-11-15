@@ -8,6 +8,7 @@ export interface Room {
     price: number;
     features: string[];
     description: string;
+    href: string;
 }
 
 export const rooms: Room[] = [
@@ -23,7 +24,8 @@ export const rooms: Room[] = [
             "Wi-Fi zdarma",
             "Moderní vybavení"
         ],
-        description: "Moderně vybavený dvoulůžkový pokoj s vlastním sociálním zařízením."
+        description: "Moderně vybavený dvoulůžkový pokoj s vlastním sociálním zařízením.",
+        href: "/images/deluxe-1.webp"
     },
     {
         id: "deluxe-double-2",
@@ -37,7 +39,8 @@ export const rooms: Room[] = [
             "Wi-Fi zdarma",
             "Moderní vybavení"
         ],
-        description: "Moderně vybavený dvoulůžkový pokoj s vlastním sociálním zařízením."
+        description: "Moderně vybavený dvoulůžkový pokoj s vlastním sociálním zařízením.",
+        href: "/images/deluxe-2.webp"
     },
     {
         id: "deluxe-quad",
@@ -52,7 +55,8 @@ export const rooms: Room[] = [
             "Moderní vybavení",
             "Prostorný pokoj"
         ],
-        description: "Prostorný moderní čtyřlůžkový pokoj ideální pro rodiny."
+        description: "Prostorný moderní čtyřlůžkový pokoj ideální pro rodiny.",
+        href: "/images/deluxe-3.webp"
     },
     {
         id: "classic-double",
@@ -65,7 +69,8 @@ export const rooms: Room[] = [
             "TV",
             "Wi-Fi zdarma"
         ],
-        description: "Útulný dvoulůžkový pokoj s klasickým vybavením."
+        description: "Útulný dvoulůžkový pokoj s klasickým vybavením.",
+        href: "/images/klasik-1.webp"
     },
     {
         id: "classic-triple",
@@ -78,7 +83,8 @@ export const rooms: Room[] = [
             "TV",
             "Wi-Fi zdarma"
         ],
-        description: "Klasicky vybavený třílůžkový pokoj pro menší skupiny."
+        description: "Klasicky vybavený třílůžkový pokoj pro menší skupiny.",
+        href: "/images/klasik-2.webp"
     },
     {
         id: "classic-quad",
@@ -91,7 +97,8 @@ export const rooms: Room[] = [
             "TV",
             "Wi-Fi zdarma"
         ],
-        description: "Prostorný klasický pokoj pro rodiny nebo skupiny přátel."
+        description: "Prostorný klasický pokoj pro rodiny nebo skupiny přátel.",
+        href: "/images/klasik-3.webp"
     }
 ];
 
