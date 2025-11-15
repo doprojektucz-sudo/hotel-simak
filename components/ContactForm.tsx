@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Send } from "lucide-react";
+import { sendContactEmail } from "@/app/actions/send-email";
 
 export default function ContactForm() {
     const [formData, setFormData] = useState({
@@ -13,27 +14,39 @@ export default function ContactForm() {
     });
 
     const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+    const [errorMessage, setErrorMessage] = useState<string>("");
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setStatus("sending");
+        setErrorMessage("");
 
-        // Simulace odeslání - zde by bylo volání API
-        setTimeout(() => {
-            setStatus("success");
-            setFormData({
-                name: "",
-                email: "",
-                phone: "",
-                subject: "",
-                message: "",
-            });
+        try {
+            const result = await sendContactEmail(formData);
 
-            // Reset success message po 5 sekundách
-            setTimeout(() => {
-                setStatus("idle");
-            }, 5000);
-        }, 1000);
+            if (result.success) {
+                setStatus("success");
+                setFormData({
+                    name: "",
+                    email: "",
+                    phone: "",
+                    subject: "",
+                    message: "",
+                });
+
+                // Reset success message po 5 sekundách
+                setTimeout(() => {
+                    setStatus("idle");
+                }, 5000);
+            } else {
+                setStatus("error");
+                setErrorMessage(result.error || "Nastala neočekávaná chyba");
+            }
+        } catch (error) {
+            console.error("Form submission error:", error);
+            setStatus("error");
+            setErrorMessage("Nepodařilo se odeslat zprávu. Zkuste to prosím později.");
+        }
     };
 
     const handleChange = (
@@ -120,7 +133,7 @@ export default function ContactForm() {
                     value={formData.subject}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white"
                 >
                     <option value="">Vyberte předmět...</option>
                     <option value="ubytovani">Rezervace ubytování</option>
@@ -176,7 +189,10 @@ export default function ContactForm() {
             {status === "success" && (
                 <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
                     <p className="font-semibold">Zpráva byla úspěšně odeslána!</p>
-                    <p className="text-sm">Ozveme se vám co nejdříve.</p>
+                    <p className="text-sm">
+                        Děkujeme za Vaši zprávu. Ozveme se Vám co nejdříve. Na Váš email jsme Vám
+                        poslali potvrzení.
+                    </p>
                 </div>
             )}
 
@@ -184,7 +200,10 @@ export default function ContactForm() {
             {status === "error" && (
                 <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
                     <p className="font-semibold">Nepodařilo se odeslat zprávu.</p>
-                    <p className="text-sm">Zkuste to prosím později nebo nás kontaktujte telefonicky.</p>
+                    <p className="text-sm">
+                        {errorMessage ||
+                            "Zkuste to prosím později nebo nás kontaktujte přímo telefonicky na 728 490 498."}
+                    </p>
                 </div>
             )}
         </form>
