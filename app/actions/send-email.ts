@@ -25,9 +25,10 @@ export async function sendContactEmail(formData: ContactFormData) {
     try {
         const subjectText = subjectMap[formData.subject] || formData.subject;
 
-        // Email pro hotel - používá profesionální šablonu
+        // Email pro hotel - replyTo nastaveno na email klienta pro snadnou odpověď
         const hotelEmail = await resend.emails.send({
-            from: "Hotel U Šimáka <noreply@vase-domena.cz>", // Nahraďte vaší doménou
+            from: "Hotel U Šimáka - Kontaktní formulář <noreply@usimaka.cz>", // Nahraďte vaší doménou
+            replyTo: formData.email, // Odpověď půjde přímo klientovi
             to: "hotresrad@seznam.cz",
             subject: `Nová zpráva z webu: ${subjectText}`,
             html: HotelNotificationEmail({
@@ -41,7 +42,7 @@ export async function sendContactEmail(formData: ContactFormData) {
 
         // Potvrzovací email pro odesílatele - používá profesionální šablonu
         const confirmationEmail = await resend.emails.send({
-            from: "Hotel U Šimáka <noreply@vase-domena.cz>", // Nahraďte vaší doménou
+            from: "Hotel U Šimáka <noreply@usimaka.cz>", // Nahraďte vaší doménou
             to: formData.email,
             subject: "Potvrzení přijetí Vaší zprávy - Hotel U Šimáka",
             html: CustomerConfirmationEmail({
