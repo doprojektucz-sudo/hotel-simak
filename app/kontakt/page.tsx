@@ -135,25 +135,25 @@ export default function KontaktPage() {
                                                     Otevírací doba
                                                 </h3>
                                                 <div className="space-y-2 text-sm">
-                                                    <div className="flex justify-between">
+                                                    <div className="flex justify-between gap-16">
                                                         <span className="text-gray-600">Pondělí:</span>
                                                         <span className="font-semibold text-red-600">
                                                             {contactInfo.openingHours.monday}
                                                         </span>
                                                     </div>
-                                                    <div className="flex justify-between">
+                                                    <div className="flex justify-between gap-16">
                                                         <span className="text-gray-600">Úterý–Čtvrtek:</span>
                                                         <span className="font-semibold text-gray-900">
                                                             {contactInfo.openingHours.tuesday}
                                                         </span>
                                                     </div>
-                                                    <div className="flex justify-between">
+                                                    <div className="flex justify-between gap-16">
                                                         <span className="text-gray-600">Pátek–Sobota:</span>
                                                         <span className="font-semibold text-gray-900">
                                                             {contactInfo.openingHours.friday}
                                                         </span>
                                                     </div>
-                                                    <div className="flex justify-between">
+                                                    <div className="flex justify-between gap-16">
                                                         <span className="text-gray-600">Neděle:</span>
                                                         <span className="font-semibold text-gray-900">
                                                             {contactInfo.openingHours.sunday}

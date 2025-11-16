@@ -192,68 +192,109 @@ export default function UbytovaniPage() {
                     </div>
                 </section>
 
-                {/* Additional info */}
-                <section className="py-16 bg-primary-50">
-                    <div className="container-custom">
+                {/* Additional info - Modern version with parallax */}
+                <section className="relative py-24 overflow-hidden">
+                    {/* Parallax background */}
+                    <div
+                        className="absolute inset-0 bg-cover bg-center bg-fixed"
+                        style={{
+                            backgroundImage: 'url(/images/hero-03.webp)', // Nahraď svým obrázkem
+                        }}
+                    />
+
+                    {/* Dark gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-gray-900/95 via-gray-900/90 to-primary-900/85" />
+
+                    {/* Content */}
+                    <div className="container-custom relative z-10">
                         <div className="max-w-4xl mx-auto">
-                            <div className="bg-white rounded-xl shadow-md p-8">
-                                <div className="flex items-start gap-4 mb-6">
-                                    <Info className="w-8 h-8 text-primary-600 flex-shrink-0" />
+                            <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-2xl p-8 md:p-12">
+                                <div className="flex items-start gap-4 mb-8">
+                                    <div className="bg-primary-500/20 p-3 rounded-lg backdrop-blur-sm">
+                                        <Info className="w-8 h-8 text-primary-300 flex-shrink-0" />
+                                    </div>
                                     <div>
-                                        <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                                        <h3 className="text-3xl font-bold text-white mb-2">
                                             Důležité informace
                                         </h3>
+                                        <p className="text-gray-300">
+                                            Vše, co potřebujete vědět před vaší návštěvou
+                                        </p>
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <Clock className="w-5 h-5 text-primary-600" />
-                                            <h4 className="font-semibold text-gray-900">Check-in</h4>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    {/* Check-in */}
+                                    <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:bg-white/10 transition-all duration-300">
+                                        <div className="flex items-center gap-3 mb-3">
+                                            <div className="bg-primary-500/20 p-2 rounded-lg">
+                                                <Clock className="w-6 h-6 text-primary-300" />
+                                            </div>
+                                            <h4 className="font-semibold text-xl text-white">Check-in</h4>
                                         </div>
-                                        <p className="text-gray-600 ml-8">
+                                        <p className="text-gray-300 text-lg ml-11">
                                             Od {accommodationInfo.checkIn}
                                         </p>
                                     </div>
 
-                                    <div>
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <Clock className="w-5 h-5 text-primary-600" />
-                                            <h4 className="font-semibold text-gray-900">Check-out</h4>
+                                    {/* Check-out */}
+                                    <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:bg-white/10 transition-all duration-300">
+                                        <div className="flex items-center gap-3 mb-3">
+                                            <div className="bg-primary-500/20 p-2 rounded-lg">
+                                                <Clock className="w-6 h-6 text-primary-300" />
+                                            </div>
+                                            <h4 className="font-semibold text-xl text-white">Check-out</h4>
                                         </div>
-                                        <p className="text-gray-600 ml-8">
+                                        <p className="text-gray-300 text-lg ml-11">
                                             Do {accommodationInfo.checkOut}
                                         </p>
                                     </div>
 
-                                    <div className="md:col-span-2">
-                                        <div className="flex items-start gap-3 mb-2">
-                                            <Info className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
+                                    {/* Rekreační poplatek */}
+                                    <div className="md:col-span-2 bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
+                                        <div className="flex items-start gap-3">
+                                            <div className="bg-primary-500/20 p-2 rounded-lg">
+                                                <Info className="w-6 h-6 text-primary-300 flex-shrink-0" />
+                                            </div>
                                             <div>
-                                                <h4 className="font-semibold text-gray-900 mb-1">
+                                                <h4 className="font-semibold text-xl text-white mb-2">
                                                     Rekreační poplatek
                                                 </h4>
-                                                <p className="text-gray-600">
+                                                <p className="text-gray-300 text-lg">
                                                     {accommodationInfo.recreationFeeNote}
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="md:col-span-2">
+                                    {/* V ceně ubytování */}
+                                    <div className="md:col-span-2 bg-gradient-to-br from-primary-500/20 to-primary-600/10 backdrop-blur-sm rounded-xl p-6 border border-primary-400/30">
                                         <div className="flex items-start gap-3">
-                                            <Check className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                                            <div>
-                                                <h4 className="font-semibold text-gray-900 mb-2">
+                                            <div className="bg-green-500/20 p-2 rounded-lg">
+                                                <Check className="w-6 h-6 text-green-300 flex-shrink-0" />
+                                            </div>
+                                            <div className="flex-1">
+                                                <h4 className="font-semibold text-xl text-white mb-4">
                                                     V ceně ubytování
                                                 </h4>
-                                                <ul className="space-y-1 text-gray-600">
-                                                    <li>• Snídaně</li>
-                                                    <li>• Wi-Fi připojení zdarma</li>
-                                                    <li>• Parkování u hotelu</li>
-                                                    <li>• TV v pokoji</li>
-                                                </ul>
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                                    <div className="flex items-center gap-2 text-gray-200">
+                                                        <div className="w-2 h-2 bg-primary-400 rounded-full" />
+                                                        <span>Snídaně</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-2 text-gray-200">
+                                                        <div className="w-2 h-2 bg-primary-400 rounded-full" />
+                                                        <span>Wi-Fi připojení zdarma</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-2 text-gray-200">
+                                                        <div className="w-2 h-2 bg-primary-400 rounded-full" />
+                                                        <span>Parkování u hotelu</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-2 text-gray-200">
+                                                        <div className="w-2 h-2 bg-primary-400 rounded-full" />
+                                                        <span>TV v pokoji</span>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
