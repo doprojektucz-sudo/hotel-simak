@@ -6,6 +6,7 @@ export interface Attraction {
   distance?: string;
   features: string[];
   href: string;
+  moreInfo?: string;
 }
 
 export const attractions: Attraction[] = [
@@ -45,6 +46,7 @@ export const attractions: Attraction[] = [
       "Cyklotrasy a turistické stezky v okolí",
     ],
     href: "/images/reka.webp",
+    moreInfo: "https://www.kudyznudy.cz/aktivity/more-u-rybnika-reka-na-vysocine"
   },
   {
     id: "radostinske-raseliniste",
@@ -63,6 +65,7 @@ export const attractions: Attraction[] = [
       "Naučná stezka s informacemi o rašeliništi",
     ],
     href: "/images/raselina.webp",
+    moreInfo: "https://www.kudyznudy.cz/aktivity/narodni-prirodni-rezervace-radostinske-raseliniste"
   },
 
   // Sport activities

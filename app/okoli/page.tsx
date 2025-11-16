@@ -121,7 +121,7 @@ export default function OkoliPage() {
         {/* Nature Attractions - Asymmetric Masonry Grid */}
         <section className="py-16 md:py-24 bg-white relative overflow-hidden">
           <div className="absolute top-0 right-0 w-96 h-96 bg-secondary-100 rounded-full blur-3xl opacity-20 -z-10" />
-          
+
           <div className="container-custom">
             <div className="text-center mb-16 fade-in-scroll">
               <div className="inline-flex items-center gap-2 bg-secondary-50 text-secondary-700 px-4 py-2 rounded-full text-sm font-semibold mb-4">
@@ -202,10 +202,10 @@ export default function OkoliPage() {
                         <p className="text-gray-600 text-sm mb-3 line-clamp-2">
                           {attraction.description}
                         </p>
-                        <div className="flex items-center text-secondary-600 text-sm font-semibold group-hover:gap-2 transition-all">
+                        <a href={attraction.moreInfo} target="_onblank" className="flex items-center text-secondary-600 text-sm font-semibold group-hover:gap-2 transition-all">
                           <span>Zjistit více</span>
                           <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
-                        </div>
+                        </a>
                       </div>
                     </div>
                   </div>
@@ -218,7 +218,7 @@ export default function OkoliPage() {
         {/* Sports - Bento Grid Style */}
         <section className="py-16 md:py-24 bg-gradient-to-br from-primary-50 via-white to-secondary-50 relative overflow-hidden">
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary-100 rounded-full blur-3xl opacity-20 -z-10" />
-          
+
           <div className="container-custom">
             <div className="text-center mb-16 fade-in-scroll">
               <div className="inline-flex items-center gap-2 bg-primary-50 text-primary-700 px-4 py-2 rounded-full text-sm font-semibold mb-4">
@@ -238,9 +238,8 @@ export default function OkoliPage() {
                 return (
                   <div
                     key={activity.id}
-                    className={`fade-in-scroll stagger-${index + 1} ${
-                      isLarge ? "md:col-span-2 md:row-span-2" : ""
-                    } bg-white rounded-2xl overflow-hidden hover-lift group shadow-lg`}
+                    className={`fade-in-scroll stagger-${index + 1} ${isLarge ? "md:col-span-2 md:row-span-2" : ""
+                      } bg-white rounded-2xl overflow-hidden hover-lift group shadow-lg`}
                   >
                     <div className={`${isLarge ? "md:flex" : ""}`}>
                       <div className={`image-overlay relative ${isLarge ? "md:w-1/2 h-64 md:h-auto" : "h-48"}`}>
@@ -284,77 +283,194 @@ export default function OkoliPage() {
           </div>
         </section>
 
-        {/* Culture - Full width feature */}
+        {/* Culture - Modern Gallery with Parallax - DARKER VERSION */}
         {activitiesByCategory.culture.length > 0 && (
-          <section className="py-16 md:py-24 bg-white">
-            <div className="container-custom">
-              <div className="fade-in-scroll bg-gradient-to-r from-amber-50 to-orange-50 rounded-3xl overflow-hidden shadow-2xl">
-                <div className="md:flex">
-                  <div className="image-overlay md:w-1/2 h-80 md:h-auto">
-                    <img
-                      src={activitiesByCategory.culture[0].href}
-                      alt={activitiesByCategory.culture[0].name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
-                    <div className="inline-flex items-center gap-2 bg-amber-100 text-amber-700 px-4 py-2 rounded-full text-sm font-semibold mb-6 w-fit">
-                      <Camera className="w-4 h-4" />
-                      <span>Kultura & Umění</span>
+          <section className="relative py-24 md:py-32 overflow-hidden">
+            {/* Parallax background with sculpture */}
+            <div
+              className="absolute inset-0 bg-cover bg-center bg-fixed"
+              style={{
+                backgroundImage: "url('/images/socha-lev.webp')", // Hlavní sousoší na pozadí
+              }}
+            />
+
+            {/* MUCH DARKER gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-black/90 via-gray-900/88 to-amber-950/85" />
+
+            {/* Content */}
+            <div className="container-custom relative z-10">
+              {/* Header */}
+              <div className="text-center mb-16 fade-in-scroll">
+                <div className="inline-flex items-center gap-2 bg-amber-400/20 backdrop-blur-sm text-amber-200 px-4 py-2 rounded-full text-sm font-semibold mb-4 border border-amber-400/30">
+                  <Camera className="w-4 h-4" />
+                  <span>Kultura & Umění</span>
+                </div>
+                <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                  {activitiesByCategory.culture[0].name}
+                </h2>
+                <p className="text-xl text-amber-100 max-w-3xl mx-auto">
+                  {activitiesByCategory.culture[0].description}
+                </p>
+              </div>
+
+              {/* Main Content Card - Glassmorphism */}
+              <div className="fade-in-scroll bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 shadow-2xl overflow-hidden">
+                <div className="p-8 md:p-12">
+                  {/* Photo Gallery Grid */}
+                  <div className="grid md:grid-cols-3 gap-4 mb-8">
+                    {/* Large featured image */}
+                    <div className="md:col-span-2 md:row-span-2 group">
+                      <div className="relative h-full min-h-[300px] md:min-h-[400px] rounded-2xl overflow-hidden">
+                        <img
+                          src="/images/socha-mamlas.webp" // Mamlas u Starého Dvora
+                          alt="Mamlas u Starého Dvora"
+                          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                          <h4 className="text-xl font-bold mb-1">Mamlas u Starého Dvora</h4>
+                          <p className="text-sm text-white/90">Lesní tvor na vyhlídce</p>
+                        </div>
+                      </div>
                     </div>
-                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                      {activitiesByCategory.culture[0].name}
-                    </h2>
-                    <p className="text-lg text-gray-600 mb-6">
-                      {activitiesByCategory.culture[0].description}
-                    </p>
-                    <div className="grid grid-cols-2 gap-3 mb-6">
-                      {activitiesByCategory.culture[0].features.slice(0, 4).map((feature, index) => (
-                        <div key={index} className="flex items-start gap-2 text-sm text-gray-700">
-                          <Compass className="w-4 h-4 text-amber-600 mt-1 flex-shrink-0" />
-                          <span>{feature}</span>
+
+                    {/* Smaller images */}
+                    <div className="group">
+                      <div className="relative h-48 rounded-2xl overflow-hidden">
+                        <img
+                          src="/images/socha-hrosi.webp" // Hroši
+                          alt="Hroši ve Škrdlovicích"
+                          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                        <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                          <h4 className="font-bold text-sm">Hroši</h4>
+                          <p className="text-xs text-white/90">Škrdlovice</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="group">
+                      <div className="relative h-48 rounded-2xl overflow-hidden">
+                        <img
+                          src="/images/socha-mamut.webp" // Mamut
+                          alt="Mamut v údolí Sázavy"
+                          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                        <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                          <h4 className="font-bold text-sm">Mamut</h4>
+                          <p className="text-xs text-white/90">Údolí Sázavy</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="group">
+                      <div className="relative h-48 rounded-2xl overflow-hidden">
+                        <img
+                          src="/images/socha-lev.webp" // Hraniční kámen
+                          alt="Hraniční kámen - lev a orlice"
+                          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                        <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                          <h4 className="font-bold text-sm">Lev a orlice</h4>
+                          <p className="text-xs text-white/90">Pilská nádrž</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="group">
+                      <div className="relative h-48 rounded-2xl overflow-hidden">
+                        <img
+                          src="/images/socha.webp" // Rozcestník
+                          alt="Rozcestník u Velkého Dářka"
+                          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                        <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                          <h4 className="font-bold text-sm">Rozcestník</h4>
+                          <p className="text-xs text-white/90">Velké Dářko</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Info Section */}
+                  <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-white/10 mb-8">
+                    <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                      <div className="bg-amber-500/20 p-2 rounded-lg">
+                        <Compass className="w-6 h-6 text-amber-300" />
+                      </div>
+                      Kde najdete další sochy
+                    </h3>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      {activitiesByCategory.culture[0].features.map((feature, index) => (
+                        <div
+                          key={index}
+                          className="flex items-start gap-3 text-white/90 bg-white/5 backdrop-blur-sm rounded-xl p-4 hover:bg-white/10 transition-all duration-300"
+                        >
+                          <div className="w-2 h-2 bg-amber-400 rounded-full mt-2 flex-shrink-0" />
+                          <span className="text-sm leading-relaxed">{feature}</span>
                         </div>
                       ))}
                     </div>
-                    <div className="flex items-center gap-2 text-amber-700 font-semibold hover:gap-3 transition-all cursor-pointer">
-                      <span>Zobrazit všechny sochy</span>
-                      <ArrowRight className="w-5 h-5" />
-                    </div>
                   </div>
+
+                  {/* CTA Button */}
+                  <div className="text-center">
+                    <a
+                      href="https://www.korunavysociny.cz/tematicke-vylety/putovani-po-sochach-michala-olsiaka"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold px-8 py-4 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+                    >
+                      <Camera className="w-5 h-5" />
+                      <span>Zobrazit všechny sochy na mapě</span>
+                      <ArrowRight className="w-5 h-5" />
+                    </a>
+                    <p className="text-amber-200 text-sm mt-4">
+                      Objevte desítky dalších soch po celé Vysočině
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Additional Info Cards */}
+              <div className="grid md:grid-cols-3 gap-6 mt-8 fade-in-scroll">
+                <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 text-center hover:bg-white/15 transition-all duration-300">
+                  <div className="bg-amber-500/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Sparkles className="w-8 h-8 text-amber-300" />
+                  </div>
+                  <h4 className="text-xl font-bold text-white mb-2">Monumentální díla</h4>
+                  <p className="text-amber-100 text-sm">
+                    Plastiky z pískovce a betonu vysoké až několik metrů
+                  </p>
+                </div>
+
+                <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 text-center hover:bg-white/15 transition-all duration-300">
+                  <div className="bg-amber-500/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Footprints className="w-8 h-8 text-amber-300" />
+                  </div>
+                  <h4 className="text-xl font-bold text-white mb-2">Turistická trasa</h4>
+                  <p className="text-amber-100 text-sm">
+                    Projděte se po cestě vedoucí od sochy k soše
+                  </p>
+                </div>
+
+                <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 text-center hover:bg-white/15 transition-all duration-300">
+                  <div className="bg-amber-500/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Camera className="w-8 h-8 text-amber-300" />
+                  </div>
+                  <h4 className="text-xl font-bold text-white mb-2">Foto lokace</h4>
+                  <p className="text-amber-100 text-sm">
+                    Ideální místa pro nezapomenutelné fotografie
+                  </p>
                 </div>
               </div>
             </div>
           </section>
         )}
-
-        {/* Map with overlay */}
-        <section className="py-16 md:py-24 bg-white">
-          <div className="container-custom">
-            <div className="text-center mb-12 fade-in-scroll">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Kde nás najdete
-              </h2>
-              <p className="text-lg text-gray-600">
-                Ideální výchozí bod pro objevování Žďárských vrchů
-              </p>
-            </div>
-
-            <div className="fade-in-scroll relative rounded-3xl overflow-hidden shadow-2xl">
-              <div className="aspect-[21/9]">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2588.7!2d15.874650!3d49.654744!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDnCsDM5JzE3LjEiTiAxNcKwNTInMjguNyJF!5e0!3m2!1scs!2scz!4v1234567890"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Mapa - Hotel U Šimáka a okolí"
-                />
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* CTA */}
         <section className="py-20 bg-gradient-to-br from-secondary-600 via-secondary-700 to-secondary-800 text-white relative overflow-hidden">
@@ -362,7 +478,7 @@ export default function OkoliPage() {
             <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl" />
             <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl" />
           </div>
-          
+
           <div className="container-custom text-center relative z-10">
             <div className="fade-in-scroll">
               <h2 className="text-4xl md:text-5xl font-bold mb-6">
