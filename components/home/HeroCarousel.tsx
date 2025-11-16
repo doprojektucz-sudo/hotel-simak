@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ChevronDown, Phone } from "lucide-react";
@@ -76,6 +76,9 @@ const slides: Slide[] = [
 export default function HeroCarousel() {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [progress, setProgress] = useState(0);
+    const touchStartX = useRef<number>(0);
+    const touchEndX = useRef<number>(0);
+    const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         // Progress bar animation
@@ -120,15 +123,52 @@ export default function HeroCarousel() {
         });
     };
 
+    // Touch handlers for swipe gestures
+    const handleTouchStart = (e: React.TouchEvent) => {
+        touchStartX.current = e.touches[0].clientX;
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+        touchEndX.current = e.touches[0].clientX;
+    };
+
+    const handleTouchEnd = () => {
+        if (!touchStartX.current || !touchEndX.current) return;
+
+        const distance = touchStartX.current - touchEndX.current;
+        const minSwipeDistance = 50; // Minimum distance for swipe to register
+
+        if (Math.abs(distance) < minSwipeDistance) return;
+
+        if (distance > 0) {
+            // Swipe left - next slide
+            handleNextSlide();
+        } else {
+            // Swipe right - previous slide
+            handlePrevSlide();
+        }
+
+        // Reset values
+        touchStartX.current = 0;
+        touchEndX.current = 0;
+    };
+
     return (
-        <section className="relative h-screen overflow-hidden">
+        <section 
+            className="relative h-screen overflow-hidden"
+            ref={containerRef}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+        >
             {/* Ken Burns Background Slides with Cross-Fade */}
             <div className="absolute inset-0">
                 {slides.map((slide, index) => (
                     <div
                         key={slide.id}
-                        className={`absolute inset-0 transition-opacity duration-[2000ms] ease-in-out ${index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
-                            }`}
+                        className={`absolute inset-0 transition-opacity duration-[2000ms] ease-in-out ${
+                            index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
+                        }`}
                     >
                         <div className="relative w-full h-full overflow-hidden">
                             <Image
@@ -136,8 +176,7 @@ export default function HeroCarousel() {
                                 alt={slide.title}
                                 fill
                                 priority={index === 0}
-                                className={`object-cover ${index === currentSlide ? "animate-ken-burns" : ""
-                                    }`}
+                                className="object-cover animate-ken-burns-infinite"
                                 sizes="100vw"
                             />
                         </div>
@@ -210,10 +249,11 @@ export default function HeroCarousel() {
                     >
                         {/* Rectangle indicator */}
                         <div
-                            className={`relative overflow-hidden transition-all hover:cursor-pointer duration-300 ${index === currentSlide
+                            className={`relative overflow-hidden transition-all hover:cursor-pointer duration-300 ${
+                                index === currentSlide
                                     ? "w-16 h-2 bg-white"
                                     : "w-12 h-2 bg-white/40 group-hover:bg-white/60"
-                                }`}
+                            }`}
                         >
                             {/* Progress bar */}
                             {index === currentSlide && (
@@ -232,7 +272,7 @@ export default function HeroCarousel() {
             {/* Reservation Button - Right Side */}
             <a
                 href={`tel:${contactInfo.phone.replace(/\s/g, "")}`}
-                className="fixed right-0 top-1/2 -translate-y-1/2 z-40 bg-primary-600 hover:bg-primary-700 text-white py-6 px-4 transition-all duration-300 group hover:px-6"
+                className="fixed right-0 top-1/2 -translate-y-1/2 z-40 hidden md:block bg-primary-600 hover:bg-primary-700 text-white py-6 px-4 transition-all duration-300 group hover:px-6"
             >
                 <div className="flex flex-col items-center gap-2">
                     <Phone className="w-6 h-6" />

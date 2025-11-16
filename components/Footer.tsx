@@ -109,9 +109,10 @@ export default function Footer() {
                         {/* Social Media - placeholder */}
                         <div className="flex gap-4 mt-4">
                             <a
-                                href="#"
+                                href="https://www.facebook.com/profile.php?id=100063633039375"
                                 className="text-gray-400 hover:text-primary-400 transition-colors"
                                 aria-label="Facebook"
+                                target="_onblank"
                             >
                                 <Facebook className="w-6 h-6" />
                             </a>
