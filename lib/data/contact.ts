@@ -1,6 +1,6 @@
 export const contactInfo = {
     name: "Hotel a Restaurace U Šimáka",
-    owners: ["Filip Šimák", "Aleš Šimák", "Naďa Šimáková"],
+    owners: ["Filip Šimák"],
     address: {
         street: "Radostín 95",
         city: "Žďár nad Sázavou",
