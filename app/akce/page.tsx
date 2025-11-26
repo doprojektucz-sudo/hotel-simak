@@ -58,11 +58,6 @@ export default function AkcePage() {
                                 <p className="text-gray-600">Kapacita 30 hostů</p>
                             </div>
                         </div>
-                        <div className="text-center mt-6">
-                            <p className="text-lg font-semibold text-gray-900">
-                                Celková kapacita: až 120 hostů
-                            </p>
-                        </div>
                     </div>
                 </section>
 
