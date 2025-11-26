@@ -132,7 +132,7 @@ export const attractions: Attraction[] = [
       "Koupání v čisté vodě",
       "Vhodné podmínky pro začátečníky i pokročilé",
     ],
-    href: "/images/okolni/vodni-sporty.jpg",
+    href: "/images/vodni-sporty.webp",
   },
   {
     id: "tenis",

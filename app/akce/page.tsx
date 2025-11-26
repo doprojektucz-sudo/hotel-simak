@@ -43,19 +43,19 @@ export default function AkcePage() {
                                 <h3 className="font-semibold text-gray-900 mb-2">
                                     Restaurace
                                 </h3>
-                                <p className="text-gray-600">Kapacita 50 hostů</p>
+                                <p className="text-gray-600">Kapacita 60 hostů</p>
                             </div>
                             <div className="bg-white rounded-lg p-6 text-center shadow-sm">
                                 <Users className="w-10 h-10 text-primary-600 mx-auto mb-3" />
                                 <h3 className="font-semibold text-gray-900 mb-2">Salonek</h3>
-                                <p className="text-gray-600">Kapacita 30 hostů</p>
+                                <p className="text-gray-600">Kapacita 24 hostů</p>
                             </div>
                             <div className="bg-white rounded-lg p-6 text-center shadow-sm">
                                 <Users className="w-10 h-10 text-primary-600 mx-auto mb-3" />
                                 <h3 className="font-semibold text-gray-900 mb-2">
                                     Venkovní terasa
                                 </h3>
-                                <p className="text-gray-600">Kapacita 40 hostů</p>
+                                <p className="text-gray-600">Kapacita 30 hostů</p>
                             </div>
                         </div>
                         <div className="text-center mt-6">

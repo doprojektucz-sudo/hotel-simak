@@ -27,11 +27,11 @@ export default function RestauracePage() {
                                 <Users className="w-10 h-10 text-primary-600 mx-auto mb-3" />
                                 <h3 className="font-semibold text-gray-900 mb-2">Kapacita</h3>
                                 <p className="text-gray-600">
-                                    50 míst v restauraci
+                                    60 míst v restauraci
                                     <br />
-                                    30 míst v salonku
+                                    24 míst v salonku
                                     <br />
-                                    40 míst na terase
+                                    30 míst na terase
                                 </p>
                             </div>
                             <div className="bg-white rounded-lg p-6 text-center shadow-sm">
