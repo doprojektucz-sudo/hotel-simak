@@ -13,10 +13,10 @@ export const eventTypes: EventType[] = [
         description: "Vytvoříme pro vás nezapomenutelnou svatební hostinu v krásném prostředí",
         icon: "heart",
         features: [
-            "Kapacita až 120 hostů",
+            "Kapacita až 50 hostů",
             "Individuální menu podle přání",
             "Kompletní servis",
-            "Venkovní terasa pro obřad",
+            "Venkovní prostory pro obřad",
             "Parkování pro hosty"
         ]
     },
@@ -41,7 +41,7 @@ export const eventTypes: EventType[] = [
         features: [
             "Útulné prostory",
             "Flexibilní menu",
-            "Dětský koutek",
+            "Dětské venkovní hřiště",
             "Venkovní terasa",
             "Vlastní hudba možná"
         ]

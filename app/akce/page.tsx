@@ -176,7 +176,7 @@ export default function AkcePage() {
                 </section>
 
                 {/* Sample Menus */}
-                <section className="py-16 md:py-24">
+                {/* <section className="py-16 md:py-24">
                     <div className="container-custom">
                         <div className="text-center mb-12">
                             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -188,7 +188,7 @@ export default function AkcePage() {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            {/* Wedding Menu */}
+                        
                             <div className="bg-white rounded-xl shadow-lg p-8">
                                 <div className="text-center mb-6">
                                     <Heart className="w-12 h-12 text-primary-600 mx-auto mb-3" />
@@ -219,7 +219,7 @@ export default function AkcePage() {
                                 </p>
                             </div>
 
-                            {/* Corporate Menu */}
+                      
                             <div className="bg-white rounded-xl shadow-lg p-8">
                                 <div className="text-center mb-6">
                                     <Briefcase className="w-12 h-12 text-primary-600 mx-auto mb-3" />
@@ -250,7 +250,6 @@ export default function AkcePage() {
                                 </p>
                             </div>
 
-                            {/* Celebration Menu */}
                             <div className="bg-white rounded-xl shadow-lg p-8">
                                 <div className="text-center mb-6">
                                     <Cake className="w-12 h-12 text-primary-600 mx-auto mb-3" />
@@ -282,7 +281,7 @@ export default function AkcePage() {
                             </div>
                         </div>
                     </div>
-                </section>
+                </section> */}
 
                 {/* Additional Services */}
                 <section className="py-16 bg-primary-50">
