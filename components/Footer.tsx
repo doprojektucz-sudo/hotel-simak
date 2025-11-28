@@ -60,20 +60,20 @@ export default function Footer() {
                         </h3>
                         <ul className="space-y-2 text-sm">
                             <li className="flex justify-between">
-                                <span>Pondělí:</span>
+                                <span>Po–Čt:</span>
                                 <span className="font-semibold text-primary-400">ZAVŘENO</span>
                             </li>
                             <li className="flex justify-between">
-                                <span>Út–Čt:</span>
+                                <span>Pátek:</span>
                                 <span>11:00–22:00</span>
                             </li>
                             <li className="flex justify-between">
-                                <span>Pá–So:</span>
-                                <span>11:00–23:00</span>
+                                <span>Sobota:</span>
+                                <span>11:00–22:00</span>
                             </li>
                             <li className="flex justify-between">
                                 <span>Neděle:</span>
-                                <span>11:00–23:00</span>
+                                <span>11:00–22:00</span>
                             </li>
                         </ul>
                     </div>
@@ -117,7 +117,7 @@ export default function Footer() {
                                 <Facebook className="w-6 h-6" />
                             </a>
                             <a
-                                href="#"
+                                href="https://www.instagram.com/restaurace_u_simaka_radostin/"
                                 className="text-gray-400 hover:text-primary-400 transition-colors"
                                 aria-label="Instagram"
                             >

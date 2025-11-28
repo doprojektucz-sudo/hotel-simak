@@ -16,11 +16,11 @@ export const contactInfo = {
     },
     openingHours: {
         monday: "ZAVŘENO",
-        tuesday: "11:00–22:00",
-        wednesday: "11:00–22:00",
-        thursday: "11:00–22:00",
-        friday: "11:00–23:00",
-        saturday: "11:00–23:00",
-        sunday: "11:00–23:00"
+        tuesday: "ZAVŘENO",
+        wednesday: "ZAVŘENO",
+        thursday: "ZAVŘENO",
+        friday: "11:00–22:00",
+        saturday: "11:00–22:00",
+        sunday: "11:00–22:00"
     }
 };

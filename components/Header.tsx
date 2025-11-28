@@ -1,9 +1,9 @@
 "use client";
 
+import { Facebook, Instagram } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
 
 const navigation = [
     { name: "Domů", href: "/" },
@@ -19,7 +19,7 @@ export default function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const pathname = usePathname();
-    const isHomePage = true
+    const isHomePage = true;
 
     useEffect(() => {
         const handleScroll = () => {
@@ -52,25 +52,11 @@ export default function Header() {
                     {/* Logo */}
                     <div className="logo-wrapper">
                         <Link href="/" className="logo">
-                            <img src="/images/logo.png" className={
-                                isHomePage && !scrolled ? "w-32" : "w-32"
-                            } alt="" />
-                            {/*  <h2
-                                className={`font-bold transition-all duration-300 ${scrolled && isHomePage ? "text-2xl" : "text-3xl"
-                                    } ${isHomePage && !scrolled
-                                        ? "text-white drop-shadow-lg"
-                                        : "text-gray-800"
-                                    }`}
-                            >
-                                <span
-                                    className={
-                                        isHomePage && !scrolled ? "text-white" : "text-primary-700"
-                                    }
-                                >
-                                    HOTEL
-                                </span>{" "}
-                                <span>U ŠIMÁKA</span>
-                            </h2> */}
+                            <img
+                                src="/images/logo.png"
+                                className={isHomePage && !scrolled ? "w-32" : "w-32"}
+                                alt=""
+                            />
                         </Link>
                     </div>
 
@@ -106,50 +92,83 @@ export default function Header() {
                         </ul>
                     </div>
 
-                    {/* Mobile Menu Button */}
+                    {/* Animated Hamburger Button */}
                     <button
                         type="button"
-                        className={`lg:hidden p-2 transition-colors ${isHomePage && !scrolled
-                            ? "text-white hover:text-white/80"
-                            : "text-gray-700 hover:text-primary-600"
+                        className={`lg:hidden p-2 relative w-10 h-10 flex items-center justify-center transition-colors ${isHomePage && !scrolled
+                            ? "text-white"
+                            : "text-gray-700"
                             }`}
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                         aria-label="Toggle menu"
                     >
-                        {mobileMenuOpen ? (
-                            <X className="w-6 h-6" />
-                        ) : (
-                            <Menu className="w-6 h-6" />
-                        )}
+                        <div className="relative w-6 h-5 flex flex-col justify-between">
+                            <span
+                                className={`block h-0.5 w-full rounded-full transition-all duration-300 ease-in-out origin-center ${isHomePage && !scrolled ? "bg-white" : "bg-gray-700"
+                                    } ${mobileMenuOpen ? "rotate-45 translate-y-2" : ""}`}
+                            />
+                            <span
+                                className={`block h-0.5 w-full rounded-full transition-all duration-300 ease-in-out ${isHomePage && !scrolled ? "bg-white" : "bg-gray-700"
+                                    } ${mobileMenuOpen ? "opacity-0 scale-x-0" : ""}`}
+                            />
+                            <span
+                                className={`block h-0.5 w-full rounded-full transition-all duration-300 ease-in-out origin-center ${isHomePage && !scrolled ? "bg-white" : "bg-gray-700"
+                                    } ${mobileMenuOpen ? "-rotate-45 -translate-y-2" : ""}`}
+                            />
+                        </div>
                     </button>
                 </div>
 
                 {/* Mobile Menu */}
                 <div
-                    className={`lg:hidden overflow-hidden transition-all duration-300 ${mobileMenuOpen ? "max-h-96 opacity-100 mt-4" : "max-h-0 opacity-0"
+                    className={`lg:hidden overflow-hidden transition-all duration-300 ${mobileMenuOpen ? "max-h-[500px] opacity-100 mt-4" : "max-h-0 opacity-0"
                         }`}
                 >
-                    <ul className="flex flex-col space-y-1 py-4 bg-white rounded-lg shadow-lg">
-                        {navigation.map((item) => {
-                            const active = isActive(item.href);
-                            return (
-                                <li key={item.name}>
-                                    <Link
-                                        href={item.href}
-                                        className={`block px-4 py-3 text-sm font-medium uppercase tracking-wide transition-colors ${active
-                                            ? "text-primary-600 bg-primary-50"
-                                            : "text-gray-700 hover:text-primary-600 hover:bg-gray-50"
-                                            }`}
-                                        onClick={() => setMobileMenuOpen(false)}
-                                    >
-                                        {item.name}
-                                    </Link>
-                                </li>
-                            );
-                        })}
-                    </ul>
+                    <div className="flex flex-col py-4 bg-white rounded-lg shadow-lg">
+                        <ul className="flex flex-col space-y-1">
+                            {navigation.map((item) => {
+                                const active = isActive(item.href);
+                                return (
+                                    <li key={item.name}>
+                                        <Link
+                                            href={item.href}
+                                            className={`block px-4 py-3 text-sm font-medium uppercase tracking-wide transition-colors ${active
+                                                ? "text-primary-600 bg-primary-50"
+                                                : "text-gray-700 hover:text-primary-600 hover:bg-gray-50"
+                                                }`}
+                                            onClick={() => setMobileMenuOpen(false)}
+                                        >
+                                            {item.name}
+                                        </Link>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+
+                        {/* Social Icons */}
+                        <div className="flex items-center gap-3 px-4 pt-4 mt-2 border-t border-gray-100">
+                            <a
+                                href="https://www.facebook.com/profile.php?id=100063633039375"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-2 rounded-full bg-primary-50 text-primary-600 hover:bg-primary-600 hover:text-white transition-all duration-300"
+                                aria-label="Facebook"
+                            >
+                                <Facebook />
+                            </a>
+                            <a
+                                href="https://www.instagram.com/restaurace_u_simaka_radostin/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-2 rounded-full bg-primary-50 text-primary-600 hover:bg-primary-600 hover:text-white transition-all duration-300"
+                                aria-label="Instagram"
+                            >
+                                <Instagram />
+                            </a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </nav>
+            </div >
+        </nav >
     );
 }

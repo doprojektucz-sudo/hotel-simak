@@ -181,7 +181,6 @@ export default function KontaktPage() {
                         </div>
                     </div>
                 </section>
-                <LocationMap />
                 {/* Map */}
                 <section className="py-16 bg-gray-50">
                     <div className="container-custom">
