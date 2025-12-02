@@ -4,14 +4,14 @@ import { useActionState } from "react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import type { Drink } from "@prisma/client";
-import { createDrink, updateDrink } from "@/lib/actions/drinks";
+import { createDrink, updateDrink, type DrinkFormState } from "@/lib/actions/drinks";
 
 interface DrinkFormProps {
   categories: string[];
   item?: Drink;
 }
 
-const initialState = {};
+const initialState: DrinkFormState = {};
 
 export function DrinkForm({ categories, item }: DrinkFormProps) {
   const router = useRouter();

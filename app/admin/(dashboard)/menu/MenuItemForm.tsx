@@ -4,14 +4,14 @@ import { useActionState } from "react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import type { MenuItem } from "@prisma/client";
-import { createMenuItem, updateMenuItem } from "@/lib/actions/menu";
+import { createMenuItem, updateMenuItem, type MenuItemFormState } from "@/lib/actions/menu";
 
 interface MenuItemFormProps {
   categories: string[];
   item?: MenuItem;
 }
 
-const initialState = {};
+const initialState: MenuItemFormState = {};
 
 export function MenuItemForm({ categories, item }: MenuItemFormProps) {
   const router = useRouter();
