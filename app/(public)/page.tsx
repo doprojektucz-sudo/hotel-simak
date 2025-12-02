@@ -5,13 +5,13 @@ import LocationSection from "@/components/home/LocationSection";
 import CTASection from "@/components/home/CTASection";
 
 export default function Home() {
-  return (
-    <main>
-      <HeroCarousel />
-      <FeaturesSection />
-      <AboutSection />
-      <LocationSection />
-      <CTASection />
-    </main>
-  );
+    return (
+        <main>
+            <HeroCarousel />
+            <FeaturesSection />
+            <AboutSection />
+            <LocationSection />
+            <CTASection />
+        </main>
+    );
 }

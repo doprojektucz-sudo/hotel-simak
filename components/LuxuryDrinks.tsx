@@ -1,10 +1,30 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { drinkCategories, drinks } from "@/lib/data/drinks";
+import { useState } from "react";
 
-export default function LuxuryDrinks() {
-    const [activeTab, setActiveTab] = useState(drinkCategories[0]);
+interface Drink {
+    id: string;
+    name: string;
+    description: string | null;
+    price: number;
+    category: string;
+    size: string | null;
+    sortOrder: number;
+}
+
+interface DrinkCategory {
+    id: string;
+    name: string;
+    sortOrder: number;
+}
+
+interface LuxuryDrinksProps {
+    drinks: Drink[];
+    categories: DrinkCategory[];
+}
+
+export default function LuxuryDrinks({ drinks, categories }: LuxuryDrinksProps) {
+    const [activeTab, setActiveTab] = useState(categories[0]?.name || "");
     const [isAnimating, setIsAnimating] = useState(false);
 
     const getDrinkItems = (category: string) => {
@@ -40,16 +60,16 @@ export default function LuxuryDrinks() {
                 {/* Category Tabs */}
                 <div className="mb-12">
                     <div className="flex flex-wrap justify-center gap-3 md:gap-4">
-                        {drinkCategories.map((category) => (
+                        {categories.map((category) => (
                             <button
-                                key={category}
-                                onClick={() => handleTabChange(category)}
-                                className={`relative px-6 py-3 text-base hover:cursor-pointer md:text-lg font-semibold uppercase tracking-wide transition-all duration-300 rounded-lg ${activeTab === category
-                                        ? "text-white bg-primary-600 shadow-lg"
-                                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                                key={category.id}
+                                onClick={() => handleTabChange(category.name)}
+                                className={`relative px-6 py-3 text-base hover:cursor-pointer md:text-lg font-semibold uppercase tracking-wide transition-all duration-300 rounded-lg ${activeTab === category.name
+                                    ? "text-white bg-primary-600 shadow-lg"
+                                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                                     }`}
                             >
-                                {category}
+                                {category.name}
                             </button>
                         ))}
                     </div>

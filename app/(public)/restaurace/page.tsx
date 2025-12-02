@@ -2,9 +2,29 @@ import Hero from "@/components/Hero";
 import LuxuryDrinks from "@/components/LuxuryDrinks";
 import Testimonials from "@/components/Testimonials";
 import VerticalMenu from "@/components/VerticalMenu";
-import { Utensils, Wine, Clock, Users } from "lucide-react";
+import { prisma } from "@/lib/prisma";
+import { Utensils, Clock, Users } from "lucide-react";
 
-export default function RestauracePage() {
+export default async function RestauracePage() {
+    const [menuItems, menuCategories, drinks, drinkCategories] = await Promise.all([
+        prisma.menuItem.findMany({
+            where: { isActive: true },
+            orderBy: { sortOrder: "asc" },
+        }),
+        prisma.menuCategory.findMany({
+            where: { isActive: true },
+            orderBy: { sortOrder: "asc" },
+        }),
+        prisma.drink.findMany({
+            where: { isActive: true },
+            orderBy: { sortOrder: "asc" },
+        }),
+        prisma.drinkCategory.findMany({
+            where: { isActive: true },
+            orderBy: { sortOrder: "asc" },
+        }),
+    ]);
+
     return (
         <>
             <main>
@@ -62,10 +82,9 @@ export default function RestauracePage() {
                     </div>
                 </section>
 
-                <VerticalMenu />
-                <LuxuryDrinks />
+                <VerticalMenu items={menuItems} categories={menuCategories} />
+                <LuxuryDrinks drinks={drinks} categories={drinkCategories} />
                 <Testimonials />
-
 
                 {/* CTA section */}
                 <section className="py-16 bg-gradient-to-r from-primary-600 to-primary-700 text-white">
@@ -91,8 +110,8 @@ export default function RestauracePage() {
                             </a>
                         </div>
                     </div>
-                </section>
-            </main>
+                </section >
+            </main >
         </>
     );
 }

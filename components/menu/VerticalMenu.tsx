@@ -1,25 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-
-interface MenuItem {
-  id: string;
-  name: string;
-  description: string | null;
-  price: number;
-  category: string;
-  weight: string | null;
-  allergens: string | null;
-  note: string | null;
-  isVegetarian: boolean;
-  sortOrder: number;
-}
-
-interface MenuCategory {
-  id: string;
-  name: string;
-  sortOrder: number;
-}
+import type { MenuItem, MenuCategory } from "@prisma/client";
 
 interface VerticalMenuProps {
   items: MenuItem[];
@@ -96,10 +78,11 @@ export default function VerticalMenu({ items, categories }: VerticalMenuProps) {
                 ref={(el) => {
                   sectionRefs.current[category.name] = el;
                 }}
-                className={`menu-section transition-all duration-1000 ease-out ${isVisible
+                className={`menu-section transition-all duration-1000 ease-out ${
+                  isVisible
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-8"
-                  }`}
+                }`}
               >
                 {/* Category Header */}
                 <div className="mb-8">
@@ -114,10 +97,11 @@ export default function VerticalMenu({ items, categories }: VerticalMenuProps) {
                   {categoryItems.map((item, index) => (
                     <div
                       key={item.id}
-                      className={`menu-item py-5 border-b border-gray-200 last:border-0 hover:bg-gray-50 transition-all duration-300 px-6 -mx-6 rounded-lg ${isVisible
+                      className={`menu-item py-5 border-b border-gray-200 last:border-0 hover:bg-gray-50 transition-all duration-300 px-6 -mx-6 rounded-lg ${
+                        isVisible
                           ? "opacity-100 translate-x-0"
                           : "opacity-0 -translate-x-4"
-                        }`}
+                      }`}
                       style={{
                         transitionDelay: isVisible ? `${index * 50}ms` : "0ms",
                       }}
