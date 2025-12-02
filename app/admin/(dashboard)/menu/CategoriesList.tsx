@@ -5,6 +5,7 @@ import type { MenuCategory, DrinkCategory } from "@prisma/client";
 import {
   createMenuCategory,
   deleteMenuCategory,
+  type MenuItemFormState,
 } from "@/lib/actions/menu";
 import {
   createDrinkCategory,
@@ -16,7 +17,7 @@ interface CategoriesListProps {
   type: "menu" | "drinks";
 }
 
-const initialState = {};
+const initialState: MenuItemFormState = {};
 
 export function CategoriesList({ categories, type }: CategoriesListProps) {
   const [showForm, setShowForm] = useState(false);
