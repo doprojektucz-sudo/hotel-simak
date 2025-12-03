@@ -29,7 +29,7 @@ export default function AboutSection() {
                         <div className="aspect-4/3 bg-gradient-to-r from-primary-200 to-secondary-200 rounded-2xl overflow-hidden">
                             {/* Placeholder pro obrázek */}
                             <div className="w-full h-full flex items-center justify-center text-gray-400">
-                                <p>Místo pro obrázek restaurace/hotelu</p>
+                                <p>Místo pro obrázek  restaurace/hotelu</p>
                             </div>
                         </div>
                     </div>
