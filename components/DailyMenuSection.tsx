@@ -100,7 +100,7 @@ export async function DailyMenuSection() {
                     {/* Footer note */}
                     <div className="mt-8 pt-6 border-t border-gray-200 text-center">
                         <p className="text-sm text-gray-500">
-                            Přejeme dobrou chuť! 🍽️
+                            Přejeme dobrou chuť!
                         </p>
                     </div>
                 </div>
