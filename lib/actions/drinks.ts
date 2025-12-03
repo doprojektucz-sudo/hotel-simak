@@ -236,3 +236,26 @@ export async function getDrink(id: string) {
     where: { id },
   });
 }
+
+export async function updateDrinkPrice(
+  id: string,
+  price: number
+): Promise<DrinkFormState> {
+  try {
+    await requireAdmin();
+
+    await prisma.drink.update({
+      where: { id },
+      data: { price },
+    });
+
+    revalidatePath("/admin/drinks");
+    revalidatePath("/napojovy-listek");
+    revalidatePath("/restaurace");
+
+    return { success: true };
+  } catch (error) {
+    console.error("Update drink price error:", error);
+    return { error: "Nastala chyba při úpravě ceny" };
+  }
+}

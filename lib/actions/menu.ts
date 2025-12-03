@@ -242,3 +242,26 @@ export async function getMenuItem(id: string) {
     where: { id },
   });
 }
+
+export async function updateMenuItemPrice(
+  id: string,
+  price: number
+): Promise<MenuItemFormState> {
+  try {
+    await requireAdmin();
+
+    await prisma.menuItem.update({
+      where: { id },
+      data: { price },
+    });
+
+    revalidatePath("/admin/menu");
+    revalidatePath("/menu");
+    revalidatePath("/restaurace");
+
+    return { success: true };
+  } catch (error) {
+    console.error("Update menu item price error:", error);
+    return { error: "Nastala chyba při úpravě ceny" };
+  }
+}

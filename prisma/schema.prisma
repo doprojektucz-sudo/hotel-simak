@@ -68,3 +68,50 @@ model DrinkCategory {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// ============ DENNÍ MENU ============
+
+model DailyMenuDish {
+  id        String   @id @default(cuid())
+  name      String
+  weight    String?
+  price     Int
+  type      String   @default("MAIN")
+  isActive  Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  menuItems DailyMenuToItem[]
+
+  @@index([type])
+  @@index([sortOrder])
+}
+
+model DailyMenu {
+  id        String   @id @default(cuid())
+  title     String?
+  validFrom DateTime
+  validTo   DateTime
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items DailyMenuToItem[]
+
+  @@index([validFrom, validTo])
+  @@index([isActive])
+}
+
+model DailyMenuToItem {
+  id        String @id @default(cuid())
+  menuId    String
+  dishId    String
+  sortOrder Int    @default(0)
+
+  menu DailyMenu     @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  dish DailyMenuDish @relation(fields: [dishId], references: [id], onDelete: Cascade)
+
+  @@unique([menuId, dishId])
+  @@index([menuId])
+}

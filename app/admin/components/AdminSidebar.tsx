@@ -61,6 +61,25 @@ const navigation = [
       </svg>
     ),
   },
+  {
+    name: "Denní menu",
+    href: "/admin/daily-menu",
+    icon: (
+      <svg
+        className="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+        />
+      </svg>
+    ),
+  },
 ];
 
 export function AdminSidebar() {
@@ -86,18 +105,16 @@ export function AdminSidebar() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
-                    isActive
+                  className={`group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${isActive
                       ? "bg-gray-800 text-white"
                       : "text-gray-300 hover:bg-gray-800 hover:text-white"
-                  }`}
+                    }`}
                 >
                   <span
-                    className={`mr-3 ${
-                      isActive
+                    className={`mr-3 ${isActive
                         ? "text-primary-400"
                         : "text-gray-400 group-hover:text-gray-300"
-                    }`}
+                      }`}
                   >
                     {item.icon}
                   </span>
@@ -143,12 +160,11 @@ export function AdminSidebar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`p-2 rounded-lg transition-colors ${
-                  pathname === item.href ||
-                  (item.href !== "/admin" && pathname.startsWith(item.href))
+                className={`p-2 rounded-lg transition-colors ${pathname === item.href ||
+                    (item.href !== "/admin" && pathname.startsWith(item.href))
                     ? "bg-gray-800 text-white"
                     : "text-gray-400 hover:text-white"
-                }`}
+                  }`}
                 title={item.name}
               >
                 {item.icon}

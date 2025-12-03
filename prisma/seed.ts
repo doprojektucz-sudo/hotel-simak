@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
+// ============ MENU CATEGORIES ============
 const menuCategories = [
   "Polévky",
   "Na chuť",
@@ -21,6 +22,7 @@ const menuCategories = [
   "Zmrzlinové poháry",
 ];
 
+// ============ DRINK CATEGORIES ============
 const drinkCategories = [
   "Pivo",
   "Nealko",
@@ -30,6 +32,21 @@ const drinkCategories = [
   "Destiláty",
 ];
 
+// ============ DAILY MENU DISH TYPES ============
+const dailyMenuDishTypes = [
+  { value: "SOUP", label: "Polévky" },
+  { value: "GAME", label: "Zvěřina" },
+  { value: "PORK", label: "Vepřové" },
+  { value: "BEEF", label: "Hovězí" },
+  { value: "POULTRY", label: "Drůbež" },
+  { value: "FISH", label: "Ryby" },
+  { value: "MEATLESS", label: "Bezmasá" },
+  { value: "SWEET", label: "Sladká" },
+  { value: "DESSERT", label: "Dezerty" },
+  { value: "DRINK", label: "Nápoje" },
+];
+
+// ============ MENU ITEMS ============
 const menuItems = [
   // Polévky
   {
@@ -461,6 +478,7 @@ const menuItems = [
   { name: "Míchaný pohár", price: 99, category: "Zmrzlinové poháry" },
 ];
 
+// ============ DRINKS ============
 const drinkItems = [
   // Pivo
   { name: "Pilsner Urquell", category: "Pivo", size: "0,5l", price: 55 },
@@ -522,10 +540,80 @@ const drinkItems = [
   { name: "Gin", category: "Destiláty", size: "0,04l", price: 55 },
 ];
 
+// ============ DAILY MENU DISHES ============
+const dailyMenuDishes = [
+  // Polévky (100+)
+  { name: "Domácí dršťková", price: 65, type: "SOUP", sortOrder: 100 },
+  { name: "Silný husí vývar s nudlemi a játrovými knedlíčky", price: 65, type: "SOUP", sortOrder: 101 },
+  { name: "Hovězí vývar s masem a nudlemi", price: 59, type: "SOUP", sortOrder: 102 },
+  { name: "Česnečka se sýrem a opečeným chlebem", price: 55, type: "SOUP", sortOrder: 103 },
+  { name: "Gulášová polévka", price: 65, type: "SOUP", sortOrder: 104 },
+
+  // Zvěřina (200+)
+  { name: "Kančí gulášek s cibulkou, domácí houskové knedlíky", weight: "200g", price: 269, type: "GAME", sortOrder: 200 },
+  { name: "Dančí plec na smetaně, domácí houskové knedlíky, brusinky", weight: "200g", price: 289, type: "GAME", sortOrder: 201 },
+  { name: "Dančí grilovaný biftek na tymiánu, americké brambory", weight: "200g", price: 349, type: "GAME", sortOrder: 202 },
+  { name: "Dančí medailonky na brusinkách, šťouchané brambory s cibulkou", weight: "200g", price: 299, type: "GAME", sortOrder: 203 },
+  { name: "Jelení guláš s houskovým knedlíkem", weight: "200g", price: 279, type: "GAME", sortOrder: 204 },
+
+  // Vepřové (300+)
+  { name: "Domácí pečený prejt, kysané zelí, vařené brambory", weight: "200g", price: 229, type: "PORK", sortOrder: 300 },
+  { name: "Řízečky z vepřové panenky, domácí bramborový salát", weight: "200g", price: 299, type: "PORK", sortOrder: 301 },
+  { name: "Grilovaná panenka s chřestem, americké brambory, pepřová omáčka", weight: "200g", price: 299, type: "PORK", sortOrder: 302 },
+  { name: "Vepřový řízek, bramborový salát", weight: "200g", price: 229, type: "PORK", sortOrder: 303 },
+  { name: "Vepřová krkovice na grilu, hranolky", weight: "200g", price: 239, type: "PORK", sortOrder: 304 },
+  { name: "Moravský vrabec, zelí, knedlík", weight: "200g", price: 219, type: "PORK", sortOrder: 305 },
+
+  // Hovězí (400+)
+  { name: "Vídeňská roštěná s osmaženou cibulkou, šťouchané brambory", weight: "200g", price: 299, type: "BEEF", sortOrder: 400 },
+  { name: "Grilovaný hovězí biftek s vejcem, americké brambory", weight: "200g", price: 389, type: "BEEF", sortOrder: 401 },
+  { name: "Hovězí guláš, houskový knedlík", weight: "200g", price: 229, type: "BEEF", sortOrder: 402 },
+  { name: "Svíčková na smetaně, houskový knedlík", weight: "200g", price: 259, type: "BEEF", sortOrder: 403 },
+
+  // Drůbež (500+)
+  { name: "Kuřecí řízek, bramborová kaše", weight: "200g", price: 199, type: "POULTRY", sortOrder: 500 },
+  { name: "Kuřecí steak s grilovanou zeleninou", weight: "200g", price: 229, type: "POULTRY", sortOrder: 501 },
+  { name: "Kuřecí kapsa plněná sýrem a šunkou, hranolky", weight: "200g", price: 239, type: "POULTRY", sortOrder: 502 },
+
+  // Ryby (600+)
+  { name: "Smažený čerstvý kapr, domácí bramborový salát", weight: "200g", price: 269, type: "FISH", sortOrder: 600 },
+  { name: "Čerstvý kapr na česneku, šťouchané brambory s cibulkou", weight: "200g", price: 269, type: "FISH", sortOrder: 601 },
+  { name: "Čerstvý pstruh na másle, šťouchané brambory", weight: "250g", price: 285, type: "FISH", sortOrder: 602 },
+  { name: "Smažené filé, domácí bramborový salát", weight: "200g", price: 249, type: "FISH", sortOrder: 603 },
+  { name: "Candátí hranolky, domácí bramborový salát", weight: "200g", price: 299, type: "FISH", sortOrder: 604 },
+  { name: "Směs listových salátů s grilovaným tuňákem", weight: "200g", price: 289, type: "FISH", sortOrder: 605 },
+
+  // Bezmasá (700+)
+  { name: "Smažený květák, vařené brambory", weight: "200g", price: 229, type: "MEATLESS", sortOrder: 700 },
+  { name: "Smažený sýr, hranolky, tatarská omáčka", weight: "150g", price: 199, type: "MEATLESS", sortOrder: 701 },
+  { name: "Grilovaná zelenina s bylinkovým máslem", weight: "250g", price: 189, type: "MEATLESS", sortOrder: 702 },
+
+  // Sladká (800+)
+  { name: "Domácí bramborové knedlíky plněné škvarkami, kysané zelí", weight: "200g", price: 199, type: "SWEET", sortOrder: 800 },
+  { name: "Domácí kynuté knedlíky plněné borůvkami, máslo, kakao, cukr, čokoláda", weight: "200g", price: 199, type: "SWEET", sortOrder: 801 },
+  { name: "Palačinky s tvarohem a rozinkami", weight: "200g", price: 169, type: "SWEET", sortOrder: 802 },
+  { name: "Ovocné knedlíky s mákem a cukrem", weight: "200g", price: 179, type: "SWEET", sortOrder: 803 },
+
+  // Dezerty (900+)
+  { name: "Medovník se šlehačkou a čokoládou", price: 70, type: "DESSERT", sortOrder: 900 },
+  { name: "Palačinka s ovocem a zmrzlinou", price: 89, type: "DESSERT", sortOrder: 901 },
+  { name: "Domácí jablečný závin se šlehačkou", price: 65, type: "DESSERT", sortOrder: 902 },
+
+  // Nápoje (1000+)
+  { name: "Radotínský čajíček s rumem", price: 70, type: "DRINK", sortOrder: 1000 },
+  { name: "Svařené víno", price: 60, type: "DRINK", sortOrder: 1001 },
+  { name: "Horká čokoláda se šlehačkou", price: 65, type: "DRINK", sortOrder: 1002 },
+];
+
+// ============ MAIN FUNCTION ============
 async function main() {
   console.log("🌱 Seeding database...");
 
   // Clear existing data
+  console.log("🗑️ Clearing existing data...");
+  await prisma.dailyMenuToItem.deleteMany();
+  await prisma.dailyMenu.deleteMany();
+  await prisma.dailyMenuDish.deleteMany();
   await prisma.menuItem.deleteMany();
   await prisma.drink.deleteMany();
   await prisma.menuCategory.deleteMany();
@@ -576,6 +664,14 @@ async function main() {
     });
   }
 
+  // Seed daily menu dishes
+  console.log("🍽️ Seeding daily menu dishes...");
+  for (const dish of dailyMenuDishes) {
+    await prisma.dailyMenuDish.create({
+      data: dish,
+    });
+  }
+
   // Create default admin user (change password after first login!)
   console.log("👤 Creating admin user...");
   const hashedPassword = await bcrypt.hash("admin123", 12);
@@ -592,6 +688,15 @@ async function main() {
   });
 
   console.log("✅ Seeding completed!");
+  console.log("");
+  console.log("📊 Summary:");
+  console.log(`   - Menu categories: ${menuCategories.length}`);
+  console.log(`   - Drink categories: ${drinkCategories.length}`);
+  console.log(`   - Menu items: ${menuItems.length}`);
+  console.log(`   - Drinks: ${drinkItems.length}`);
+  console.log(`   - Daily menu dishes: ${dailyMenuDishes.length}`);
+  console.log("");
+  console.log("🔐 Admin login: admin@usimaka.cz / admin123");
 }
 
 main()
