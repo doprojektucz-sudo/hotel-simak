@@ -17,30 +17,39 @@ interface Testimonial {
 const testimonials: Testimonial[] = [
   {
     id: 1,
-    name: "Jan Novák",
+    name: "Jiří Petrák",
     role: "Host recenze",
-    text: "Vynikající česká kuchyně v krásném prostředí Vysočiny. Obsluha byla velmi milá a profesionální. Zvláště chutnal svíčkový steak a domácí dezerty. Určitě se vrátíme!",
+    text: "Dnes při pěší procházce v okolí Dářka jsme přišli do vesnice zvané Radostin. A navštívily zdejší restauraci. Velice milé překvapení ochotná a příjemná obsluha s vynikajícím jídlem velké porce. Všem doporučuji 👏👍👏 Ještě jednou děkujeme celému týmu.",
     rating: 5,
     source: "Google",
-    link: "https://google.com",
+    link: "https://maps.app.goo.gl/R2ZKRkP2DhRAk9Qo9",
   },
   {
     id: 2,
-    name: "Marie Procházková",
+    name: "Valkira Lucie",
     role: "Host recenze",
-    text: "Perfektní místo pro rodinnou oslavou. Prostorný salonek, výborné jídlo a příjemná atmosféra. Děti si pochutnaly na pizze a my na tradiční české kuchyni. Velké plus za příjemné prostředí a vstřícný personál.",
+    text: "Zavítali jsme sem v sobotu brzké odpoledne s 3letým synkem hladový a hospoda byla plná, poslední dva volné stoly. Číšník nám oznámil, že mají o víkendu zvěřinové hody, což nám nijak nevadilo, naopak. Nemohli jsme si vybrat, chuť byla na všechno z nabídky 😄 Dali jsem si gulášovou polévku a ze zvěřiny rolády a steak a všechno výborné. Jen jsme déle čekali, ale to bylo způsobeno plnou hodpodou. Obsluha milá, měli plné ruce práce.",
     rating: 5,
-    source: "Booking.com",
-    link: "https://booking.com",
+    source: "Google",
+    link: "https://maps.app.goo.gl/M5QUcGJryRDKaqBN7",
   },
   {
     id: 3,
-    name: "Petr Svoboda",
+    name: "Pavel Rosecký",
     role: "Host recenze",
-    text: "Skvělá restaurace s autentickou českou kuchyní. Pstruh na másle byl výborný, porce velkorysé a ceny přijatelné. Doporučuji také ubytování - čisté pokoje a klidné prostředí.",
+    text: "Byli jsme na Svatomartinských hodech a dali jsme si jako předkrm paštiku s toustíky, polévka knedličková a jako hlavní chod se podávala čtvrtka husy, k ní dva druhy zelí a knedlíků. Mysleli jsme, že nemáme šanci všechno sníst. Ale byla to taková bašta, že jsme pomalu vylízali talíře 🙂. Obsluha byla moc příjemná.",
     rating: 5,
-    source: "TripAdvisor",
-    link: "https://tripadvisor.com",
+    source: "Google",
+    link: "https://maps.app.goo.gl/bkequKbns3mXeqCg6",
+  },
+  {
+    id: 4,
+    name: "Jan Doubeček",
+    role: "Host recenze",
+    text: "Šli jsme okolo a rozhodli se zastavit na jedno. Po přečtení menu jsme dostali chuť na Cmundu a kulajdu. Obě jídla byla naprostá dobrota. Domácí bramborák, jedno z nejlepších zelí co jsem kdy jedl a naprosto vynikající kulajda. Abych nezapomněl tak nás obsluhovala velmi příjemná slečna. Určitě se k Šimákovi rádi vrátíme.",
+    rating: 5,
+    source: "Google",
+    link: "https://maps.app.goo.gl/6cyStx11NsJ7PduG8",
   },
 ];
 
@@ -210,8 +219,8 @@ export default function Testimonials() {
                   key={index}
                   onClick={() => goToSlide(index)}
                   className={`transition-all duration-300 rounded-full ${index === currentIndex
-                      ? "w-8 h-2 bg-primary-400"
-                      : "w-2 h-2 bg-white/30 hover:bg-white/50"
+                    ? "w-8 h-2 bg-primary-400"
+                    : "w-2 h-2 bg-white/30 hover:bg-white/50"
                     }`}
                   aria-label={`Go to testimonial ${index + 1}`}
                 />
