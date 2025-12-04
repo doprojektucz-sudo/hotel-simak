@@ -1,15 +1,16 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import type { DailyMenuDish } from "@prisma/client";
-import { deleteDailyMenuDish } from "@/lib/actions/daily-menu";
+import { deleteDailyMenuDish, updateDailyMenuDishPrice } from "@/lib/actions/daily-menu";
+import { InlinePrice } from "@/components/admin/InlinePrice";
 
 interface DishListProps {
     dishes: DailyMenuDish[];
+    onEdit: (dish: DailyMenuDish) => void;
 }
 
-export function DishList({ dishes }: DishListProps) {
+export function DishList({ dishes, onEdit }: DishListProps) {
     const [deletingId, setDeletingId] = useState<string | null>(null);
 
     const handleDelete = async (id: string, name: string) => {
@@ -28,6 +29,10 @@ export function DishList({ dishes }: DishListProps) {
         }
     };
 
+    const handlePriceUpdate = async (id: string, newPrice: number) => {
+        await updateDailyMenuDishPrice(id, newPrice);
+    };
+
     return (
         <div className="divide-y divide-gray-200">
             {dishes.map((dish) => (
@@ -37,7 +42,10 @@ export function DishList({ dishes }: DishListProps) {
                         }`}
                 >
                     <div className="flex items-center justify-between gap-4">
-                        <div className="flex-1 min-w-0">
+                        <div
+                            className="flex-1 min-w-0 cursor-pointer"
+                            onClick={() => onEdit(dish)}
+                        >
                             <div className="flex items-center gap-2 flex-wrap">
                                 {dish.weight && (
                                     <span className="text-sm font-bold text-gray-500">
@@ -54,13 +62,14 @@ export function DishList({ dishes }: DishListProps) {
                         </div>
 
                         <div className="flex items-center gap-3">
-                            <span className="text-lg font-bold text-primary-600 whitespace-nowrap">
-                                {dish.price} Kč
-                            </span>
+                            <InlinePrice
+                                price={dish.price}
+                                onSave={(newPrice) => handlePriceUpdate(dish.id, newPrice)}
+                            />
 
                             <div className="flex items-center gap-1">
-                                <Link
-                                    href={`/admin/daily-menu/dishes/${dish.id}`}
+                                <button
+                                    onClick={() => onEdit(dish)}
                                     className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                                     title="Upravit"
                                 >
@@ -77,7 +86,7 @@ export function DishList({ dishes }: DishListProps) {
                                             d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                                         />
                                     </svg>
-                                </Link>
+                                </button>
 
                                 <button
                                     onClick={() => handleDelete(dish.id, dish.name)}

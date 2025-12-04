@@ -392,3 +392,26 @@ function getBaseSortOrder(type: string): number {
     };
     return baseOrders[type] || 500;
 }
+
+export async function updateDailyMenuDishPrice(
+    id: string,
+    price: number
+): Promise<DailyMenuFormState> {
+    try {
+        await requireAdmin();
+
+        await prisma.dailyMenuDish.update({
+            where: { id },
+            data: { price },
+        });
+
+        revalidatePath("/admin/daily-menu");
+        revalidatePath("/admin/daily-menu/dishes");
+        revalidatePath("/restaurace");
+
+        return { success: true };
+    } catch (error) {
+        console.error("Update daily menu dish price error:", error);
+        return { error: "Nastala chyba při úpravě ceny" };
+    }
+}

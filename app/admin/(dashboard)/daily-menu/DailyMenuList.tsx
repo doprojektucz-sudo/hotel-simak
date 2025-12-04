@@ -11,9 +11,10 @@ type MenuWithItems = DailyMenu & {
 
 interface DailyMenuListProps {
     menus: MenuWithItems[];
+    onEdit: (menu: MenuWithItems) => void;
 }
 
-export function DailyMenuList({ menus }: DailyMenuListProps) {
+export function DailyMenuList({ menus, onEdit }: DailyMenuListProps) {
     const [deletingId, setDeletingId] = useState<string | null>(null);
     const [togglingId, setTogglingId] = useState<string | null>(null);
 
@@ -78,12 +79,6 @@ export function DailyMenuList({ menus }: DailyMenuListProps) {
                     </svg>
                 </div>
                 <p className="text-gray-500 mb-4">Zatím nemáte žádné menu</p>
-                <Link
-                    href="/admin/daily-menu/new"
-                    className="text-primary-600 hover:text-primary-700 font-medium"
-                >
-                    Vytvořit první menu →
-                </Link>
             </div>
         );
     }
@@ -100,7 +95,10 @@ export function DailyMenuList({ menus }: DailyMenuListProps) {
                             }`}
                     >
                         <div className="flex items-start justify-between gap-4">
-                            <div className="flex-1 min-w-0">
+                            <div
+                                className="flex-1 min-w-0 cursor-pointer"
+                                onClick={() => onEdit(menu)}
+                            >
                                 <div className="flex items-center gap-2 flex-wrap mb-2">
                                     <h4 className="font-semibold text-gray-900">
                                         {menu.title || "Menu"}
@@ -146,8 +144,8 @@ export function DailyMenuList({ menus }: DailyMenuListProps) {
                                     onClick={() => handleToggleActive(menu.id, menu.isActive)}
                                     disabled={togglingId === menu.id}
                                     className={`p-2 rounded-lg transition-colors ${menu.isActive
-                                            ? "text-green-600 hover:bg-green-50"
-                                            : "text-gray-400 hover:bg-gray-100"
+                                        ? "text-green-600 hover:bg-green-50"
+                                        : "text-gray-400 hover:bg-gray-100"
                                         }`}
                                     title={menu.isActive ? "Skrýt menu" : "Zobrazit menu"}
                                 >
@@ -163,26 +161,25 @@ export function DailyMenuList({ menus }: DailyMenuListProps) {
                                     )}
                                 </button>
 
-                                <Link
-                                    href={`/admin/daily-menu/${menu.id}`}
+                                <button
+                                    onClick={() => onEdit(menu)}
                                     className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                                     title="Upravit"
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                     </svg>
-                                </Link>
-
-                                <Link
-                                    href={`/admin/daily-menu/${menu.id}/print`}
+                                </button>
+                                <a
+                                    href={`/api/daily-menu/${menu.id}/pdf`}
+                                    download
                                     className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-                                    title="Tisk PDF"
-                                    target="_blank"
+                                    title="Stáhnout PDF"
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                     </svg>
-                                </Link>
+                                </a>
 
                                 <button
                                     onClick={() => handleDelete(menu.id, menu.title || "")}
