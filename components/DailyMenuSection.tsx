@@ -2,13 +2,16 @@ import { prisma } from "@/lib/prisma";
 import { dishTypes } from "@/lib/constants/daily-menu";
 
 export async function DailyMenuSection() {
+    // Aktuální čas - začátek a konec dnešního dne
     const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+    const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
 
     const menu = await prisma.dailyMenu.findFirst({
         where: {
             isActive: true,
-            validFrom: { lte: now },
-            validTo: { gte: now },
+            validFrom: { lte: todayEnd },
+            validTo: { gte: todayStart },
         },
         include: {
             items: {
@@ -18,13 +21,26 @@ export async function DailyMenuSection() {
         },
     });
 
-    // Pokud není aktivní menu, nezobrazuj nic
+    // Pokud není aktivní menu nebo nemá žádné položky, nezobrazuj nic
     if (!menu || menu.items.length === 0) {
         return null;
     }
 
+    // Dvojitá kontrola - ověř, že menu opravdu platí dnes
+    const menuFrom = new Date(menu.validFrom);
+    const menuTo = new Date(menu.validTo);
+
+    const menuFromDate = new Date(menuFrom.getFullYear(), menuFrom.getMonth(), menuFrom.getDate());
+    const menuToDate = new Date(menuTo.getFullYear(), menuTo.getMonth(), menuTo.getDate());
+    const todayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    if (todayDate < menuFromDate || todayDate > menuToDate) {
+        return null;
+    }
+
     const formatDate = (date: Date) => {
-        return new Date(date).toLocaleDateString("cs-CZ", {
+        const d = new Date(date);
+        return d.toLocaleDateString("cs-CZ", {
             weekday: "long",
             day: "numeric",
             month: "long",
@@ -42,11 +58,10 @@ export async function DailyMenuSection() {
             .filter((type) => type.dishes.length > 0);
     };
 
-    const isSingleDay =
-        menu.validFrom.toDateString() === menu.validTo.toDateString();
+    const isSingleDay = menuFromDate.getTime() === menuToDate.getTime();
 
     return (
-        <section className="py-16 md:py-24 bg-gradient-to-b from-amber-50 to-white">
+        <section className="py-16 md:py-24 bg-gradient-to-b from-primary-50 to-white">
             <div className="container-custom max-w-4xl">
                 {/* Header */}
                 <div className="text-center mb-12">
@@ -99,9 +114,7 @@ export async function DailyMenuSection() {
 
                     {/* Footer note */}
                     <div className="mt-8 pt-6 border-t border-gray-200 text-center">
-                        <p className="text-sm text-gray-500">
-                            Přejeme dobrou chuť!
-                        </p>
+                        <p className="text-sm text-gray-500">Přejeme dobrou chuť!</p>
                     </div>
                 </div>
             </div>
