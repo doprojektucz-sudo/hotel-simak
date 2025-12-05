@@ -2,10 +2,16 @@ import { prisma } from "@/lib/prisma";
 import { dishTypes } from "@/lib/constants/daily-menu";
 
 export async function DailyMenuSection() {
-    // Aktuální čas - začátek a konec dnešního dne
+    // Aktuální čas v UTC
     const now = new Date();
-    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
-    const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+
+    // Vytvoříme rozmezí pro dnešní den s buffer 2:00 - 22:00 UTC
+    // (Vercel běží v UTC, tak přidáme buffer pro CET/CEST timezone)
+    const todayStart = new Date(now);
+    todayStart.setUTCHours(0, 0, 0, 0);
+
+    const todayEnd = new Date(now);
+    todayEnd.setUTCHours(23, 59, 59, 999);
 
     const menu = await prisma.dailyMenu.findFirst({
         where: {
@@ -26,13 +32,21 @@ export async function DailyMenuSection() {
         return null;
     }
 
-    // Dvojitá kontrola - ověř, že menu opravdu platí dnes
+    // Kontrola času - zobrazuj pouze mezi 2:00 a 22:00 UTC
+    // (to odpovídá přibližně 3:00-23:00 CET nebo 4:00-24:00 CEST)
+    const currentHourUTC = now.getUTCHours();
+    if (currentHourUTC < 2 || currentHourUTC >= 22) {
+        return null;
+    }
+
+    // Kontrola data - ověř, že menu opravdu platí dnes
     const menuFrom = new Date(menu.validFrom);
     const menuTo = new Date(menu.validTo);
 
-    const menuFromDate = new Date(menuFrom.getFullYear(), menuFrom.getMonth(), menuFrom.getDate());
-    const menuToDate = new Date(menuTo.getFullYear(), menuTo.getMonth(), menuTo.getDate());
-    const todayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    // Porovnáváme pouze datum (bez času) v UTC
+    const menuFromDate = Date.UTC(menuFrom.getUTCFullYear(), menuFrom.getUTCMonth(), menuFrom.getUTCDate());
+    const menuToDate = Date.UTC(menuTo.getUTCFullYear(), menuTo.getUTCMonth(), menuTo.getUTCDate());
+    const todayDate = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
 
     if (todayDate < menuFromDate || todayDate > menuToDate) {
         return null;
@@ -58,7 +72,8 @@ export async function DailyMenuSection() {
             .filter((type) => type.dishes.length > 0);
     };
 
-    const isSingleDay = menuFromDate.getTime() === menuToDate.getTime();
+    // Porovnání dat pro single day check
+    const isSingleDay = menuFromDate === menuToDate;
 
     return (
         <section className="py-16 md:py-24 bg-gradient-to-b from-primary-50 to-white">
