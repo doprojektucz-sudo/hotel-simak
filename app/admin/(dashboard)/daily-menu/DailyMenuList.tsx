@@ -18,21 +18,27 @@ export function DailyMenuList({ menus, onEdit }: DailyMenuListProps) {
     const [deletingId, setDeletingId] = useState<string | null>(null);
     const [togglingId, setTogglingId] = useState<string | null>(null);
 
+    // Formátování data v UTC
     const formatDate = (date: Date) => {
-        return new Date(date).toLocaleDateString("cs-CZ", {
+        const d = new Date(date);
+        return d.toLocaleDateString("cs-CZ", {
             weekday: "short",
             day: "numeric",
             month: "numeric",
+            timeZone: "UTC",
         });
     };
 
     const isCurrentlyActive = (menu: MenuWithItems) => {
         const now = new Date();
-        return (
-            menu.isActive &&
-            new Date(menu.validFrom) <= now &&
-            new Date(menu.validTo) >= now
-        );
+        const nowUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+
+        const menuFrom = new Date(menu.validFrom);
+        const menuTo = new Date(menu.validTo);
+        const fromUTC = Date.UTC(menuFrom.getUTCFullYear(), menuFrom.getUTCMonth(), menuFrom.getUTCDate());
+        const toUTC = Date.UTC(menuTo.getUTCFullYear(), menuTo.getUTCMonth(), menuTo.getUTCDate());
+
+        return menu.isActive && nowUTC >= fromUTC && nowUTC <= toUTC;
     };
 
     const handleDelete = async (id: string, title: string) => {
@@ -170,6 +176,7 @@ export function DailyMenuList({ menus, onEdit }: DailyMenuListProps) {
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                     </svg>
                                 </button>
+
                                 <a
                                     href={`/api/daily-menu/${menu.id}/pdf`}
                                     download
@@ -196,6 +203,6 @@ export function DailyMenuList({ menus, onEdit }: DailyMenuListProps) {
                     </div>
                 );
             })}
-        </div>
+        </div >
     );
 }
