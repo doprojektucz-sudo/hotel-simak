@@ -138,11 +138,14 @@ export async function createDailyMenu(
             return { error: "Vyberte alespoň jedno jídlo" };
         }
 
-        const validFrom = new Date(validFromStr);
-        validFrom.setHours(0, 0, 0, 0);
+        // Parsování datumu - vstup je YYYY-MM-DD
+        const [fromYear, fromMonth, fromDay] = validFromStr.split("-").map(Number);
+        const [toYear, toMonth, toDay] = validToStr.split("-").map(Number);
 
-        const validTo = new Date(validToStr);
-        validTo.setHours(23, 59, 59, 999);
+        // Vytvoříme UTC datum - začátek dne 00:00 UTC
+        const validFrom = new Date(Date.UTC(fromYear, fromMonth - 1, fromDay, 0, 0, 0, 0));
+        // Konec dne 23:59:59 UTC
+        const validTo = new Date(Date.UTC(toYear, toMonth - 1, toDay, 23, 59, 59, 999));
 
         if (validTo < validFrom) {
             return { error: "Datum 'do' nemůže být před datem 'od'" };
@@ -159,8 +162,8 @@ export async function createDailyMenu(
         });
 
         if (overlapping) {
-            const fromDate = overlapping.validFrom.toLocaleDateString("cs-CZ");
-            const toDate = overlapping.validTo.toLocaleDateString("cs-CZ");
+            const fromDate = new Date(overlapping.validFrom).toLocaleDateString("cs-CZ");
+            const toDate = new Date(overlapping.validTo).toLocaleDateString("cs-CZ");
             return {
                 error: `Menu se překrývá s existujícím menu (${fromDate} - ${toDate})`,
             };
@@ -203,7 +206,7 @@ export async function updateDailyMenu(
         const validFromStr = formData.get("validFrom") as string;
         const validToStr = formData.get("validTo") as string;
         const dishIds = formData.getAll("dishIds") as string[];
-        const isActive = formData.get("isActive") !== "off";
+        const isActive = formData.get("isActive") === "on";
 
         if (!validFromStr || !validToStr) {
             return { error: "Vyplňte datum platnosti" };
@@ -213,11 +216,14 @@ export async function updateDailyMenu(
             return { error: "Vyberte alespoň jedno jídlo" };
         }
 
-        const validFrom = new Date(validFromStr);
-        validFrom.setHours(0, 0, 0, 0);
+        // Parsování datumu - vstup je YYYY-MM-DD
+        const [fromYear, fromMonth, fromDay] = validFromStr.split("-").map(Number);
+        const [toYear, toMonth, toDay] = validToStr.split("-").map(Number);
 
-        const validTo = new Date(validToStr);
-        validTo.setHours(23, 59, 59, 999);
+        // Vytvoříme UTC datum - začátek dne 00:00 UTC
+        const validFrom = new Date(Date.UTC(fromYear, fromMonth - 1, fromDay, 0, 0, 0, 0));
+        // Konec dne 23:59:59 UTC
+        const validTo = new Date(Date.UTC(toYear, toMonth - 1, toDay, 23, 59, 59, 999));
 
         if (validTo < validFrom) {
             return { error: "Datum 'do' nemůže být před datem 'od'" };
@@ -235,8 +241,8 @@ export async function updateDailyMenu(
         });
 
         if (overlapping) {
-            const fromDate = overlapping.validFrom.toLocaleDateString("cs-CZ");
-            const toDate = overlapping.validTo.toLocaleDateString("cs-CZ");
+            const fromDate = new Date(overlapping.validFrom).toLocaleDateString("cs-CZ");
+            const toDate = new Date(overlapping.validTo).toLocaleDateString("cs-CZ");
             return {
                 error: `Menu se překrývá s existujícím menu (${fromDate} - ${toDate})`,
             };
