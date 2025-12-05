@@ -38,7 +38,7 @@ export function Drawer({ isOpen, onClose, title, children }: DrawerProps) {
             />
 
             {/* Drawer */}
-            <div className="fixed inset-y-0 right-0 w-full max-w-lg">
+            <div className="fixed inset-y-0 right-0 w-full max-w-4xl">
                 <div className="h-full bg-white shadow-xl flex flex-col animate-slide-in">
                     {/* Header */}
                     <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
