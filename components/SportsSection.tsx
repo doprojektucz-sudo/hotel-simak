@@ -164,7 +164,7 @@ export default function SportsSection() {
                     >
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent z-10" />
                         <Image
-                            src="/images/sports/turistika.jpg"
+                            src="/images/udoli.webp"
                             alt="Pěší turistika"
                             fill
                             className={`object-cover transition-transform duration-700 ${hoveredCard === "turistika" ? "scale-110" : "scale-100"

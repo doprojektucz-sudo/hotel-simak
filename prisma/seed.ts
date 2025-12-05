@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
-
+/* 
 // ============ MENU CATEGORIES ============
 const menuCategories = [
   "Polévky",
@@ -603,6 +603,17 @@ const dailyMenuDishes = [
   { name: "Radotínský čajíček s rumem", price: 70, type: "DRINK", sortOrder: 1000 },
   { name: "Svařené víno", price: 60, type: "DRINK", sortOrder: 1001 },
   { name: "Horká čokoláda se šlehačkou", price: 65, type: "DRINK", sortOrder: 1002 },
+]; */
+
+// ============ OPENING HOURS ============
+const openingHours = [
+  { dayOfWeek: 0, dayName: "Pondělí", isOpen: false, openTime: null, closeTime: null, sortOrder: 0 },
+  { dayOfWeek: 1, dayName: "Úterý", isOpen: true, openTime: "11:00", closeTime: "22:00", sortOrder: 1 },
+  { dayOfWeek: 2, dayName: "Středa", isOpen: true, openTime: "11:00", closeTime: "22:00", sortOrder: 2 },
+  { dayOfWeek: 3, dayName: "Čtvrtek", isOpen: true, openTime: "11:00", closeTime: "22:00", sortOrder: 3 },
+  { dayOfWeek: 4, dayName: "Pátek", isOpen: true, openTime: "11:00", closeTime: "23:00", sortOrder: 4 },
+  { dayOfWeek: 5, dayName: "Sobota", isOpen: true, openTime: "11:00", closeTime: "23:00", sortOrder: 5 },
+  { dayOfWeek: 6, dayName: "Neděle", isOpen: true, openTime: "11:00", closeTime: "23:00", sortOrder: 6 },
 ];
 
 // ============ MAIN FUNCTION ============
@@ -611,90 +622,98 @@ async function main() {
 
   // Clear existing data
   console.log("🗑️ Clearing existing data...");
-  await prisma.dailyMenuToItem.deleteMany();
-  await prisma.dailyMenu.deleteMany();
-  await prisma.dailyMenuDish.deleteMany();
-  await prisma.menuItem.deleteMany();
-  await prisma.drink.deleteMany();
-  await prisma.menuCategory.deleteMany();
-  await prisma.drinkCategory.deleteMany();
+  /*   await prisma.dailyMenuToItem.deleteMany();
+    await prisma.dailyMenu.deleteMany();
+    await prisma.dailyMenuDish.deleteMany();
+    await prisma.menuItem.deleteMany();
+    await prisma.drink.deleteMany();
+    await prisma.menuCategory.deleteMany();
+    await prisma.drinkCategory.deleteMany(); */
+  /* 
+    // Seed menu categories
+    console.log("📂 Seeding menu categories...");
+    for (let i = 0; i < menuCategories.length; i++) {
+      await prisma.menuCategory.create({
+        data: {
+          name: menuCategories[i],
+          sortOrder: i,
+        },
+      });
+    }
+  
+    // Seed drink categories
+    console.log("📂 Seeding drink categories...");
+    for (let i = 0; i < drinkCategories.length; i++) {
+      await prisma.drinkCategory.create({
+        data: {
+          name: drinkCategories[i],
+          sortOrder: i,
+        },
+      });
+    }
+  
+    // Seed menu items
+    console.log("🍽️ Seeding menu items...");
+    for (let i = 0; i < menuItems.length; i++) {
+      await prisma.menuItem.create({
+        data: {
+          ...menuItems[i],
+          sortOrder: i,
+          isVegetarian: menuItems[i].isVegetarian || false,
+        },
+      });
+    }
+  
+    // Seed drinks
+    console.log("🍺 Seeding drinks...");
+    for (let i = 0; i < drinkItems.length; i++) {
+      await prisma.drink.create({
+        data: {
+          ...drinkItems[i],
+          sortOrder: i,
+        },
+      });
+    }
+  
+    // Seed daily menu dishes
+    console.log("🍽️ Seeding daily menu dishes...");
+    for (const dish of dailyMenuDishes) {
+      await prisma.dailyMenuDish.create({
+        data: dish,
+      });
+    }
 
-  // Seed menu categories
-  console.log("📂 Seeding menu categories...");
-  for (let i = 0; i < menuCategories.length; i++) {
-    await prisma.menuCategory.create({
-      data: {
-        name: menuCategories[i],
-        sortOrder: i,
+    
+  
+    // Create default admin user (change password after first login!)
+    console.log("👤 Creating admin user...");
+    const hashedPassword = await bcrypt.hash("admin123", 12);
+    await prisma.user.upsert({
+      where: { email: "admin@usimaka.cz" },
+      update: {},
+      create: {
+        email: "admin@usimaka.cz",
+        password: hashedPassword,
+        name: "Administrátor",
+        phone: "+420 123 456 789",
+        isAdmin: true,
       },
-    });
-  }
+    }); */
 
-  // Seed drink categories
-  console.log("📂 Seeding drink categories...");
-  for (let i = 0; i < drinkCategories.length; i++) {
-    await prisma.drinkCategory.create({
-      data: {
-        name: drinkCategories[i],
-        sortOrder: i,
-      },
-    });
+  console.log("🕐 Seeding opening hours...");
+  await prisma.openingHours.deleteMany();
+  for (const hours of openingHours) {
+    await prisma.openingHours.create({ data: hours });
   }
-
-  // Seed menu items
-  console.log("🍽️ Seeding menu items...");
-  for (let i = 0; i < menuItems.length; i++) {
-    await prisma.menuItem.create({
-      data: {
-        ...menuItems[i],
-        sortOrder: i,
-        isVegetarian: menuItems[i].isVegetarian || false,
-      },
-    });
-  }
-
-  // Seed drinks
-  console.log("🍺 Seeding drinks...");
-  for (let i = 0; i < drinkItems.length; i++) {
-    await prisma.drink.create({
-      data: {
-        ...drinkItems[i],
-        sortOrder: i,
-      },
-    });
-  }
-
-  // Seed daily menu dishes
-  console.log("🍽️ Seeding daily menu dishes...");
-  for (const dish of dailyMenuDishes) {
-    await prisma.dailyMenuDish.create({
-      data: dish,
-    });
-  }
-
-  // Create default admin user (change password after first login!)
-  console.log("👤 Creating admin user...");
-  const hashedPassword = await bcrypt.hash("admin123", 12);
-  await prisma.user.upsert({
-    where: { email: "admin@usimaka.cz" },
-    update: {},
-    create: {
-      email: "admin@usimaka.cz",
-      password: hashedPassword,
-      name: "Administrátor",
-      phone: "+420 123 456 789",
-      isAdmin: true,
-    },
-  });
 
   console.log("✅ Seeding completed!");
   console.log("");
   console.log("📊 Summary:");
-  console.log(`   - Menu categories: ${menuCategories.length}`);
-  console.log(`   - Drink categories: ${drinkCategories.length}`);
-  console.log(`   - Menu items: ${menuItems.length}`);
-  console.log(`   - Drinks: ${drinkItems.length}`);
-  console.log(`   - Daily menu dishes: ${dailyMenuDishes.length}`);
+  /*   console.log(`   - Menu categories: ${menuCategories.length}`);
+    console.log(`   - Drink categories: ${drinkCategories.length}`);
+    console.log(`   - Menu items: ${menuItems.length}`);
+    console.log(`   - Drinks: ${drinkItems.length}`);
+    console.log(`   - Daily menu dishes: ${dailyMenuDishes.length}`); */
   console.log("");
   console.log("🔐 Admin login: admin@usimaka.cz / admin123");
 }

@@ -3,6 +3,7 @@ import { contactInfo } from "@/lib/data/contact";
 import { Phone, Mail, MapPin, Clock, Send } from "lucide-react";
 import ContactForm from "@/components/ContactForm";
 import LocationMap from "@/components/LocationMap";
+import { OpeningHoursDisplay } from "@/components/OpeningHoursDisplay";
 
 export default function KontaktPage() {
     return (
@@ -134,32 +135,7 @@ export default function KontaktPage() {
                                                 <h3 className="font-semibold text-gray-900 mb-3">
                                                     Otevírací doba
                                                 </h3>
-                                                <div className="space-y-2 text-sm">
-                                                    <div className="flex justify-between gap-16">
-                                                        <span className="text-gray-600">Pondělí:</span>
-                                                        <span className="font-semibold text-red-600">
-                                                            {contactInfo.openingHours.monday}
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex justify-between gap-16">
-                                                        <span className="text-gray-600">Úterý–Čtvrtek:</span>
-                                                        <span className="font-semibold text-gray-900">
-                                                            {contactInfo.openingHours.tuesday}
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex justify-between gap-16">
-                                                        <span className="text-gray-600">Pátek–Sobota:</span>
-                                                        <span className="font-semibold text-gray-900">
-                                                            {contactInfo.openingHours.friday}
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex justify-between gap-16">
-                                                        <span className="text-gray-600">Neděle:</span>
-                                                        <span className="font-semibold text-gray-900">
-                                                            {contactInfo.openingHours.sunday}
-                                                        </span>
-                                                    </div>
-                                                </div>
+                                                <OpeningHoursDisplay variant="list" />
                                             </div>
                                         </div>
                                     </div>
@@ -167,7 +143,7 @@ export default function KontaktPage() {
 
                                 <div className="bg-white rounded-xl shadow-md p-6">
                                     <h3 className="font-semibold text-gray-900 mb-3">
-                                        Majitelé
+                                        Majitel
                                     </h3>
                                     <ul className="space-y-2">
                                         {contactInfo.owners.map((owner, index) => (

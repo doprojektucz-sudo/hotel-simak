@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Phone, Mail, MapPin, Clock, Facebook, Instagram } from "lucide-react";
 import { contactInfo } from "@/lib/data/contact";
+import { OpeningHoursDisplay } from "./OpeningHoursDisplay";
 
 export default function Footer() {
     return (
@@ -58,24 +59,7 @@ export default function Footer() {
                         <h3 className="text-white text-lg font-semibold mb-4">
                             Otevírací doba
                         </h3>
-                        <ul className="space-y-2 text-sm">
-                            <li className="flex justify-between">
-                                <span>Po–Čt:</span>
-                                <span className="font-semibold text-primary-400">ZAVŘENO</span>
-                            </li>
-                            <li className="flex justify-between">
-                                <span>Pátek:</span>
-                                <span>11:00–22:00</span>
-                            </li>
-                            <li className="flex justify-between">
-                                <span>Sobota:</span>
-                                <span>11:00–22:00</span>
-                            </li>
-                            <li className="flex justify-between">
-                                <span>Neděle:</span>
-                                <span>11:00–22:00</span>
-                            </li>
-                        </ul>
+                        <OpeningHoursDisplay variant="footer" />
                     </div>
 
                     {/* Contact */}

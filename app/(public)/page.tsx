@@ -12,8 +12,9 @@ export default function Home() {
             <DailyMenuSection />
             <FeaturesSection />
             <AboutSection />
-            <LocationSection />
             <CTASection />
+            <LocationSection />
+
         </main>
     );
 }

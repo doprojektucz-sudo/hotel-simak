@@ -1,5 +1,6 @@
 import Hero from "@/components/Hero";
 import LuxuryDrinks from "@/components/LuxuryDrinks";
+import { OpeningHoursDisplay } from "@/components/OpeningHoursDisplay";
 import Testimonials from "@/components/Testimonials";
 import VerticalMenu from "@/components/VerticalMenu";
 import { prisma } from "@/lib/prisma";
@@ -59,13 +60,7 @@ export default async function RestauracePage() {
                                 <h3 className="font-semibold text-gray-900 mb-2">
                                     Otevírací doba
                                 </h3>
-                                <p className="text-gray-600">
-                                    Po: ZAVŘENO
-                                    <br />
-                                    Út–Čt: 11:00–22:00
-                                    <br />
-                                    Pá–Ne: 11:00–23:00
-                                </p>
+                                <OpeningHoursDisplay variant="card" />
                             </div>
                             <div className="bg-white rounded-lg p-6 text-center shadow-sm">
                                 <Utensils className="w-10 h-10 text-primary-600 mx-auto mb-3" />

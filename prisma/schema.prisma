@@ -115,3 +115,17 @@ model DailyMenuToItem {
   @@unique([menuId, dishId])
   @@index([menuId])
 }
+
+model OpeningHours {
+  id        String   @id @default(cuid())
+  dayOfWeek Int      @unique // 0 = Pondělí, 1 = Úterý, ..., 6 = Neděle
+  dayName   String // "Pondělí", "Úterý", ...
+  isOpen    Boolean  @default(true)
+  openTime  String? // "11:00"
+  closeTime String? // "22:00"
+  note      String? // Volitelná poznámka, např. "Pouze pro ubytované"
+  sortOrder Int      @default(0)
+  updatedAt DateTime @updatedAt
+
+  @@index([dayOfWeek])
+}
