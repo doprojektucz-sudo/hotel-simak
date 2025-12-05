@@ -106,7 +106,7 @@ export default function Testimonials() {
       <div
         className="absolute inset-0 bg-cover bg-center bg-fixed"
         style={{
-          backgroundImage: "url('/images/hero-02.webp')",
+          backgroundImage: "url('/images/knedliky.webp')",
         }}
       />
 
