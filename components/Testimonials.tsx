@@ -198,14 +198,14 @@ export default function Testimonials() {
             <div className="flex justify-center gap-4 mt-10">
               <button
                 onClick={goToPrev}
-                className="p-3 rounded-full bg-white/10 hover:bg-primary-600 border border-white/20 text-white transition-all duration-300 hover:scale-110 hover:border-primary-500"
+                className="p-3 rounded-full bg-white/10 hover:bg-primary-600 border hover:cursor-pointer border-white/20 text-white transition-all duration-300 hover:scale-110 hover:border-primary-500"
                 aria-label="Previous testimonial"
               >
                 <ChevronLeft className="w-6 h-6" />
               </button>
               <button
                 onClick={goToNext}
-                className="p-3 rounded-full bg-white/10 hover:bg-primary-600 border border-white/20 text-white transition-all duration-300 hover:scale-110 hover:border-primary-500"
+                className="p-3 rounded-full bg-white/10 hover:bg-primary-600 border hover:cursor-pointer border-white/20 text-white transition-all duration-300 hover:scale-110 hover:border-primary-500"
                 aria-label="Next testimonial"
               >
                 <ChevronRight className="w-6 h-6" />
