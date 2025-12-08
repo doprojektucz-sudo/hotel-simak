@@ -60,7 +60,7 @@ export function CategoriesList({ categories, type }: CategoriesListProps) {
             <span className="text-sm font-medium text-gray-700">
               {category.name}
             </span>
-            <button
+            {/* <button
               onClick={() => handleDelete(category.id, category.name)}
               disabled={deletingId === category.id}
               className="text-gray-400 hover:text-red-500 transition-colors disabled:opacity-50"
@@ -79,7 +79,7 @@ export function CategoriesList({ categories, type }: CategoriesListProps) {
                   d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
-            </button>
+            </button> */}
           </div>
         ))}
       </div>

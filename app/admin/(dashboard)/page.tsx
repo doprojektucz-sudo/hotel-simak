@@ -128,7 +128,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
+      {/* <div className="bg-white rounded-xl shadow-sm p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
           Rychlé akce
         </h3>
@@ -243,7 +243,7 @@ export default async function AdminDashboard() {
             </span>
           </Link>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

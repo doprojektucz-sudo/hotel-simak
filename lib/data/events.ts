@@ -27,7 +27,6 @@ export const eventTypes: EventType[] = [
         icon: "briefcase",
         features: [
             "Školící místnosti",
-            "Prezentační technika",
             "Catering dle přání",
             "Wi-Fi zdarma",
             "Možnost ubytování"
@@ -66,7 +65,6 @@ export const eventTypes: EventType[] = [
         icon: "graduation-cap",
         features: [
             "Moderní prostory",
-            "Taneční parket",
             "Možnost hudby",
             "Speciální nabídka pro studenty",
             "Dlouhá otevírací doba"

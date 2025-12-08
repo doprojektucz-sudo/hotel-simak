@@ -1,9 +1,10 @@
 import Hero from "@/components/Hero";
 import { contactInfo } from "@/lib/data/contact";
-import { Phone, Mail, MapPin, Clock, Send } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Send, Link, Navigation } from "lucide-react";
 import ContactForm from "@/components/ContactForm";
 import LocationMap from "@/components/LocationMap";
 import { OpeningHoursDisplay } from "@/components/OpeningHoursDisplay";
+import LocationSection from "@/components/home/LocationSection";
 
 export default function KontaktPage() {
     return (
@@ -158,63 +159,76 @@ export default function KontaktPage() {
                     </div>
                 </section>
                 {/* Map */}
-                <section className="py-16 bg-gray-50">
-                    <div className="container-custom">
-                        <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
-                            Kde nás najdete
-                        </h2>
-                        <div className="bg-white rounded-2xl overflow-hidden shadow-xl">
-                            <div className="aspect-21/9 bg-gray-200">
-                                <iframe
-                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2588.7!2d15.874650!3d49.654744!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDnCsDM5JzE3LjEiTiAxNcKwNTInMjguNyJF!5e0!3m2!1scs!2scz!4v1234567890"
-                                    width="100%"
-                                    height="100%"
-                                    style={{ border: 0 }}
-                                    allowFullScreen
-                                    loading="lazy"
-                                    referrerPolicy="no-referrer-when-downgrade"
-                                    title="Mapa - Hotel U Šimáka"
-                                />
+                <section className="relative py-24 md:py-32 overflow-hidden">
+                    {/* Parallax background */}
+                    <div
+                        className="absolute inset-0 bg-cover bg-center bg-fixed"
+                        style={{
+                            backgroundImage: "url('/images/hero-03.webp')",
+                        }}
+                    />
+
+                    {/* Dark gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-gray-900/90 via-gray-900/85 to-primary-900/80" />
+
+                    {/* Content */}
+                    <div className="container-custom relative z-10">
+                        <div className="max-w-6xl mx-auto">
+                            {/* Header */}
+                            <div className="text-center mb-16">
+                                <p className="text-primary-400 uppercase tracking-widest text-sm font-semibold mb-3">
+                                    Srdce Vysočiny
+                                </p>
+                                <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                                    Jak se k nám dostanete
+                                </h2>
+                                <div className="w-16 h-1 bg-primary-500 mx-auto mb-6" />
+                                <p className="text-white/70 text-lg max-w-2xl mx-auto">
+                                    Radostín leží v samém srdci chráněné krajinné oblasti, obklopen lesy, rybníky a přírodními rezervacemi.
+                                </p>
                             </div>
-                        </div>
-                    </div>
-                </section>
 
-                {/* Directions */}
-                <section className="py-16">
-                    <div className="container-custom">
-                        <div className="max-w-4xl mx-auto">
-                            <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
-                                Jak se k nám dostanete
-                            </h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                <div className="bg-white rounded-xl shadow-md p-6">
-                                    <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                                        Autem
-                                    </h3>
-                                    <p className="text-gray-600 mb-4">
-                                        Radostín se nachází cca 10 km od Žďáru nad Sázavou. Z Brna
-                                        či Prahy jeďte po dálnici D1, v Jihlavě odbočte směr Žďár
-                                        nad Sázavou. Z města pokračujte směr Radostín.
-                                    </p>
-                                    <p className="text-sm text-gray-500">
-                                        Parkování přímo u hotelu zdarma.
-                                    </p>
+                            {/* Main Content Grid */}
+                            <div className="grid lg:grid-cols-1 gap-8">
+                                {/* Map Card - Glassmorphism */}
+                                <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-2xl overflow-hidden">
+                                    {/* Map Embed */}
+                                    <div className="aspect-[4/3] w-full">
+                                        <iframe
+                                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2586.123456789!2d15.874650!3d49.654744!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDnCsDM5JzE3LjEiTiAxNcKwNTInMjguNyJF!5e0!3m2!1scs!2scz!4v1234567890"
+                                            width="100%"
+                                            height="100%"
+                                            style={{ border: 0 }}
+                                            allowFullScreen
+                                            loading="lazy"
+                                            referrerPolicy="no-referrer-when-downgrade"
+                                            className="grayscale hover:grayscale-0 transition-all duration-500"
+                                        />
+                                    </div>
+
+                                    {/* Map Actions */}
+                                    <div className="p-6 flex flex-col sm:flex-row gap-3">
+                                        <a
+                                            href="https://maps.google.com/?q=49.654744,15.874650"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105"
+                                        >
+                                            <Navigation className="w-4 h-4" />
+                                            Navigovat
+                                        </a>
+                                        <a
+                                            href="https://mapy.cz/zakladni?x=15.874650&y=49.654744&z=15"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl transition-all duration-300 border border-white/20"
+                                        >
+                                            <MapPin className="w-4 h-4" />
+                                            Mapy.cz
+                                        </a>
+                                    </div>
                                 </div>
 
-                                <div className="bg-white rounded-xl shadow-md p-6">
-                                    <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                                        Vlakem a autobusem
-                                    </h3>
-                                    <p className="text-gray-600 mb-4">
-                                        Nejbližší vlakové nádraží je ve Žďáru nad Sázavou (cca 10
-                                        km). Odtud můžete pokračovat autobusem směr Radostín nebo
-                                        využít taxi službu.
-                                    </p>
-                                    <p className="text-sm text-gray-500">
-                                        Rádi vám s dopravou pomůžeme, kontaktujte nás.
-                                    </p>
-                                </div>
                             </div>
                         </div>
                     </div>

@@ -34,10 +34,10 @@ const features = [
         icon: Utensils,
         title: "Restaurace",
         description:
-            "Tradiční česká kuchyně, Pilsner Urquell a široký výběr jídel.",
+            "Tradiční česká kuchyně, Pilsner Urquell, čepovaná Kofola a široký výběr jídel.",
         href: "/restaurace",
-        gradient: "from-amber-500 to-orange-600",
-        bgLight: "bg-amber-50",
+        gradient: "from-primary-500 to-primary-700",
+        bgLight: "bg-primary-50",
     },
     {
         icon: Bed,
@@ -45,8 +45,8 @@ const features = [
         description:
             "Moderní i klasické pokoje s vlastním sociálním zařízením, TV a Wi-Fi zdarma.",
         href: "/ubytovani",
-        gradient: "from-emerald-500 to-teal-600",
-        bgLight: "bg-emerald-50",
+        gradient: "from-secondary-500 to-secondary-700",
+        bgLight: "bg-secondary-50",
     },
     {
         icon: Home,
@@ -54,8 +54,8 @@ const features = [
         description:
             "Útulná chata u vodní nádrže pro 8-10 osob s loďkou zdarma a možností rybaření.",
         href: "/chata-milunda",
-        gradient: "from-sky-500 to-blue-600",
-        bgLight: "bg-sky-50",
+        gradient: "from-primary-600 to-secondary-600",
+        bgLight: "bg-primary-50",
     },
     {
         icon: Calendar,
@@ -63,8 +63,8 @@ const features = [
         description:
             "Svatby, firemní večírky, promoce a rodinné oslavy v krásném prostředí.",
         href: "/akce",
-        gradient: "from-rose-500 to-pink-600",
-        bgLight: "bg-rose-50",
+        gradient: "from-secondary-600 to-primary-600",
+        bgLight: "bg-secondary-50",
     },
 ];
 
