@@ -68,9 +68,7 @@ export default async function RestauracePage() {
                                 <p className="text-gray-600">
                                     Vídeňská rostěná
                                     <br />
-                                    Pomalu pečený pstruh na másle
-                                    <br />
-                                    Smažená vepřová játra
+                                    Smažené candátí hranolky
                                 </p>
                             </div>
                         </div>

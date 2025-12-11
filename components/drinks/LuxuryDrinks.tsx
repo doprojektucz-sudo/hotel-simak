@@ -54,11 +54,10 @@ export default function LuxuryDrinks({
               <button
                 key={category.id}
                 onClick={() => handleTabChange(category.name)}
-                className={`relative px-6 py-3 text-base hover:cursor-pointer md:text-lg font-semibold uppercase tracking-wide transition-all duration-300 rounded-lg ${
-                  activeTab === category.name
+                className={`relative px-6 py-3 text-base hover:cursor-pointer md:text-lg font-semibold uppercase tracking-wide transition-all duration-300 rounded-lg ${activeTab === category.name
                     ? "text-white bg-primary-600 shadow-lg"
                     : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                }`}
+                  }`}
               >
                 {category.name}
               </button>
@@ -70,31 +69,29 @@ export default function LuxuryDrinks({
         <div className="max-w-5xl mx-auto">
           {getDrinkItems(activeTab).length > 0 ? (
             <div
-              className={`transition-all duration-300 ${
-                isAnimating
+              className={`transition-all duration-300 ${isAnimating
                   ? "opacity-0 translate-y-4"
                   : "opacity-100 translate-y-0"
-              }`}
+                }`}
             >
               {/* Drink Items - Same style as menu */}
               <div className="space-y-4">
                 {getDrinkItems(activeTab).map((drink, index) => (
                   <div
                     key={drink.id}
-                    className={`drink-item py-5 border-b border-gray-200 last:border-0 hover:bg-gray-50 transition-all duration-300 px-6 -mx-6 rounded-lg ${
-                      !isAnimating
+                    className={`drink-item py-5 border-b border-gray-200 last:border-0 hover:bg-gray-50 transition-all duration-300 px-6 -mx-6 rounded-lg ${!isAnimating
                         ? "opacity-100 translate-x-0"
                         : "opacity-0 -translate-x-4"
-                    }`}
+                      }`}
                     style={{
                       transitionDelay: !isAnimating ? `${index * 30}ms` : "0ms",
                     }}
                   >
                     <div className="flex justify-between items-start gap-6">
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-start gap-2 mb-1 flex-wrap">
+                        <div className="flex items-center gap-2 mb-1 flex-wrap ">
                           {drink.size && (
-                            <span className="font-bold text-gray-900 whitespace-nowrap flex-shrink-0 text-base">
+                            <span className="font-bold text-gray-900 whitespace-nowrap flex-shrink-0 text-base w-12">
                               {drink.size}
                             </span>
                           )}
@@ -119,7 +116,7 @@ export default function LuxuryDrinks({
               </div>
 
               {/* Special notes for specific categories */}
-           {/*    {activeTab === "Pivo" && (
+              {/*    {activeTab === "Pivo" && (
                 <div className="mt-8 p-6 bg-amber-50 rounded-lg border-2 border-amber-200">
                   <p className="text-center text-sm text-amber-900">
                     <span className="font-semibold">Čepované pivo:</span>{" "}

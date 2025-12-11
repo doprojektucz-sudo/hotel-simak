@@ -108,9 +108,9 @@ export default function VerticalMenu({ items, categories }: VerticalMenuProps) {
                     >
                       <div className="flex justify-between items-start gap-6">
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-start gap-2 mb-1 flex-wrap">
+                          <div className="flex items-center gap-2 mb-1 flex-wrap">
                             {item.weight && (
-                              <span className="font-bold text-gray-900 whitespace-nowrap flex-shrink-0 text-base">
+                              <span className="font-bold text-gray-900 whitespace-nowrap flex-shrink-0 text-base w-12">
                                 {item.weight}
                               </span>
                             )}
