@@ -15,6 +15,7 @@ import {
     ChevronRight,
     Star,
     ShowerHead,
+    Car,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -105,7 +106,7 @@ export default function UbytovaniPage() {
                                 </p>
                             </div>
                             {/* Navigation arrows for future carousel */}
-                        {/*     <div className="flex gap-3">
+                            {/*     <div className="flex gap-3">
                                 <button className="w-12 h-12 rounded-full border border-gray-700 text-gray-400 hover:border-primary-500 hover:text-primary-400 transition-colors flex items-center justify-center">
                                     <ChevronLeft className="w-5 h-5" />
                                 </button>
@@ -224,7 +225,7 @@ export default function UbytovaniPage() {
                                 </p>
                             </div>
                             {/* Navigation arrows */}
-                           {/*  <div className="flex gap-3">
+                            {/*  <div className="flex gap-3">
                                 <button className="w-12 h-12 rounded-full border border-gray-200 text-gray-400 hover:border-secondary-500 hover:text-secondary-500 transition-colors flex items-center justify-center">
                                     <ChevronLeft className="w-5 h-5" />
                                 </button>
@@ -353,46 +354,84 @@ export default function UbytovaniPage() {
 
                             {/* Info grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+
                                 {/* Check-in */}
-                                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all group">
-                                    <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                                        <Clock className="w-6 h-6 text-primary-300" />
+                                <div className="
+        bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 
+        hover:bg-white/15 transition-all group
+        flex flex-row items-center justify-between gap-4
+        lg:flex-col lg:items-start
+    ">
+                                    <div className="flex flex-row items-center gap-4 lg:flex-col lg:items-start lg:w-full">
+                                        <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                            <Clock className="w-6 h-6 text-primary-300" />
+                                        </div>
+                                        <h4 className="font-semibold text-white mb-0 lg:mb-1">Check-in</h4>
                                     </div>
-                                    <h4 className="font-semibold text-white mb-1">Check-in</h4>
-                                    <p className="text-2xl font-bold text-primary-300">
+
+                                    <p className="text-2xl font-bold text-primary-300 lg:mt-4">
                                         {accommodationInfo.checkIn}
                                     </p>
                                 </div>
 
                                 {/* Check-out */}
-                                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all group">
-                                    <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                                        <Clock className="w-6 h-6 text-primary-300" />
+                                <div className="
+        bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 
+        hover:bg-white/15 transition-all group
+        flex flex-row items-center justify-between gap-4
+        lg:flex-col lg:items-start
+    ">
+                                    <div className="flex flex-row items-center gap-4 lg:flex-col lg:items-start lg:w-full">
+                                        <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center">
+                                            <Clock className="w-6 h-6 text-primary-300" />
+                                        </div>
+                                        <h4 className="font-semibold text-white mb-0 lg:mb-1">Check-out</h4>
                                     </div>
-                                    <h4 className="font-semibold text-white mb-1">Check-out</h4>
-                                    <p className="text-2xl font-bold text-primary-300">
+
+                                    <p className="text-2xl font-bold text-primary-300 lg:mt-4">
                                         {accommodationInfo.checkOut}
                                     </p>
                                 </div>
 
                                 {/* Parking */}
-                                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all group">
-                                    <div className="w-12 h-12 rounded-xl bg-secondary-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                                        <Check className="w-6 h-6 text-secondary-300" />
+                                <div className="
+        bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 
+        hover:bg-white/15 transition-all group
+        flex flex-row items-center justify-between gap-4
+        lg:flex-col lg:items-start
+    ">
+                                    <div className="flex flex-row items-center gap-4 lg:flex-col lg:items-start lg:w-full">
+                                        <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center">
+                                            <Car className="w-6 h-6 text-primary-300" />
+                                        </div>
+                                        <h4 className="font-semibold text-white mb-0 lg:mb-1">Parkování</h4>
                                     </div>
-                                    <h4 className="font-semibold text-white mb-1">Parkování</h4>
-                                    <p className="text-lg text-secondary-300">Zdarma u hotelu</p>
+
+                                    <p className="text-lg text-primary-300 lg:mt-4">
+                                        Zdarma u hotelu
+                                    </p>
                                 </div>
 
                                 {/* Breakfast */}
-                                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all group">
-                                    <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                                        <Coffee className="w-6 h-6 text-primary-300" />
+                                <div className="
+        bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 
+        hover:bg-white/15 transition-all group
+        flex flex-row items-center justify-between gap-4
+        lg:flex-col lg:items-start
+    ">
+                                    <div className="flex flex-row items-center gap-4 lg:flex-col lg:items-start lg:w-full">
+                                        <div className="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center">
+                                            <Coffee className="w-6 h-6 text-primary-300" />
+                                        </div>
+                                        <h4 className="font-semibold text-white mb-0 lg:mb-1">Snídaně</h4>
                                     </div>
-                                    <h4 className="font-semibold text-white mb-1">Snídaně</h4>
-                                    <p className="text-lg text-primary-300">V ceně ubytování</p>
+
+                                    <p className="text-lg text-primary-300 lg:mt-4">
+                                        V ceně ubytování
+                                    </p>
                                 </div>
                             </div>
+
 
                             {/* Recreation fee notice */}
                             <div className="bg-gradient-to-r from-primary-500/20 to-secondary-500/20 backdrop-blur-md rounded-2xl p-6 border border-white/20">

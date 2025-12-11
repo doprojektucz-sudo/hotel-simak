@@ -66,7 +66,7 @@ export const rooms: Room[] = [
         price: 700,
         features: [
             "Vlastní sociální zařízení",
-            "Smart-TV",
+            "TV",
             "Wi-Fi zdarma"
         ],
         description: "Útulný dvoulůžkový pokoj s klasickým vybavením.",
@@ -80,7 +80,7 @@ export const rooms: Room[] = [
         price: 700,
         features: [
             "Vlastní sociální zařízení",
-            "Smart-TV",
+            "TV",
             "Wi-Fi zdarma"
         ],
         description: "Klasicky vybavený třílůžkový pokoj pro menší skupiny.",
@@ -94,7 +94,7 @@ export const rooms: Room[] = [
         price: 700,
         features: [
             "Vlastní sociální zařízení",
-            "Smart-TV",
+            "TV",
             "Wi-Fi zdarma"
         ],
         description: "Prostorný klasický pokoj pro rodiny nebo skupiny přátel.",
