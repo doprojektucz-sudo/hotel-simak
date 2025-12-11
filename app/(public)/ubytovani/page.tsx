@@ -28,7 +28,7 @@ export default function UbytovaniPage() {
                 <Hero
                     subtitle="Ubytování"
                     title="Pohodlné ubytování v srdci Vysočiny"
-                    description="Moderní i klasické pokoje s vlastním sociálním zařízením, TV a Wi-Fi zdarma. Ideální základna pro výlety do Žďárských vrchů."
+                    description="Moderní i klasické pokoje s vlastním sociálním zařízením, Smart-TV a Wi-Fi zdarma. Ideální základna pro výlety do Žďárských vrchů."
                     primaryCta={{
                         text: "Rezervovat pokoj",
                         href: "#booking",
@@ -72,7 +72,7 @@ export default function UbytovaniPage() {
                                     <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary-100 text-primary-700 mb-3 group-hover:scale-110 transition-transform">
                                         <Tv className="w-6 h-6" />
                                     </div>
-                                    <p className="text-2xl font-bold text-gray-900">TV</p>
+                                    <p className="text-2xl font-bold text-gray-900">Smart-TV</p>
                                     <p className="text-sm text-gray-500">V pokojích</p>
                                 </div>
                                 <div className="px-4 py-5 text-center group">

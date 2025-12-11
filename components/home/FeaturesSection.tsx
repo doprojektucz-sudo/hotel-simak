@@ -12,7 +12,7 @@ const features = [
     {
         icon: Bed,
         title: "Ubytování",
-        description: "Moderní i klasické pokoje s vlastním sociálním zařízením, TV a Wi-Fi zdarma.",
+        description: "Moderní i klasické pokoje s vlastním sociálním zařízením, Smart-TV a Wi-Fi zdarma.",
         href: "/ubytovani",
         color: "secondary"
     },

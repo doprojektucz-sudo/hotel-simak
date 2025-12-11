@@ -60,7 +60,7 @@ const slides: Slide[] = [
         title: "Pohodlné ubytování",
         subtitle: "Moderní i klasické pokoje",
         description:
-            "Útulné pokoje s vlastním sociálním zařízením, TV a Wi-Fi zdarma. Ideální základna pro výlety do Žďárských vrchů.",
+            "Útulné pokoje s vlastním sociálním zařízením, Smart-TV a Wi-Fi zdarma. Ideální základna pro výlety do Žďárských vrchů.",
         image: "/images/hero-01.webp",
         primaryCta: {
             text: "Zobrazit pokoje",
