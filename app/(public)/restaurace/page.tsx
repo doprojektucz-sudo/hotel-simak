@@ -68,7 +68,7 @@ export default async function RestauracePage() {
                                 <p className="text-gray-600">
                                     Vídeňská rostěná
                                     <br />
-                                    Smažené candátí hranolky
+                                    Čerstvé candátí hranolky
                                 </p>
                             </div>
                         </div>

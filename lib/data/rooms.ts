@@ -28,10 +28,10 @@ export const rooms: Room[] = [
         href: "/images/deluxe-1.webp"
     },
     {
-        id: "deluxe-double-2",
-        name: "Dvoulůžkový pokoj Deluxe",
+        id: "deluxe-quad-1",
+        name: "Čtyřlůžkový pokoj Deluxe",
         type: "deluxe",
-        capacity: 2,
+        capacity: 4,
         price: 900,
         features: [
             "Vlastní sociální zařízení",
@@ -39,11 +39,11 @@ export const rooms: Room[] = [
             "Wi-Fi zdarma",
             "Moderní vybavení"
         ],
-        description: "Moderně vybavený dvoulůžkový pokoj s vlastním sociálním zařízením.",
+        description: "Prostorný moderní čtyřlůžkový pokoj ideální pro rodiny.",
         href: "/images/deluxe-2.webp"
     },
     {
-        id: "deluxe-quad",
+        id: "deluxe-quad-2",
         name: "Čtyřlůžkový pokoj Deluxe",
         type: "deluxe",
         capacity: 4,
@@ -73,17 +73,17 @@ export const rooms: Room[] = [
         href: "/images/klasik-1.webp"
     },
     {
-        id: "classic-triple",
-        name: "Třílůžkový pokoj Klasik",
+        id: "classic-double-1",
+        name: "Dvoulůžkový pokoj Klasik",
         type: "classic",
-        capacity: 3,
+        capacity: 2,
         price: 700,
         features: [
             "Vlastní sociální zařízení",
             "TV",
             "Wi-Fi zdarma"
         ],
-        description: "Klasicky vybavený třílůžkový pokoj pro menší skupiny.",
+        description: "Útulný dvoulůžkový pokoj s klasickým vybavením.",
         href: "/images/klasik-2.webp"
     },
     {
