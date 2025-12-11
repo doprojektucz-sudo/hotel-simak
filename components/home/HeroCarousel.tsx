@@ -206,7 +206,6 @@ export default function HeroCarousel() {
                                             </svg>
                                         ))}
                                     </div>
-
                                     {/* Subtitle */}
                                     <h4 className="text-primary-300 font-semibold mb-4 text-xl uppercase tracking-widest animate-fade-in-up animation-delay-200">
                                         {slide.subtitle}

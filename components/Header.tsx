@@ -51,19 +51,22 @@ export default function Header() {
                 <div className="flex items-center justify-between">
                     {/* Logo */}
                     <div className="logo-wrapper flex gap-2 items-center">
-                        <Link href="/" className="logo">
+                        <Link href="/" className="flex gap-2 items-center">
                             <img
                                 src={!scrolled ? "/images/logo-light.webp" : "/images/logo.webp"}
                                 className={isHomePage && !scrolled ? "w-32" : "w-32"}
                                 alt=""
                             />
+                            <div>
+                                <span className={`${!scrolled ? "text-white" : ""} text-lg uppercase font-bold`}>
+                                    Hotel & restaurace
+                                </span><br />
+                                <span className={`${!scrolled ? "text-primary-300" : "text-primary-600"} font-semibold uppercase`}>
+                                    U Šimáka Radostín
+                                </span>
+                            </div>
                         </Link>
-                        <div className="">
-                            <span className={`${!scrolled ? "text-white" : ""} text-lg uppercase font-bold`}>Hotel & restaurace</span><br />
-                            <span className={`${!scrolled ? "text-primary-300 " : "text-primary-600"}  font-semibold uppercase`}>U Šimáka Radostín</span>
-                        </div>
                     </div>
-
                     {/* Desktop Menu */}
                     <div className="hidden xl:flex items-center">
                         <ul className="flex items-center space-x-8">
