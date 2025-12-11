@@ -50,18 +50,22 @@ export default function Header() {
             <div className="container-custom">
                 <div className="flex items-center justify-between">
                     {/* Logo */}
-                    <div className="logo-wrapper">
+                    <div className="logo-wrapper flex gap-2 items-center">
                         <Link href="/" className="logo">
                             <img
-                                src="/images/logo.png"
+                                src={!scrolled ? "/images/logo-light.webp" : "/images/logo.webp"}
                                 className={isHomePage && !scrolled ? "w-32" : "w-32"}
                                 alt=""
                             />
                         </Link>
+                        <div className="">
+                            <span className={`${!scrolled ? "text-white" : ""} text-lg uppercase font-bold`}>Hotel & restaurace</span><br />
+                            <span className={`${!scrolled ? "text-primary-300 " : "text-primary-600"}  font-semibold uppercase`}>U Šimáka Radostín</span>
+                        </div>
                     </div>
 
                     {/* Desktop Menu */}
-                    <div className="hidden lg:flex items-center">
+                    <div className="hidden xl:flex items-center">
                         <ul className="flex items-center space-x-8">
                             {navigation.map((item) => {
                                 const active = isActive(item.href);
@@ -95,7 +99,7 @@ export default function Header() {
                     {/* Animated Hamburger Button */}
                     <button
                         type="button"
-                        className={`lg:hidden p-2 relative w-10 h-10 flex items-center justify-center transition-colors ${isHomePage && !scrolled
+                        className={`xl:hidden p-2 relative w-10 h-10 flex items-center justify-center transition-colors ${isHomePage && !scrolled
                             ? "text-white"
                             : "text-gray-700"
                             }`}
@@ -121,7 +125,7 @@ export default function Header() {
 
                 {/* Mobile Menu */}
                 <div
-                    className={`lg:hidden overflow-hidden transition-all duration-300 ${mobileMenuOpen ? "max-h-[500px] opacity-100 mt-4" : "max-h-0 opacity-0"
+                    className={`xl:hidden overflow-hidden transition-all duration-300 ${mobileMenuOpen ? "max-h-[500px] opacity-100 mt-4" : "max-h-0 opacity-0"
                         }`}
                 >
                     <div className="flex flex-col py-4 bg-white rounded-lg shadow-lg">
