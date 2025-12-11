@@ -119,11 +119,11 @@ export default function LuxuryDrinks({
               </div>
 
               {/* Special notes for specific categories */}
-              {activeTab === "Pivo" && (
+           {/*    {activeTab === "Pivo" && (
                 <div className="mt-8 p-6 bg-amber-50 rounded-lg border-2 border-amber-200">
                   <p className="text-center text-sm text-amber-900">
                     <span className="font-semibold">Čepované pivo:</span>{" "}
-                    Pilsner Urquell a Bernard
+                    Bernard
                   </p>
                 </div>
               )}
@@ -132,10 +132,10 @@ export default function LuxuryDrinks({
                 <div className="mt-8 p-6 bg-blue-50 rounded-lg border-2 border-blue-200">
                   <p className="text-center text-sm text-blue-900">
                     <span className="font-semibold">Specialita:</span> Pravá
-                    čepovaná KOFOLA
+                    čepovaná BEZINKA
                   </p>
                 </div>
-              )}
+              )} */}
             </div>
           ) : (
             // Empty State

@@ -1,8 +1,8 @@
 import Hero from "@/components/Hero";
-import LuxuryDrinks from "@/components/LuxuryDrinks";
+import LuxuryDrinks from "@/components/drinks/LuxuryDrinks";
 import { OpeningHoursDisplay } from "@/components/OpeningHoursDisplay";
 import Testimonials from "@/components/Testimonials";
-import VerticalMenu from "@/components/VerticalMenu";
+import VerticalMenu from "@/components/menu/VerticalMenu";
 import { prisma } from "@/lib/prisma";
 import { Utensils, Clock, Users } from "lucide-react";
 
@@ -66,11 +66,11 @@ export default async function RestauracePage() {
                                 <Utensils className="w-10 h-10 text-primary-600 mx-auto mb-3" />
                                 <h3 className="font-semibold text-gray-900 mb-2">Speciality</h3>
                                 <p className="text-gray-600">
-                                    Pilsner Urquell
+                                    Vídeňská rostěná
                                     <br />
-                                    Bernard
+                                    Pomalu pečený pstruh na másle
                                     <br />
-                                    Čepovaná Kofola
+                                    Smažená vepřová játra
                                 </p>
                             </div>
                         </div>
