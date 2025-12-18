@@ -50,18 +50,23 @@ export default function Header() {
             <div className="container-custom">
                 <div className="flex items-center justify-between">
                     {/* Logo */}
+            {/* Logo */}
                     <div className="logo-wrapper flex gap-2 items-center">
                         <Link href="/" className="flex gap-2 items-center">
                             <img
                                 src={!scrolled ? "/images/logo-light.webp" : "/images/logo.webp"}
-                                className={isHomePage && !scrolled ? "w-32" : "w-32"}
-                                alt=""
+                                className="w-20 sm:w-32"
+                                alt="Hotel U Šimáka logo"
                             />
                             <div>
-                                <span className={`${!scrolled ? "text-white" : ""} text-lg uppercase font-bold`}>
+                                <span className={`hidden sm:inline ${!scrolled ? "text-white" : ""} text-lg uppercase font-bold`}>
                                     Hotel & restaurace
-                                </span><br />
-                                <span className={`${!scrolled ? "text-primary-300" : "text-primary-600"} font-semibold uppercase`}>
+                                </span>
+                                <span className={`sm:hidden ${!scrolled ? "text-white" : ""} text-base uppercase font-bold`}>
+                                    U Šimáka
+                                </span>
+                                <br className="hidden sm:block" />
+                                <span className={`hidden sm:inline ${!scrolled ? "text-primary-300" : "text-primary-600"} font-semibold uppercase`}>
                                     U Šimáka Radostín
                                 </span>
                             </div>
