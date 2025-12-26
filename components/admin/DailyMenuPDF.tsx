@@ -24,26 +24,14 @@ Font.register({
     ],
 });
 
-// Barvy optimalizované pro tisk - vyšší kontrast
+// Barvy optimalizované pro černobílý tisk
 const colors = {
-    primary: {
-        700: "#8B6914", // tmavší zlatá pro lepší čitelnost
-        800: "#6B5010",
-    },
-    secondary: {
-        600: "#4A4035", // tmavší pro lepší kontrast
-        700: "#3A3025",
-        800: "#2A2015", // téměř černá pro hlavní text
-        900: "#1A1005",
-    },
-    gray: {
-        200: "#D0D0D0", // světlejší pro tečkované čáry
-        300: "#B0B0B0",
-    },
-    accent: {
-        gold: "#A07820", // sytá zlatá pro kategorie
-        dark: "#1A1A1A", // téměř černá pro text jídel
-    },
+    black: "#000000",
+    darkGray: "#333333",
+    mediumGray: "#666666",
+    lightGray: "#999999",
+    lineGray: "#CCCCCC",
+    dotGray: "#AAAAAA",
 };
 
 interface DailyMenuDish {
@@ -139,7 +127,7 @@ const getStyles = (totalItems: number) => {
             marginBottom: headerMargin,
             paddingBottom: spacing - 4,
             borderBottomWidth: 2,
-            borderBottomColor: colors.accent.gold,
+            borderBottomColor: colors.black,
         },
         logo: {
             height: logoHeight,
@@ -152,7 +140,7 @@ const getStyles = (totalItems: number) => {
         title: {
             fontSize: titleSize,
             fontWeight: 700,
-            color: colors.secondary[900],
+            color: colors.black,
             marginBottom: 2,
             letterSpacing: 0.5,
             textAlign: "right",
@@ -160,7 +148,7 @@ const getStyles = (totalItems: number) => {
         date: {
             fontSize: dateSize,
             fontWeight: 700,
-            color: colors.secondary[700],
+            color: colors.darkGray,
             textTransform: "capitalize",
             textAlign: "right",
         },
@@ -170,13 +158,13 @@ const getStyles = (totalItems: number) => {
         categoryTitle: {
             fontSize: categorySize,
             fontWeight: 700,
-            color: colors.accent.gold,
+            color: colors.black,
             textTransform: "uppercase",
             letterSpacing: 1.5,
             marginBottom: dishSpacing + 2,
             paddingBottom: 4,
             borderBottomWidth: 2,
-            borderBottomColor: colors.accent.gold,
+            borderBottomColor: colors.black,
         },
         dish: {
             flexDirection: "row",
@@ -184,7 +172,7 @@ const getStyles = (totalItems: number) => {
             alignItems: "flex-start",
             paddingVertical: dishSpacing,
             borderBottomWidth: 1,
-            borderBottomColor: colors.gray[300],
+            borderBottomColor: colors.dotGray,
             borderBottomStyle: "dotted",
         },
         dishLast: {
@@ -202,20 +190,20 @@ const getStyles = (totalItems: number) => {
         dishWeight: {
             fontSize: weightSize,
             fontWeight: 700,
-            color: colors.secondary[800],
+            color: colors.darkGray,
             marginRight: 8,
             minWidth: 35,
         },
         dishName: {
             fontSize: dishSize,
-            color: colors.accent.dark,
+            color: colors.black,
             flex: 1,
             lineHeight: 1.3,
         },
         dishPrice: {
             fontSize: priceSize,
             fontWeight: 700,
-            color: colors.accent.gold,
+            color: colors.black,
             minWidth: 55,
             textAlign: "right",
         },
@@ -223,7 +211,7 @@ const getStyles = (totalItems: number) => {
             marginTop: "auto",
             paddingTop: 8,
             borderTopWidth: 1,
-            borderTopColor: colors.accent.gold,
+            borderTopColor: colors.black,
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
@@ -231,11 +219,11 @@ const getStyles = (totalItems: number) => {
         footerText: {
             fontSize: 10,
             fontWeight: 700,
-            color: colors.secondary[700],
+            color: colors.darkGray,
         },
         footerContact: {
             fontSize: 9,
-            color: colors.secondary[600],
+            color: colors.mediumGray,
         },
     });
 };
