@@ -24,7 +24,6 @@ Font.register({
     ],
 });
 
-// Barvy optimalizované pro černobílý tisk
 const colors = {
     black: "#000000",
     darkGray: "#333333",
@@ -55,68 +54,206 @@ interface DailyMenuPDFProps {
     logoUrl: string;
 }
 
-// Dynamické styly podle počtu položek - zvětšené pro lepší čitelnost
-const getStyles = (totalItems: number) => {
-    // Základní velikosti - kompaktní header, čitelné položky
-    let titleSize = 24;
-    let dateSize = 13;
-    let categorySize = 14;
-    let dishSize = 12;
-    let priceSize = 12;
-    let weightSize = 12;
-    let spacing = 14;
-    let dishSpacing = 7;
-    let categorySpacing = 16;
-    let logoHeight = 55;
-    let headerMargin = 14;
+// Výpočet "hustoty" obsahu - kombinuje počet položek a kategorií
+const calculateContentDensity = (totalItems: number, categoryCount: number) => {
+    // Každá kategorie zabírá extra místo (nadpis + odsazení)
+    const effectiveItems = totalItems + categoryCount * 2;
+    return effectiveItems;
+};
 
-    // Zmenšení při větším počtu položek
-    if (totalItems > 15) {
-        titleSize = 22;
-        dateSize = 12;
-        categorySize = 13;
-        dishSize = 11;
-        priceSize = 11;
-        weightSize = 11;
-        spacing = 12;
-        dishSpacing = 6;
-        categorySpacing = 14;
-        logoHeight = 50;
-        headerMargin = 12;
-    }
+// Dynamické styly podle obsahu
+const getStyles = (totalItems: number, categoryCount: number) => {
+    const density = calculateContentDensity(totalItems, categoryCount);
 
-    if (totalItems > 25) {
-        titleSize = 20;
-        dateSize = 11;
-        categorySize = 12;
-        dishSize = 10;
-        priceSize = 10;
-        weightSize = 10;
-        spacing = 10;
-        dishSpacing = 5;
-        categorySpacing = 12;
-        logoHeight = 45;
-        headerMargin = 10;
-    }
+    type ScaleLevel = {
+        maxDensity: number;
+        // Fonty - header se může zmenšovat, jídla zůstávají čitelná
+        title: number;
+        date: number;
+        category: number;
+        dish: number;
+        price: number;
+        weight: number;
+        // Vertikální spacing - hlavní úspora místa
+        logoHeight: number;
+        pageTopPadding: number;
+        pageSidePadding: number;
+        headerMargin: number;
+        headerPadding: number;
+        categoryMargin: number;
+        categoryTitleMargin: number;
+        categoryTitlePadding: number;
+        dishPadding: number;
+        footerPadding: number;
+        footerFontSize: number;
+        lineHeight: number;
+    };
 
-    if (totalItems > 35) {
-        titleSize = 18;
-        dateSize = 10;
-        categorySize = 11;
-        dishSize = 9;
-        priceSize = 9;
-        weightSize = 9;
-        spacing = 8;
-        dishSpacing = 4;
-        categorySpacing = 10;
-        logoHeight = 40;
-        headerMargin = 8;
-    }
+    const scales: ScaleLevel[] = [
+        {
+            // Úroveň 1: Velmi málo položek (do 12 efektivních)
+            maxDensity: 12,
+            title: 26,
+            date: 14,
+            category: 14,
+            dish: 12,
+            price: 12,
+            weight: 12,
+            logoHeight: 55,
+            pageTopPadding: 30,
+            pageSidePadding: 35,
+            headerMargin: 16,
+            headerPadding: 12,
+            categoryMargin: 16,
+            categoryTitleMargin: 8,
+            categoryTitlePadding: 5,
+            dishPadding: 7,
+            footerPadding: 10,
+            footerFontSize: 10,
+            lineHeight: 1.35,
+        },
+        {
+            // Úroveň 2: Málo položek (do 18)
+            maxDensity: 18,
+            title: 24,
+            date: 13,
+            category: 13,
+            dish: 12,
+            price: 12,
+            weight: 12,
+            logoHeight: 50,
+            pageTopPadding: 25,
+            pageSidePadding: 32,
+            headerMargin: 12,
+            headerPadding: 10,
+            categoryMargin: 12,
+            categoryTitleMargin: 6,
+            categoryTitlePadding: 4,
+            dishPadding: 5,
+            footerPadding: 8,
+            footerFontSize: 10,
+            lineHeight: 1.3,
+        },
+        {
+            // Úroveň 3: Střední počet (do 25)
+            maxDensity: 25,
+            title: 22,
+            date: 12,
+            category: 12,
+            dish: 11,
+            price: 11,
+            weight: 11,
+            logoHeight: 45,
+            pageTopPadding: 22,
+            pageSidePadding: 30,
+            headerMargin: 10,
+            headerPadding: 8,
+            categoryMargin: 9,
+            categoryTitleMargin: 5,
+            categoryTitlePadding: 3,
+            dishPadding: 4,
+            footerPadding: 6,
+            footerFontSize: 9,
+            lineHeight: 1.25,
+        },
+        {
+            // Úroveň 4: Více položek (do 32)
+            maxDensity: 32,
+            title: 20,
+            date: 11,
+            category: 11,
+            dish: 11,
+            price: 11,
+            weight: 11,
+            logoHeight: 40,
+            pageTopPadding: 18,
+            pageSidePadding: 28,
+            headerMargin: 8,
+            headerPadding: 6,
+            categoryMargin: 7,
+            categoryTitleMargin: 4,
+            categoryTitlePadding: 2,
+            dishPadding: 3,
+            footerPadding: 5,
+            footerFontSize: 9,
+            lineHeight: 1.2,
+        },
+        {
+            // Úroveň 5: Hodně položek (do 40)
+            maxDensity: 40,
+            title: 18,
+            date: 10,
+            category: 10,
+            dish: 10,
+            price: 10,
+            weight: 10,
+            logoHeight: 35,
+            pageTopPadding: 15,
+            pageSidePadding: 25,
+            headerMargin: 6,
+            headerPadding: 5,
+            categoryMargin: 5,
+            categoryTitleMargin: 3,
+            categoryTitlePadding: 2,
+            dishPadding: 2.5,
+            footerPadding: 4,
+            footerFontSize: 8,
+            lineHeight: 1.15,
+        },
+        {
+            // Úroveň 6: Velmi hodně položek (do 50)
+            maxDensity: 50,
+            title: 16,
+            date: 9,
+            category: 10,
+            dish: 10,
+            price: 10,
+            weight: 10,
+            logoHeight: 32,
+            pageTopPadding: 12,
+            pageSidePadding: 22,
+            headerMargin: 5,
+            headerPadding: 4,
+            categoryMargin: 4,
+            categoryTitleMargin: 2,
+            categoryTitlePadding: 1,
+            dishPadding: 2,
+            footerPadding: 3,
+            footerFontSize: 8,
+            lineHeight: 1.1,
+        },
+        {
+            // Úroveň 7: Extrémní počet (nad 50)
+            maxDensity: Infinity,
+            title: 14,
+            date: 8,
+            category: 9,
+            dish: 9,
+            price: 9,
+            weight: 9,
+            logoHeight: 28,
+            pageTopPadding: 10,
+            pageSidePadding: 20,
+            headerMargin: 4,
+            headerPadding: 3,
+            categoryMargin: 3,
+            categoryTitleMargin: 1,
+            categoryTitlePadding: 1,
+            dishPadding: 1.5,
+            footerPadding: 2,
+            footerFontSize: 7,
+            lineHeight: 1.05,
+        },
+    ];
+
+    // Najdi správnou úroveň škálování
+    const scale = scales.find((s) => density <= s.maxDensity) || scales[scales.length - 1];
 
     return StyleSheet.create({
         page: {
-            padding: 30,
-            paddingTop: 25,
+            paddingTop: scale.pageTopPadding,
+            paddingBottom: scale.pageTopPadding,
+            paddingHorizontal: scale.pageSidePadding,
             fontFamily: "Roboto",
             backgroundColor: "#ffffff",
         },
@@ -124,13 +261,13 @@ const getStyles = (totalItems: number) => {
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
-            marginBottom: headerMargin,
-            paddingBottom: spacing - 4,
+            marginBottom: scale.headerMargin,
+            paddingBottom: scale.headerPadding,
             borderBottomWidth: 2,
             borderBottomColor: colors.black,
         },
         logo: {
-            height: logoHeight,
+            height: scale.logoHeight,
         },
         headerTextContainer: {
             flex: 1,
@@ -138,40 +275,40 @@ const getStyles = (totalItems: number) => {
             paddingLeft: 15,
         },
         title: {
-            fontSize: titleSize,
+            fontSize: scale.title,
             fontWeight: 700,
             color: colors.black,
-            marginBottom: 2,
+            marginBottom: 1,
             letterSpacing: 0.5,
             textAlign: "right",
         },
         date: {
-            fontSize: dateSize,
+            fontSize: scale.date,
             fontWeight: 700,
             color: colors.darkGray,
             textTransform: "capitalize",
             textAlign: "right",
         },
         category: {
-            marginBottom: categorySpacing,
+            marginBottom: scale.categoryMargin,
         },
         categoryTitle: {
-            fontSize: categorySize,
+            fontSize: scale.category,
             fontWeight: 700,
             color: colors.black,
             textTransform: "uppercase",
-            letterSpacing: 1.5,
-            marginBottom: dishSpacing + 2,
-            paddingBottom: 4,
-            borderBottomWidth: 2,
+            letterSpacing: 1,
+            marginBottom: scale.categoryTitleMargin,
+            paddingBottom: scale.categoryTitlePadding,
+            borderBottomWidth: 1.5,
             borderBottomColor: colors.black,
         },
         dish: {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "flex-start",
-            paddingVertical: dishSpacing,
-            borderBottomWidth: 1,
+            paddingVertical: scale.dishPadding,
+            borderBottomWidth: 0.5,
             borderBottomColor: colors.dotGray,
             borderBottomStyle: "dotted",
         },
@@ -179,37 +316,37 @@ const getStyles = (totalItems: number) => {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "flex-start",
-            paddingVertical: dishSpacing,
+            paddingVertical: scale.dishPadding,
             borderBottomWidth: 0,
         },
         dishInfo: {
             flex: 1,
             flexDirection: "row",
-            paddingRight: 15,
+            paddingRight: 10,
         },
         dishWeight: {
-            fontSize: weightSize,
+            fontSize: scale.weight,
             fontWeight: 700,
             color: colors.darkGray,
-            marginRight: 8,
-            minWidth: 35,
+            marginRight: 6,
+            minWidth: 32,
         },
         dishName: {
-            fontSize: dishSize,
+            fontSize: scale.dish,
             color: colors.black,
             flex: 1,
-            lineHeight: 1.3,
+            lineHeight: scale.lineHeight,
         },
         dishPrice: {
-            fontSize: priceSize,
+            fontSize: scale.price,
             fontWeight: 700,
             color: colors.black,
-            minWidth: 55,
+            minWidth: 50,
             textAlign: "right",
         },
         footer: {
             marginTop: "auto",
-            paddingTop: 8,
+            paddingTop: scale.footerPadding,
             borderTopWidth: 1,
             borderTopColor: colors.black,
             flexDirection: "row",
@@ -217,12 +354,12 @@ const getStyles = (totalItems: number) => {
             alignItems: "center",
         },
         footerText: {
-            fontSize: 10,
+            fontSize: scale.footerFontSize,
             fontWeight: 700,
             color: colors.darkGray,
         },
         footerContact: {
-            fontSize: 9,
+            fontSize: scale.footerFontSize - 1,
             color: colors.mediumGray,
         },
     });
@@ -235,14 +372,15 @@ export function DailyMenuPDF({
     totalItems,
     logoUrl,
 }: DailyMenuPDFProps) {
-    const styles = getStyles(totalItems);
+    const categoryCount = dishesByType.length;
+    const styles = getStyles(totalItems, categoryCount);
 
     return (
         <Document>
             <Page size="A4" style={styles.page}>
-                {/* Header - kompaktní, logo vlevo, text vpravo */}
+                {/* Header */}
                 <View style={styles.header}>
-                    <Image src={logoUrl} style={styles.logo} />
+                    <Image style={styles.logo} src={logoUrl} />
                     <View style={styles.headerTextContainer}>
                         <Text style={styles.title}>{title}</Text>
                         <Text style={styles.date}>{dateText}</Text>
@@ -273,7 +411,7 @@ export function DailyMenuPDF({
                     </View>
                 ))}
 
-                {/* Footer - kompaktní na jeden řádek */}
+                {/* Footer */}
                 <View style={styles.footer}>
                     <Text style={styles.footerText}>Přejeme dobrou chuť!</Text>
                     <Text style={styles.footerContact}>

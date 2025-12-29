@@ -1,8 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Send } from "lucide-react";
 import { sendContactEmail } from "@/app/actions/send-email";
+
+const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!;
+
+declare global {
+    interface Window {
+        grecaptcha: {
+            ready: (callback: () => void) => void;
+            execute: (siteKey: string, options: { action: string }) => Promise<string>;
+        };
+    }
+}
 
 export default function ContactForm() {
     const [formData, setFormData] = useState({
@@ -16,13 +27,57 @@ export default function ContactForm() {
     const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
     const [errorMessage, setErrorMessage] = useState<string>("");
 
+    // Načti reCAPTCHA script
+    useEffect(() => {
+        if (typeof window !== "undefined" && !window.grecaptcha) {
+            const script = document.createElement("script");
+            script.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`;
+            script.async = true;
+            document.head.appendChild(script);
+        }
+    }, []);
+
+    // Funkce pro získání reCAPTCHA tokenu
+    const executeRecaptcha = useCallback(async (): Promise<string | null> => {
+        if (typeof window === "undefined" || !window.grecaptcha) {
+            console.error("reCAPTCHA not loaded");
+            return null;
+        }
+
+        return new Promise((resolve) => {
+            window.grecaptcha.ready(async () => {
+                try {
+                    const token = await window.grecaptcha.execute(RECAPTCHA_SITE_KEY, {
+                        action: "contact_form",
+                    });
+                    resolve(token);
+                } catch (error) {
+                    console.error("reCAPTCHA error:", error);
+                    resolve(null);
+                }
+            });
+        });
+    }, []);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setStatus("sending");
         setErrorMessage("");
 
         try {
-            const result = await sendContactEmail(formData);
+            // Získej reCAPTCHA token
+            const recaptchaToken = await executeRecaptcha();
+
+            if (!recaptchaToken) {
+                setStatus("error");
+                setErrorMessage("Ověření proti spamu selhalo. Zkuste obnovit stránku.");
+                return;
+            }
+
+            const result = await sendContactEmail({
+                ...formData,
+                recaptchaToken,
+            });
 
             if (result.success) {
                 setStatus("success");
@@ -184,6 +239,29 @@ export default function ContactForm() {
                     )}
                 </button>
             </div>
+
+            {/* reCAPTCHA info */}
+            <p className="text-xs text-gray-500 text-center">
+                Tento web je chráněn pomocí reCAPTCHA od Google.{" "}
+                <a
+                    href="https://policies.google.com/privacy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-gray-700"
+                >
+                    Zásady ochrany osobních údajů
+                </a>{" "}
+                a{" "}
+                <a
+                    href="https://policies.google.com/terms"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-gray-700"
+                >
+                    Smluvní podmínky
+                </a>
+                .
+            </p>
 
             {/* Success Message */}
             {status === "success" && (

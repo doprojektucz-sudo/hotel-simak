@@ -2,6 +2,7 @@
 
 import { Resend } from "resend";
 import { HotelNotificationEmail, CustomerConfirmationEmail } from "./email-templates";
+import { verifyRecaptcha } from "./verifyRecaptcha";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -11,6 +12,7 @@ export interface ContactFormData {
     phone?: string;
     subject: string;
     message: string;
+    recaptchaToken: string;
 }
 
 const subjectMap: Record<string, string> = {
@@ -23,12 +25,32 @@ const subjectMap: Record<string, string> = {
 
 export async function sendContactEmail(formData: ContactFormData) {
     try {
+        // 1. Ověř reCAPTCHA
+        const recaptchaResult = await verifyRecaptcha(
+            formData.recaptchaToken,
+            "contact_form",
+            0.5
+        );
+
+        if (!recaptchaResult.success) {
+            console.warn(
+                "reCAPTCHA failed:",
+                recaptchaResult.error,
+                "Score:",
+                recaptchaResult.score
+            );
+            return {
+                success: false,
+                error: "Ověření proti spamu selhalo. Zkuste to prosím znovu.",
+            };
+        }
+
         const subjectText = subjectMap[formData.subject] || formData.subject;
 
         // Email pro hotel - replyTo nastaveno na email klienta pro snadnou odpověď
         const hotelEmail = await resend.emails.send({
-            from: "Hotel U Šimáka - Kontaktní formulář <noreply@usimaka.cz>", // Nahraďte vaší doménou
-            replyTo: formData.email, // Odpověď půjde přímo klientovi
+            from: "Hotel U Šimáka - Kontaktní formulář <noreply@usimaka.cz>",
+            replyTo: formData.email,
             to: "hotresrad@seznam.cz",
             subject: `Nová zpráva z webu: ${subjectText}`,
             html: HotelNotificationEmail({
@@ -40,9 +62,9 @@ export async function sendContactEmail(formData: ContactFormData) {
             }),
         });
 
-        // Potvrzovací email pro odesílatele - používá profesionální šablonu
+        // Potvrzovací email pro odesílatele
         const confirmationEmail = await resend.emails.send({
-            from: "Hotel U Šimáka <noreply@usimaka.cz>", // Nahraďte vaší doménou
+            from: "Hotel U Šimáka <noreply@usimaka.cz>",
             to: formData.email,
             subject: "Potvrzení přijetí Vaší zprávy - Hotel U Šimáka",
             html: CustomerConfirmationEmail({
