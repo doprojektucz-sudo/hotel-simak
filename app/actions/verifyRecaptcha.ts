@@ -1,44 +1,34 @@
-const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY!;
+const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY;
 const RECAPTCHA_VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify";
 
 interface RecaptchaVerifyResponse {
     success: boolean;
-    score: number;
-    action: string;
-    challenge_ts: string;
-    hostname: string;
+    challenge_ts?: string;
+    hostname?: string;
     "error-codes"?: string[];
 }
 
 interface VerifyResult {
     success: boolean;
-    score: number;
     error?: string;
 }
 
 /**
- * Ověří reCAPTCHA token na serveru
- * @param token - Token z klienta
- * @param expectedAction - Očekávaná akce (např. "contact_form")
- * @param minScore - Minimální skóre (0.0 - 1.0), default 0.5
+ * Ověří reCAPTCHA v2 token na serveru
  */
-export async function verifyRecaptcha(
-    token: string,
-    expectedAction: string,
-    minScore: number = 0.5
-): Promise<VerifyResult> {
+export async function verifyRecaptcha(token: string | undefined | null): Promise<VerifyResult> {
     if (!token) {
-        return { success: false, score: 0, error: "Token chybí" };
+        console.error("[reCAPTCHA] ❌ Token chybí");
+        return { success: false, error: "Potvrďte, že nejste robot" };
     }
 
     if (!RECAPTCHA_SECRET_KEY) {
-        console.error("RECAPTCHA_SECRET_KEY není nastaven");
-        // V development módu můžeme povolit bez ověření
+        console.error("[reCAPTCHA] ❌ RECAPTCHA_SECRET_KEY není nastaven");
         if (process.env.NODE_ENV === "development") {
-            console.warn("reCAPTCHA přeskočena v development módu");
-            return { success: true, score: 1 };
+            console.warn("[reCAPTCHA] ⚠️ Přeskakuji v development módu");
+            return { success: true };
         }
-        return { success: false, score: 0, error: "Chyba konfigurace serveru" };
+        return { success: false, error: "Chyba konfigurace serveru" };
     }
 
     try {
@@ -55,42 +45,28 @@ export async function verifyRecaptcha(
 
         const data: RecaptchaVerifyResponse = await response.json();
 
+        console.log("[reCAPTCHA] Response:", {
+            success: data.success,
+            hostname: data.hostname,
+            errors: data["error-codes"],
+        });
+
         if (!data.success) {
-            return {
-                success: false,
-                score: 0,
-                error: `Ověření selhalo: ${data["error-codes"]?.join(", ") || "neznámá chyba"}`,
-            };
+            const errorCodes = data["error-codes"] || [];
+
+            // Timeout nebo již použitý token
+            if (errorCodes.includes("timeout-or-duplicate")) {
+                return { success: false, error: "Ověření vypršelo, zkuste to znovu" };
+            }
+
+            console.error("[reCAPTCHA] ❌ Ověření selhalo:", errorCodes);
+            return { success: false, error: "Ověření selhalo" };
         }
 
-        // Kontrola akce
-        if (data.action !== expectedAction) {
-            return {
-                success: false,
-                score: data.score,
-                error: `Neočekávaná akce: ${data.action}`,
-            };
-        }
-
-        // Kontrola skóre
-        if (data.score < minScore) {
-            return {
-                success: false,
-                score: data.score,
-                error: `Nízké skóre: ${data.score}`,
-            };
-        }
-
-        return {
-            success: true,
-            score: data.score,
-        };
+        console.log("[reCAPTCHA] ✅ Úspěch");
+        return { success: true };
     } catch (error) {
-        console.error("reCAPTCHA verify error:", error);
-        return {
-            success: false,
-            score: 0,
-            error: "Chyba při ověřování",
-        };
+        console.error("[reCAPTCHA] ❌ Chyba:", error);
+        return { success: false, error: "Chyba při ověřování" };
     }
 }

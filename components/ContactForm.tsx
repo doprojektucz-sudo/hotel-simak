@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Send } from "lucide-react";
 import { sendContactEmail } from "@/app/actions/send-email";
 
@@ -9,9 +9,19 @@ const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!;
 declare global {
     interface Window {
         grecaptcha: {
-            ready: (callback: () => void) => void;
-            execute: (siteKey: string, options: { action: string }) => Promise<string>;
+            render: (
+                container: string | HTMLElement,
+                parameters: {
+                    sitekey: string;
+                    callback: (token: string) => void;
+                    "expired-callback": () => void;
+                    "error-callback": () => void;
+                }
+            ) => number;
+            reset: (widgetId?: number) => void;
+            getResponse: (widgetId?: number) => string;
         };
+        onRecaptchaLoad: () => void;
     }
 }
 
@@ -24,56 +34,81 @@ export default function ContactForm() {
         message: "",
     });
 
+    const [recaptchaToken, setRecaptchaToken] = useState<string>("");
     const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
     const [errorMessage, setErrorMessage] = useState<string>("");
+    const recaptchaRef = useRef<HTMLDivElement>(null);
+    const widgetIdRef = useRef<number | null>(null);
+    const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
 
-    // Načti reCAPTCHA script
+    // Načti reCAPTCHA v2 script
     useEffect(() => {
-        if (typeof window !== "undefined" && !window.grecaptcha) {
+        if (typeof window === "undefined") return;
+
+        // Callback když se reCAPTCHA načte
+        window.onRecaptchaLoad = () => {
+            setRecaptchaLoaded(true);
+        };
+
+        // Přidej script pokud ještě není
+        if (!document.querySelector('script[src*="recaptcha/api.js"]')) {
             const script = document.createElement("script");
-            script.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`;
+            script.src = `https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit&hl=cs`;
             script.async = true;
+            script.defer = true;
             document.head.appendChild(script);
+        } else if (window.grecaptcha) {
+            setRecaptchaLoaded(true);
         }
+
+        return () => {
+            window.onRecaptchaLoad = () => { };
+        };
     }, []);
 
-    // Funkce pro získání reCAPTCHA tokenu
-    const executeRecaptcha = useCallback(async (): Promise<string | null> => {
-        if (typeof window === "undefined" || !window.grecaptcha) {
-            console.error("reCAPTCHA not loaded");
-            return null;
-        }
+    // Renderuj reCAPTCHA widget když je script načtený
+    useEffect(() => {
+        if (!recaptchaLoaded || !recaptchaRef.current || widgetIdRef.current !== null) return;
 
-        return new Promise((resolve) => {
-            window.grecaptcha.ready(async () => {
-                try {
-                    const token = await window.grecaptcha.execute(RECAPTCHA_SITE_KEY, {
-                        action: "contact_form",
-                    });
-                    resolve(token);
-                } catch (error) {
-                    console.error("reCAPTCHA error:", error);
-                    resolve(null);
-                }
+        try {
+            widgetIdRef.current = window.grecaptcha.render(recaptchaRef.current, {
+                sitekey: RECAPTCHA_SITE_KEY,
+                callback: (token: string) => {
+                    setRecaptchaToken(token);
+                },
+                "expired-callback": () => {
+                    setRecaptchaToken("");
+                },
+                "error-callback": () => {
+                    setRecaptchaToken("");
+                    console.error("reCAPTCHA error");
+                },
             });
-        });
-    }, []);
+        } catch (error) {
+            console.error("Failed to render reCAPTCHA:", error);
+        }
+    }, [recaptchaLoaded]);
+
+    const resetRecaptcha = () => {
+        if (widgetIdRef.current !== null && window.grecaptcha) {
+            window.grecaptcha.reset(widgetIdRef.current);
+            setRecaptchaToken("");
+        }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setStatus("sending");
         setErrorMessage("");
 
+        // Kontrola reCAPTCHA
+        if (!recaptchaToken) {
+            setStatus("error");
+            setErrorMessage("Prosím potvrďte, že nejste robot.");
+            return;
+        }
+
         try {
-            // Získej reCAPTCHA token
-            const recaptchaToken = await executeRecaptcha();
-
-            if (!recaptchaToken) {
-                setStatus("error");
-                setErrorMessage("Ověření proti spamu selhalo. Zkuste obnovit stránku.");
-                return;
-            }
-
             const result = await sendContactEmail({
                 ...formData,
                 recaptchaToken,
@@ -88,19 +123,21 @@ export default function ContactForm() {
                     subject: "",
                     message: "",
                 });
+                resetRecaptcha();
 
-                // Reset success message po 5 sekundách
                 setTimeout(() => {
                     setStatus("idle");
                 }, 5000);
             } else {
                 setStatus("error");
                 setErrorMessage(result.error || "Nastala neočekávaná chyba");
+                resetRecaptcha();
             }
         } catch (error) {
             console.error("Form submission error:", error);
             setStatus("error");
             setErrorMessage("Nepodařilo se odeslat zprávu. Zkuste to prosím později.");
+            resetRecaptcha();
         }
     };
 
@@ -219,12 +256,17 @@ export default function ContactForm() {
                 />
             </div>
 
+            {/* reCAPTCHA v2 widget */}
+            <div className="flex justify-center">
+                <div ref={recaptchaRef}></div>
+            </div>
+
             {/* Submit Button */}
             <div>
                 <button
                     type="submit"
-                    disabled={status === "sending"}
-                    className="w-full bg-primary-600 hover:bg-primary-700 disabled:bg-gray-400 text-white font-semibold py-4 px-8 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+                    disabled={status === "sending" || !recaptchaToken}
+                    className="w-full bg-primary-600 hover:bg-primary-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-4 px-8 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
                 >
                     {status === "sending" ? (
                         <>
@@ -239,29 +281,6 @@ export default function ContactForm() {
                     )}
                 </button>
             </div>
-
-            {/* reCAPTCHA info */}
-            <p className="text-xs text-gray-500 text-center">
-                Tento web je chráněn pomocí reCAPTCHA od Google.{" "}
-                <a
-                    href="https://policies.google.com/privacy"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline hover:text-gray-700"
-                >
-                    Zásady ochrany osobních údajů
-                </a>{" "}
-                a{" "}
-                <a
-                    href="https://policies.google.com/terms"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline hover:text-gray-700"
-                >
-                    Smluvní podmínky
-                </a>
-                .
-            </p>
 
             {/* Success Message */}
             {status === "success" && (
