@@ -386,7 +386,7 @@ export async function getCurrentDailyMenu() {
 function getBaseSortOrder(type: string): number {
     const baseOrders: Record<string, number> = {
         SOUP: 100,
-        MEAL: 150,
+        CHEF: 150,
         GAME: 200,
         PORK: 300,
         BEEF: 400,

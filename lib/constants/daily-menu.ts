@@ -1,6 +1,6 @@
 export const dishTypes = [
     { value: "SOUP", label: "Polévky" },
-    { value: "MEAL", label: "Hotová jídla" },
+    { value: "CHEF", label: "Šéfkuchař doporučuje" },
     { value: "GAME", label: "Zvěřina" },
     { value: "PORK", label: "Vepřové" },
     { value: "BEEF", label: "Hovězí" },
