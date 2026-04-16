@@ -112,12 +112,28 @@ export default function Footer() {
                 </div >
 
                 {/* Bottom bar */}
-                < div className="border-t border-gray-800 mt-8 pt-8 text-sm text-center" >
-                    <p>
-                        &copy; {new Date().getFullYear()} Hotel a Restaurace U Šimáka. Všechna
-                        práva vyhrazena.
-                    </p>
-                </div >
+                {/* Bottom bar */}
+                <div className="border-t border-gray-800 mt-8 pt-8 text-sm">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <p className="text-center md:text-left">
+                            &copy; {new Date().getFullYear()} Hotel a Restaurace U Šimáka. Všechna
+                            práva vyhrazena.
+                        </p>
+                        <a
+                            href="https://www.firmy.cz/detail/277496-hotel-u-simaka-radostin.html"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                                width={92}
+                                height={80}
+                                src="https://www.firmy.cz/top-firma/2025.svg"
+                                alt="TOP firma 2025"
+                            />
+                        </a>
+                    </div>
+                </div>
             </div >
         </footer >
     );

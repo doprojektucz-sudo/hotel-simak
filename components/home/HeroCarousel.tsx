@@ -154,7 +154,7 @@ export default function HeroCarousel() {
     };
 
     return (
-        <section 
+        <section
             className="relative h-screen overflow-hidden"
             ref={containerRef}
             onTouchStart={handleTouchStart}
@@ -166,9 +166,8 @@ export default function HeroCarousel() {
                 {slides.map((slide, index) => (
                     <div
                         key={slide.id}
-                        className={`absolute inset-0 transition-opacity duration-[2000ms] ease-in-out ${
-                            index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
-                        }`}
+                        className={`absolute inset-0 transition-opacity duration-[2000ms] ease-in-out ${index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
+                            }`}
                     >
                         <div className="relative w-full h-full overflow-hidden">
                             <Image
@@ -236,6 +235,23 @@ export default function HeroCarousel() {
                     </div>
                 </div>
             </div>
+            {/* TOP firma 2025 badge - Bottom Right */}
+            <div className="absolute bottom-10 right-6 z-40">
+                <a
+                    href="https://www.firmy.cz/detail/277496-hotel-u-simaka-radostin.html"
+                    target="_blank"
+                    rel="noopener"
+                >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                        width={138}
+                        height={120}
+                        src="https://www.firmy.cz/top-firma/2025.svg"
+                        alt="TOP firma 2025"
+                        className="drop-shadow-lg h-16 w-16 md:h-32 md:w-32"
+                    />
+                </a>
+            </div>
 
             {/* Slide Indicators - Bottom Center */}
             <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-40 flex gap-4">
@@ -248,11 +264,10 @@ export default function HeroCarousel() {
                     >
                         {/* Rectangle indicator */}
                         <div
-                            className={`relative overflow-hidden transition-all hover:cursor-pointer duration-300 ${
-                                index === currentSlide
+                            className={`relative overflow-hidden transition-all hover:cursor-pointer duration-300 ${index === currentSlide
                                     ? "w-16 h-2 bg-white"
                                     : "w-12 h-2 bg-white/40 group-hover:bg-white/60"
-                            }`}
+                                }`}
                         >
                             {/* Progress bar */}
                             {index === currentSlide && (
