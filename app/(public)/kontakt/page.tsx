@@ -6,6 +6,24 @@ import LocationMap from "@/components/LocationMap";
 import { OpeningHoursDisplay } from "@/components/OpeningHoursDisplay";
 import LocationSection from "@/components/home/LocationSection";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Kontakt",
+    description:
+        "Kontaktujte Hotel a Restauraci U Šimáka – Radostín 95, 591 01. Tel: +420 728 958 114. Rezervace ubytování, stolu nebo akce. Najděte nás na mapě.",
+    alternates: {
+        canonical: "https://www.usimaka.cz/kontakt",
+    },
+    openGraph: {
+        title: "Kontakt – Hotel a Restaurace U Šimáka | Radostín",
+        description:
+            "Radostín 95, tel. +420 728 958 114. Rezervace ubytování, restaurace a akcí. Najděte nás v srdci Žďárských vrchů.",
+        url: "https://www.usimaka.cz/kontakt",
+        type: "website",
+    },
+};
+
 export default function KontaktPage() {
     return (
         <>

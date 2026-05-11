@@ -6,6 +6,24 @@ import VerticalMenu from "@/components/menu/VerticalMenu";
 import { prisma } from "@/lib/prisma";
 import { Utensils, Clock, Users } from "lucide-react";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Restaurace",
+    description:
+        "Tradiční česká kuchyně v restauraci U Šimáka v Radostíně. Pilsner Urquell, čepovaná Kofola a poctivá domácí jídla. Otevřeno denně 11–22 hod. Rezervace stolů.",
+    alternates: {
+        canonical: "https://www.usimaka.cz/restaurace",
+    },
+    openGraph: {
+        title: "Restaurace U Šimáka – Tradiční česká kuchyně | Radostín",
+        description:
+            "Tradiční česká kuchyně, Pilsner Urquell a čepovaná Kofola. Otevřeno denně 11–22 hod. v Radostíně u Žďáru nad Sázavou.",
+        url: "https://www.usimaka.cz/restaurace",
+        type: "website",
+    },
+};
+
 export default async function RestauracePage() {
     const [menuItems, menuCategories, drinks, drinkCategories] = await Promise.all([
         prisma.menuItem.findMany({

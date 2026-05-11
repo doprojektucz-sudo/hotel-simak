@@ -1,12 +1,20 @@
-import type { Metadata } from "next";
 import { Cookie, Shield, BarChart3, Target } from "lucide-react";
 import Hero from "@/components/Hero";
 import ResetConsentButton from "@/components/ResetConsentButton";
 
+import type { Metadata } from "next";
+
 export const metadata: Metadata = {
-    title: "Zásady zpracování cookies | Hotel U Šimáka",
+    title: "Zásady Cookies",
     description:
-        "Informace o tom, jaké cookies používáme na webu Hotelu a Restaurace U Šimáka v Radostíně.",
+        "Informace o používání cookies na webu hotelu U Šimáka v Radostíně.",
+    alternates: {
+        canonical: "https://www.usimaka.cz/zasady-cookies",
+    },
+    robots: {
+        index: false,
+        follow: false,
+    },
 };
 
 const cookieTypes = [

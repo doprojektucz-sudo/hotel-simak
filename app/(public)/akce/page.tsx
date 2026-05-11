@@ -24,6 +24,24 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Akce a Události",
+    description:
+        "Pořádáme svatby, firemní večírky, promoce a rodinné oslavy v restauraci U Šimáka v Radostíně. Salonek, venkovní terasa a profesionální obsluha v srdci Žďárských vrchů.",
+    alternates: {
+        canonical: "https://www.usimaka.cz/akce",
+    },
+    openGraph: {
+        title: "Akce a Události – Svatby, Firemní večírky | U Šimáka Radostín",
+        description:
+            "Svatby, firemní večírky, promoce a oslavy v restauraci U Šimáka. Salonek a terasa pro Vaše nezapomenutelné události.",
+        url: "https://www.usimaka.cz/akce",
+        type: "website",
+    },
+};
+
 const iconMap: Record<string, any> = {
     heart: Heart,
     briefcase: Briefcase,
@@ -61,7 +79,7 @@ const spaces = [
         capacity: "24 hostů",
         description: "Soukromý prostor pro intimnější akce a firemní meetingy",
         icon: Users,
-        features: ["Soukromí", "Audio zářítení", ],
+        features: ["Soukromí", "Audio zářítení",],
     },
     {
         name: "Venkovní terasa",

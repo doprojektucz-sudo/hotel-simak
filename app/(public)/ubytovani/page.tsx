@@ -19,6 +19,24 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Ubytování",
+    description:
+        "Ubytování v hotelu U Šimáka v Radostíně – 21 lůžek ve 2–4lůžkových pokojích. Vlastní koupelna, Smart-TV, Wi-Fi zdarma. Ideální pro rodiny, turisty i firemní klientelu.",
+    alternates: {
+        canonical: "https://www.usimaka.cz/ubytovani",
+    },
+    openGraph: {
+        title: "Ubytování U Šimáka – Hotel Radostín, Žďárské vrchy",
+        description:
+            "21 lůžek ve 2–4lůžkových pokojích s vlastní koupelnou, Smart-TV a Wi-Fi. Rodinný hotel v Radostíně u Velké Dářko.",
+        url: "https://www.usimaka.cz/ubytovani",
+        type: "website",
+    },
+};
+
 export default function UbytovaniPage() {
     const deluxeRooms = rooms.filter((room) => room.type === "deluxe");
     const classicRooms = rooms.filter((room) => room.type === "classic");

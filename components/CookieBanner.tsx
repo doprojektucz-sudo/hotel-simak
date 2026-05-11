@@ -17,6 +17,23 @@ declare global {
     }
 }
 
+// Voláno co nejdříve — ideálně také v _document.tsx / layout.tsx
+// před načtením gtag skriptu jako gtag('consent','default',{...})
+function initPreConsent() {
+    if (typeof window.gtag !== "function") return;
+    window.gtag("consent", "default", {
+        analytics_storage: "denied",   // cookies se NEZAPISUJÍ
+        ad_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied",
+        // GA4 v tomto módu posílá „cookieless pings" — bez client_id,
+        // bez cross-session trackingu, pouze agregovaná data.
+        // To GDPR povoluje jako oprávněný zájem (recital 47).
+    });
+    // anonymize_ip je v GA4 vždy zapnuté, explicitně pro jistotu:
+    window.gtag("set", { anonymize_ip: true });
+}
+
 export default function CookieBanner() {
     const [visible, setVisible] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
@@ -24,25 +41,27 @@ export default function CookieBanner() {
     const [marketing, setMarketing] = useState(false);
 
     useEffect(() => {
+        // 1. Nastav pre-consent hned
+        initPreConsent();
+
         const stored = localStorage.getItem(COOKIE_KEY);
         if (!stored) {
-            // krátké zpoždění, ať banner nevyletí dřív než stránka
             const timer = setTimeout(() => setVisible(true), 800);
             return () => clearTimeout(timer);
         } else {
-            // re-aplikuj uložený souhlas pro gtag (uživatel se vrátil na web)
             try {
                 const consent: ConsentState = JSON.parse(stored);
-                applyConsent(consent.analytics, consent.marketing);
+                // Uživatel už rozhodl dříve — aplikuj jeho volbu
+                applyFinalConsent(consent.analytics, consent.marketing);
             } catch {
                 setVisible(true);
             }
         }
     }, []);
 
-    const applyConsent = (analyticsOk: boolean, marketingOk: boolean) => {
+    // Voláno až PO rozhodnutí uživatele
+    const applyFinalConsent = (analyticsOk: boolean, marketingOk: boolean) => {
         if (typeof window.gtag !== "function") return;
-
         window.gtag("consent", "update", {
             analytics_storage: analyticsOk ? "granted" : "denied",
             ad_storage: marketingOk ? "granted" : "denied",
@@ -58,7 +77,7 @@ export default function CookieBanner() {
             timestamp: Date.now(),
         };
         localStorage.setItem(COOKIE_KEY, JSON.stringify(consent));
-        applyConsent(analyticsOk, marketingOk);
+        applyFinalConsent(analyticsOk, marketingOk);
         setVisible(false);
     };
 
