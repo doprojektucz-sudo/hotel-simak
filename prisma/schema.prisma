@@ -69,19 +69,16 @@ model DrinkCategory {
   updatedAt DateTime @updatedAt
 }
 
-// ============ DENNÍ MENU ============
-
 model DailyMenuDish {
-  id        String   @id @default(cuid())
+  id        String            @id @default(cuid())
   name      String
   weight    String?
   price     Int
-  type      String   @default("MAIN")
-  isActive  Boolean  @default(true)
-  sortOrder Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  type      String            @default("MAIN")
+  isActive  Boolean           @default(true)
+  sortOrder Int               @default(0)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
   menuItems DailyMenuToItem[]
 
   @@index([type])
@@ -89,28 +86,26 @@ model DailyMenuDish {
 }
 
 model DailyMenu {
-  id        String   @id @default(cuid())
+  id        String            @id @default(cuid())
   title     String?
   validFrom DateTime
   validTo   DateTime
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  items DailyMenuToItem[]
+  isActive  Boolean           @default(true)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  items     DailyMenuToItem[]
 
   @@index([validFrom, validTo])
   @@index([isActive])
 }
 
 model DailyMenuToItem {
-  id        String @id @default(cuid())
+  id        String        @id @default(cuid())
   menuId    String
   dishId    String
-  sortOrder Int    @default(0)
-
-  menu DailyMenu     @relation(fields: [menuId], references: [id], onDelete: Cascade)
-  dish DailyMenuDish @relation(fields: [dishId], references: [id], onDelete: Cascade)
+  sortOrder Int           @default(0)
+  dish      DailyMenuDish @relation(fields: [dishId], references: [id], onDelete: Cascade)
+  menu      DailyMenu     @relation(fields: [menuId], references: [id], onDelete: Cascade)
 
   @@unique([menuId, dishId])
   @@index([menuId])
@@ -118,14 +113,126 @@ model DailyMenuToItem {
 
 model OpeningHours {
   id        String   @id @default(cuid())
-  dayOfWeek Int      @unique // 0 = Pondělí, 1 = Úterý, ..., 6 = Neděle
-  dayName   String // "Pondělí", "Úterý", ...
+  dayOfWeek Int      @unique
+  dayName   String
   isOpen    Boolean  @default(true)
-  openTime  String? // "11:00"
-  closeTime String? // "22:00"
-  note      String? // Volitelná poznámka, např. "Pouze pro ubytované"
+  openTime  String?
+  closeTime String?
+  note      String?
   sortOrder Int      @default(0)
   updatedAt DateTime @updatedAt
 
   @@index([dayOfWeek])
+}
+
+// ============ BROŽURY ============
+
+model Brozura {
+  id        String           @id @default(cuid())
+  nazev     String
+  sablona   SablonaTyp       @default(AKCE)
+  kategorie KategorieBrozury @default(OSTATNI)
+  stav      StavBrozury      @default(ROZPRACOVANA)
+
+  // Obsah
+  nadpis    String
+  podnadpis String?
+  popis     String?
+  datum     String?
+  cas       String?
+  misto     String?
+  cena      String?
+  kontakt   String?
+  web       String?
+  fotoUrl   String?
+  logoUrl   String?
+  mapUrl    String?
+
+  // Vzhled
+  format       FormatTisku    @default(A4)
+  orientace    OrientaceTisku @default(PORTRAIT)
+  layout       LayoutTyp      @default(KLASICKY)
+  tema         TemaTyp        @default(TMAVE)
+  barvaPozadi  String         @default("#1c1008")
+  barvaText    String         @default("#fdf6e3")
+  barvaAkcentu String         @default("#c9a547")
+
+  // Brand prvky
+  zobrazitLogo    Boolean @default(true)
+  zobrazitPaticku Boolean @default(true)
+
+  tagy      String[] @default([])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([kategorie])
+  @@index([stav])
+  @@index([sablona])
+}
+
+enum SablonaTyp {
+  AKCE
+  ZVERINOVE_HODY
+  UBYTOVANI
+  RESTAURACE
+  VSEOBECNE
+}
+
+enum KategorieBrozury {
+  AKCE
+  MENU
+  UBYTOVANI
+  SPORTOVNI
+  OSTATNI
+}
+
+enum StavBrozury {
+  ROZPRACOVANA
+  HOTOVA
+  ARCHIV
+}
+
+enum FormatTisku {
+  A3
+  A4
+  A5
+}
+
+enum OrientaceTisku {
+  PORTRAIT
+  LANDSCAPE
+}
+
+enum LayoutTyp {
+  KLASICKY
+  MAGAZIN
+  MINIMA
+  SIROKY
+  VINTAGE
+  SVETLY_CARD
+  SPLIT
+  MIKROMINIMA
+}
+
+enum TemaTyp {
+  TMAVE
+  SVETLE
+  MODRE
+  ZELENE
+  BILA
+  VLASTNI
+}
+
+model GalerieObrazek {
+  id          String   @id @default(cuid())
+  nazev       String                        // původní název souboru
+  popis       String?                       // volitelný popis / alt text
+  url         String                        // cesta: /uploads/brozury/xxx.jpg
+  velikost    Int                           // bytes
+  typ         String                        // image/jpeg | image/png | image/webp
+  tagy        String[] @default([])         // pro filtrování: "jidlo", "budova", atd.
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([createdAt])
 }
