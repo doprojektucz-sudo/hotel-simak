@@ -18,7 +18,6 @@ export default async function AdminLayout({
   if (!session?.isAdmin) {
     redirect("/admin/login");
   }
-
   return (
     <div className="min-h-screen bg-gray-100">
       <AdminSidebar />
