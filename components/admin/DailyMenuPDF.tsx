@@ -383,7 +383,7 @@ export function DailyMenuPDF({
                     <Image style={styles.logo} src={logoUrl} />
                     <View style={styles.headerTextContainer}>
                         <Text style={styles.title}>{title}</Text>
-                        <Text style={styles.date}>{dateText}</Text>
+                        {/* <Text style={styles.date}>{dateText}</Text> */}
                     </View>
                 </View>
 

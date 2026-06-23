@@ -4,51 +4,51 @@ import { dishTypes } from "@/lib/constants/daily-menu";
 import { PrintButton } from "./PrintButton";
 
 interface PrintMenuPageProps {
-    params: Promise<{ id: string }>;
+  params: Promise<{ id: string }>;
 }
 
 export default async function PrintMenuPage({ params }: PrintMenuPageProps) {
-    const { id } = await params;
+  const { id } = await params;
 
-    const menu = await prisma.dailyMenu.findUnique({
-        where: { id },
-        include: {
-            items: {
-                include: { dish: true },
-                orderBy: { sortOrder: "asc" },
-            },
-        },
+  const menu = await prisma.dailyMenu.findUnique({
+    where: { id },
+    include: {
+      items: {
+        include: { dish: true },
+        orderBy: { sortOrder: "asc" },
+      },
+    },
+  });
+
+  if (!menu) {
+    notFound();
+  }
+
+  const formatDate = (date: Date) => {
+    return new Date(date).toLocaleDateString("cs-CZ", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
     });
+  };
 
-    if (!menu) {
-        notFound();
-    }
+  const getDishesByType = () => {
+    return dishTypes
+      .map((type) => ({
+        ...type,
+        dishes: menu.items
+          .filter((item) => item.dish.type === type.value)
+          .map((item) => item.dish),
+      }))
+      .filter((type) => type.dishes.length > 0);
+  };
 
-    const formatDate = (date: Date) => {
-        return new Date(date).toLocaleDateString("cs-CZ", {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-        });
-    };
+  const isSingleDay =
+    menu.validFrom.toDateString() === menu.validTo.toDateString();
 
-    const getDishesByType = () => {
-        return dishTypes
-            .map((type) => ({
-                ...type,
-                dishes: menu.items
-                    .filter((item) => item.dish.type === type.value)
-                    .map((item) => item.dish),
-            }))
-            .filter((type) => type.dishes.length > 0);
-    };
-
-    const isSingleDay =
-        menu.validFrom.toDateString() === menu.validTo.toDateString();
-
-    return (
-        <div className="print-page">
-            <style>{`
+  return (
+    <div className="print-page">
+      <style>{`
         @media print {
           @page {
             size: A4;
@@ -165,44 +165,44 @@ export default async function PrintMenuPage({ params }: PrintMenuPageProps) {
         }
       `}</style>
 
-            <div className="container">
-                <div className="header">
-                    <div className="logo">Restaurace a Hotel U Šimáka</div>
-                    <div className="subtitle">Radostín</div>
-                    <div className="menu-title">{menu.title || "Denní menu"}</div>
-                    <div className="menu-date">
-                        {isSingleDay
-                            ? formatDate(menu.validFrom)
-                            : `${formatDate(menu.validFrom)} – ${formatDate(menu.validTo)}`}
-                    </div>
-                </div>
-
-                {getDishesByType().map((type) => (
-                    <div key={type.value} className="category">
-                        <div className="category-title">{type.label}</div>
-                        {type.dishes.map((dish) => (
-                            <div key={dish.id} className="dish">
-                                <div className="dish-info">
-                                    {dish.weight && (
-                                        <span className="dish-weight">{dish.weight}</span>
-                                    )}
-                                    <span className="dish-name">{dish.name}</span>
-                                </div>
-                                <div className="dish-price">{dish.price},- Kč</div>
-                            </div>
-                        ))}
-                    </div>
-                ))}
-
-                <div className="footer">
-                    <p>Přejeme dobrou chuť!</p>
-                    <p style={{ marginTop: "5px" }}>
-                        Tel: 728 490 498 | usimaka.cz
-                    </p>
-                </div>
-            </div>
-
-            <PrintButton />
+      <div className="container">
+        <div className="header">
+          <div className="logo">Restaurace a Hotel U Šimáka</div>
+          <div className="subtitle">Radostín</div>
+          <div className="menu-title">{menu.title || "Denní menu"}</div>
+          <div className="menu-date">
+            {isSingleDay
+              ? formatDate(menu.validFrom)
+              : `${formatDate(menu.validFrom)} – ${formatDate(menu.validTo)}`}
+          </div>
         </div>
-    );
+
+        {getDishesByType().map((type) => (
+          <div key={type.value} className="category">
+            <div className="category-title">{type.label}</div>
+            {type.dishes.map((dish) => (
+              <div key={dish.id} className="dish">
+                <div className="dish-info">
+                  {dish.weight && (
+                    <span className="dish-weight">{dish.weight}</span>
+                  )}
+                  <span className="dish-name">{dish.name}</span>
+                </div>
+                <div className="dish-price">{dish.price},- Kč</div>
+              </div>
+            ))}
+          </div>
+        ))}
+
+        <div className="footer">
+          <p>Přejeme dobrou chuť!</p>
+          <p style={{ marginTop: "5px" }}>
+            Tel: 728 490 498 | usimaka.cz
+          </p>
+        </div>
+      </div>
+
+      <PrintButton />
+    </div>
+  );
 }
