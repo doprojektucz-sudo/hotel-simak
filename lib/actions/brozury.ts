@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import type {
   SablonaTyp, KategorieBrozury, StavBrozury,
-  FormatTisku, OrientaceTisku, LayoutTyp, TemaTyp,
+  FormatTisku, OrientaceTisku, LayoutTyp, TemaTyp, NarocnostTrasy,
 } from "@prisma/client";
 
 export interface BrozuraFormState {
@@ -17,6 +17,10 @@ function parseData(formData: FormData) {
   const s = (key: string) => (formData.get(key) as string) || null;
   const r = (key: string) => formData.get(key) as string;
   const b = (key: string) => formData.get(key) === "true";
+  const n = (key: string) => {
+    const v = formData.get(key);
+    return v ? Number(v) : null;
+  };
 
   return {
     nazev:           r("nazev"),
@@ -42,10 +46,46 @@ function parseData(formData: FormData) {
     web:             s("web"),
     fotoUrl:         s("fotoUrl"),
     mapUrl:          s("mapUrl"),
+    // Cyklotrasa pole
+    trasaKm:         n("trasaKm") as number | null,
+    trasaNarocnost:  (s("trasaNarocnost") || null) as NarocnostTrasy | null,
+    trasaPrevyseni:  n("trasaPrevyseni") as number | null,
+    trasaPovrch:     s("trasaPovrch"),
+    trasaTyp:        s("trasaTyp"),
+    trasaCislo:      n("trasaCislo") as number | null,
+    gpxUrl:          s("gpxUrl"),
+    mapaTrasyUrl:    s("mapaTrasyUrl"),
+    mapaMiniUrl:     s("mapaMiniUrl"),
     tagy:            s("tagy")
       ? (formData.get("tagy") as string).split(",").map(t => t.trim()).filter(Boolean)
       : [],
   };
+}
+
+async function saveZastavky(brozuraId: string, zastavkyJson: string) {
+  if (!zastavkyJson) return;
+  try {
+    const zastavky = JSON.parse(zastavkyJson);
+    if (!Array.isArray(zastavky)) return;
+
+    // Delete existing and recreate (simplest approach)
+    await prisma.zastavka.deleteMany({ where: { brozuraId } });
+
+    if (zastavky.length > 0) {
+      await prisma.zastavka.createMany({
+        data: zastavky.map((z: any, i: number) => ({
+          brozuraId,
+          poradi:  z.poradi || i + 1,
+          nazev:   z.nazev || "",
+          popis:   z.popis || null,
+          gps:     z.gps || null,
+          fotoUrl: z.fotoUrl || null,
+        })),
+      });
+    }
+  } catch (err) {
+    console.error("saveZastavky error:", err);
+  }
 }
 
 export async function createBrozura(
@@ -54,6 +94,8 @@ export async function createBrozura(
 ): Promise<BrozuraFormState> {
   try {
     const brozura = await prisma.brozura.create({ data: parseData(formData) });
+    const zastavkyJson = formData.get("zastavkyJson") as string;
+    if (zastavkyJson) await saveZastavky(brozura.id, zastavkyJson);
     revalidatePath("/admin/brozury");
     return { success: true, id: brozura.id };
   } catch (err) {
@@ -73,6 +115,8 @@ export async function updateBrozura(
       where: { id },
       data: { ...parseData(formData), ...(stav && { stav }) },
     });
+    const zastavkyJson = formData.get("zastavkyJson") as string;
+    if (zastavkyJson) await saveZastavky(id, zastavkyJson);
     revalidatePath("/admin/brozury");
     revalidatePath(`/admin/brozury/${id}`);
     return { success: true };
@@ -115,5 +159,8 @@ export async function getBrozury(kategorie?: KategorieBrozury, stav?: StavBrozur
 }
 
 export async function getBrozura(id: string) {
-  return prisma.brozura.findUnique({ where: { id } });
+  return prisma.brozura.findUnique({
+    where: { id },
+    include: { zastavky: { orderBy: { poradi: "asc" } } },
+  });
 }

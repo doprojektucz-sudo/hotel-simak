@@ -8,34 +8,35 @@ import fs from "fs";
 import path from "path";
 import sharp from "sharp";
 
+const BASE_URL = "https://usimaka.cz";
+
 async function toBase64(src: string | null | undefined): Promise<string | null> {
   if (!src) return null;
   try {
-    let buf: Buffer;
-
     if (src.startsWith("/")) {
       const filePath = path.join(process.cwd(), "public", src);
       if (!fs.existsSync(filePath)) return null;
-      buf = fs.readFileSync(filePath);
-    } else {
-      const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), 8000);
-      const res = await fetch(src, { signal: ctrl.signal });
-      clearTimeout(timer);
-      if (!res.ok) return null;
-      buf = Buffer.from(await res.arrayBuffer());
+      let buf = fs.readFileSync(filePath);
+      const ext = path.extname(src).slice(1).toLowerCase();
+      if (["webp", "gif", "avif"].includes(ext)) {
+        buf = await sharp(buf).jpeg({ quality: 90 }).toBuffer();
+        return `data:image/jpeg;base64,${buf.toString("base64")}`;
+      }
+      const mime = ext === "png" ? "image/png" : "image/jpeg";
+      return `data:${mime};base64,${buf.toString("base64")}`;
     }
-
-    const ext = src.split(".").pop()?.toLowerCase();
-
-    // Překonvertuj WebP (a případně jiné formáty) na JPEG přes sharp
-    if (ext === "webp" || ext === "gif" || ext === "avif") {
-      const converted = await sharp(buf).jpeg({ quality: 90 }).toBuffer();
-      return `data:image/jpeg;base64,${converted.toString("base64")}`;
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 8000);
+    const res = await fetch(src, { signal: ctrl.signal });
+    clearTimeout(timer);
+    if (!res.ok) return null;
+    let buf = Buffer.from(await res.arrayBuffer());
+    const ct = res.headers.get("content-type") || "";
+    if (ct.includes("webp") || ct.includes("gif")) {
+      buf = await sharp(buf).jpeg({ quality: 90 }).toBuffer();
+      return `data:image/jpeg;base64,${buf.toString("base64")}`;
     }
-
-    // PNG a JPEG nechej jak jsou
-    const mime = ext === "png" ? "image/png" : "image/jpeg";
+    const mime = ct.includes("png") ? "image/png" : "image/jpeg";
     return `data:${mime};base64,${buf.toString("base64")}`;
   } catch { return null; }
 }
@@ -45,14 +46,26 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const b = await prisma.brozura.findUnique({ where: { id } });
+
+  const b = await prisma.brozura.findUnique({
+    where: { id },
+    include: { zastavky: { orderBy: { poradi: "asc" } } },
+  });
   if (!b) return NextResponse.json({ error: "Nenalezena" }, { status: 404 });
 
-  const [qrDataUrl, fotoBase64, logoBase64, mapBase64] = await Promise.all([
-    b.web ? QRCode.toDataURL(b.web, { width: 200, margin: 1, color: { dark: b.barvaAkcentu, light: b.barvaPozadi } }).catch(() => null) : null,
+  // QR zdroj — relativní cesta vždy rozšíříme na usimaka.cz
+  const rawQr = (b as any).gpxUrl || b.web;
+  const qrSource = rawQr?.startsWith("/") ? `${BASE_URL}${rawQr}` : rawQr;
+
+  const [qrDataUrl, fotoBase64, logoBase64, mapBase64, mapaMiniBase64, mapaTrasyBase64] = await Promise.all([
+    qrSource
+      ? QRCode.toDataURL(qrSource, { width: 200, margin: 1, color: { dark: (b as any).barvaAkcentu, light: (b as any).barvaPozadi } }).catch(() => null)
+      : null,
     toBase64(b.fotoUrl),
     b.zobrazitLogo ? toBase64("/images/logo.webp") : null,
     toBase64((b as any).mapUrl),
+    toBase64((b as any).mapaMiniUrl),
+    toBase64((b as any).mapaTrasyUrl),
   ]);
 
   try {
@@ -69,7 +82,18 @@ export async function GET(
         logoBase64,
         mapUrl: mapBase64,
         qrDataUrl,
-      }) as any
+        // Cyklotrasa
+        trasaKm: (b as any).trasaKm,
+        trasaNarocnost: (b as any).trasaNarocnost,
+        trasaPrevyseni: (b as any).trasaPrevyseni,
+        trasaPovrch: (b as any).trasaPovrch,
+        trasaTyp: (b as any).trasaTyp,
+        trasaCislo: (b as any).trasaCislo,
+        gpxUrl: (b as any).gpxUrl,
+        mapaMiniUrl: mapaMiniBase64,
+        mapaTrasyUrl: mapaTrasyBase64,
+        zastavky: (b as any).zastavky || [],
+      } as any)
     );
 
     const chunks: Buffer[] = [];
@@ -90,6 +114,6 @@ export async function GET(
     });
   } catch (err) {
     console.error("PDF error:", err);
-    return NextResponse.json({ error: "PDF error" }, { status: 500 });
+    return NextResponse.json({ error: "PDF generation error" }, { status: 500 });
   }
 }

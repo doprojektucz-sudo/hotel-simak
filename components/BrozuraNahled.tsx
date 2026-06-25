@@ -120,7 +120,7 @@ export function Logo({ s, acc, logoRef }: { s: number; acc: string; logoRef: Rea
 }
 
 export function Footer({ data, s }: { data: BrozuraData; s: number }) {
-  const { barvaText: txt, barvaAkcentu: acc, barvaPozadi: bg } = data;
+  const { barvaText: txt, barvaAkcentu: acc } = data;
   const isDark = data.tema === "TMAVE" || data.tema === "MODRE" || data.tema === "ZELENE";
   const footerBg = isDark ? "rgba(0,0,0,0.35)" : "rgba(0,0,0,0.06)";
 
@@ -137,8 +137,6 @@ export function Footer({ data, s }: { data: BrozuraData; s: number }) {
       <span style={{ color: txt, fontSize: 2.4 * s, opacity: 0.75 }}>📞 {HOTEL_INFO.phone}</span>
       <span style={{ color: txt, fontSize: 2.4 * s, opacity: 0.75 }}>✉ {HOTEL_INFO.email}</span>
       <span style={{ color: txt, fontSize: 2.4 * s, opacity: 0.75 }}>📍 {HOTEL_INFO.address}</span>
-      <span style={{ color: acc, fontSize: 2.4 * s, opacity: 0.85 }}>f {HOTEL_INFO.facebook}</span>
-      <span style={{ color: acc, fontSize: 2.4 * s, opacity: 0.85 }}>📷 {HOTEL_INFO.instagram}</span>
     </div>
   );
 }

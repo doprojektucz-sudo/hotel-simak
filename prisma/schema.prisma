@@ -157,13 +157,25 @@ model Brozura {
   barvaText    String         @default("#fdf6e3")
   barvaAkcentu String         @default("#c9a547")
 
+  // Cyklotrasa specifická pole
+  trasaKm        Float?
+  trasaNarocnost NarocnostTrasy?
+  trasaPrevyseni Int? // metry
+  trasaPovrch    String? // "asfalt", "štěrk", "mix"
+  trasaTyp       String? // "okruh", "tam a zpět"
+  trasaCislo     Int? // číslo v seriálu
+  gpxUrl         String? // URL GPX souboru nebo Komoot odkaz
+  mapaTrasyUrl   String? // statická mapa s vykreslenou trasou
+  mapaMiniUrl    String? // miniatura okruhu pro přední stranu
+
   // Brand prvky
   zobrazitLogo    Boolean @default(true)
   zobrazitPaticku Boolean @default(true)
 
-  tagy      String[] @default([])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  tagy      String[]   @default([])
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  zastavky Zastavka[]
 
   @@index([kategorie])
   @@index([stav])
@@ -176,6 +188,7 @@ enum SablonaTyp {
   UBYTOVANI
   RESTAURACE
   VSEOBECNE
+  CYKLOTRASA
 }
 
 enum KategorieBrozury {
@@ -207,6 +220,7 @@ enum LayoutTyp {
   KLASICKY
   MAGAZIN
   MINIMA
+  CYKLOTRASA
   SIROKY
   VINTAGE
   SVETLY_CARD
@@ -224,15 +238,35 @@ enum TemaTyp {
 }
 
 model GalerieObrazek {
-  id          String   @id @default(cuid())
-  nazev       String                        // původní název souboru
-  popis       String?                       // volitelný popis / alt text
-  url         String                        // cesta: /uploads/brozury/xxx.jpg
-  velikost    Int                           // bytes
-  typ         String                        // image/jpeg | image/png | image/webp
-  tagy        String[] @default([])         // pro filtrování: "jidlo", "budova", atd.
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  nazev     String // původní název souboru
+  popis     String? // volitelný popis / alt text
+  url       String // cesta: /uploads/brozury/xxx.jpg
+  velikost  Int // bytes
+  typ       String // image/jpeg | image/png | image/webp
+  tagy      String[] @default([]) // pro filtrování: "jidlo", "budova", atd.
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([createdAt])
+}
+
+enum NarocnostTrasy {
+  LEHKA
+  STREDNI
+  TEZKA
+}
+
+model Zastavka {
+  id        String  @id @default(cuid())
+  brozuraId String
+  poradi    Int
+  nazev     String
+  popis     String?
+  gps       String? // "49.5938, 15.9394" — volitelně pro info
+  fotoUrl   String?
+  brozura   Brozura @relation(fields: [brozuraId], references: [id], onDelete: Cascade)
+
+  @@index([brozuraId])
+  @@index([poradi])
 }

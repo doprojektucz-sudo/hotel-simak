@@ -22,6 +22,11 @@ export interface BrozuraPDFProps {
   cena?: string | null; kontakt?: string | null; web?: string | null;
   fotoUrl?: string | null; mapUrl?: string | null; qrDataUrl?: string | null;
   logoBase64?: string | null;
+  // Cyklotrasa
+  trasaKm?: number | null; trasaNarocnost?: string | null; trasaPrevyseni?: number | null;
+  trasaPovrch?: string | null; trasaTyp?: string | null; trasaCislo?: number | null;
+  gpxUrl?: string | null; mapaTrasyUrl?: string | null; mapaMiniUrl?: string | null;
+  zastavky?: { poradi: number; nazev: string; popis?: string | null; gps?: string | null }[];
 }
 
 const SABLONA: Record<string, string> = {
@@ -37,7 +42,6 @@ const HOTEL = {
   name: "Hotel a Restaurace U Šimáka",
   phone: "728 490 498", email: "hotresrad@seznam.cz",
   address: "Radostín 95, 591 01 Žďár nad Sázavou",
-  facebook: "facebook.com/hotelsimak", instagram: "@hotel_u_simaka",
   logo: "/images/logo.webp",
 };
 
@@ -92,11 +96,11 @@ function Divider({ s, acc }: { s:number; acc:string }) {
   );
 }
 
-function FooterPDF({ s, acc, txt, bg }: { s:number; acc:string; txt:string; bg:string }) {
+function FooterPDF({ s, acc, txt }: { s:number; acc:string; txt:string; bg?:string }) {
   return (
-    <View style={{ position:"absolute", bottom:0, left:0, right:0, borderTopWidth:0.5, borderTopColor:acc, backgroundColor:"rgba(0,0,0,0.3)", padding:`${3*s}px ${8*s}px`, flexDirection:"row", flexWrap:"wrap", gap:8*s, alignItems:"center" }}>
-      {[HOTEL.phone, HOTEL.email, HOTEL.address, HOTEL.facebook, HOTEL.instagram].map((v,i) => (
-        <Text key={i} style={{ fontSize:7*s, color:i>=3?acc:txt, opacity:i>=3?0.85:0.7, fontFamily:"Roboto" }}>{v}</Text>
+    <View style={{ position:"absolute", bottom:0, left:0, right:0, borderTopWidth:0.5, borderTopColor:acc, backgroundColor:"rgba(0,0,0,0.3)", padding:`${3*s}px ${8*s}px`, flexDirection:"row", flexWrap:"wrap", gap:10*s, alignItems:"center" }}>
+      {[HOTEL.phone, HOTEL.email, HOTEL.address].map((v,i) => (
+        <Text key={i} style={{ fontSize:7*s, color:txt, opacity:0.75, fontFamily:"Roboto" }}>{v}</Text>
       ))}
     </View>
   );
@@ -250,6 +254,174 @@ function LayoutSirokyPDF({ p, s, pageW, pageH, infoItems, footerH }: any) {
   );
 }
 
+
+// ─── Layout: Cyklotrasa (dvoustranná) ────────────────────────────────────────
+
+const NAROCNOST_COLORS: Record<string, string> = {
+  LEHKA: "#22c55e", STREDNI: "#f59e0b", TEZKA: "#ef4444",
+};
+const NAROCNOST_DOTS: Record<string, number> = { LEHKA: 1, STREDNI: 2, TEZKA: 3 };
+const NAROCNOST_LABELS: Record<string, string> = { LEHKA: "Lehká", STREDNI: "Střední", TEZKA: "Těžká" };
+
+function LayoutCykloTrasaPDF({ p, s, pageW, pageH, footerH }: { p: BrozuraPDFProps; s: number; pageW: number; pageH: number; footerH: number }) {
+  const { barvaPozadi: bg, barvaText: txt, barvaAkcentu: acc } = p;
+  const pad = 30 * s;
+  const logoOff = p.zobrazitLogo ? 22 * s : 0;
+  const zastavky = p.zastavky || [];
+
+  // ── Strana A — přední ──
+  const stranaA = (
+    <Page size={[pageW, pageH]} style={{ backgroundColor: bg, fontFamily: "Roboto", padding: 0 }}>
+      <View style={{ height: 2 * s, backgroundColor: acc }} />
+
+      {p.zobrazitLogo && p.logoBase64 && (
+        <View style={{ position: "absolute", top: 6 * s, left: 0, right: 0, alignItems: "center", zIndex: 10 }}>
+          <Image src={p.logoBase64} style={{ height: 16 * s, objectFit: "contain" }} />
+        </View>
+      )}
+
+      <View style={{ flex: 1, paddingHorizontal: pad, paddingTop: pad * 0.6 + logoOff, paddingBottom: pad * 0.6 + footerH, flexDirection: "column", gap: 10 * s }}>
+
+        {/* Série + nadpis */}
+        <View>
+          {p.trasaCislo != null && (
+            <Text style={{ fontSize: 8 * s, color: acc, letterSpacing: 2.5, textTransform: "uppercase", marginBottom: 4 * s, opacity: 0.9 }}>
+              Cyklotrasa č. {p.trasaCislo}
+            </Text>
+          )}
+          <Text style={{ fontSize: 30 * s, fontWeight: 700, color: txt, lineHeight: 1.15 }}>{p.nadpis}</Text>
+          {p.podnadpis && (
+            <Text style={{ fontSize: 12 * s, fontStyle: "italic", color: txt, opacity: 0.7, marginTop: 4 * s }}>{p.podnadpis}</Text>
+          )}
+        </View>
+
+        {/* Miniatura mapy */}
+        {p.mapaMiniUrl && (
+          <View style={{ width: "100%", height: pageH * 0.28, borderRadius: 2, overflow: "hidden", borderWidth: 0.5, borderColor: acc + "66" }}>
+            <Image src={p.mapaMiniUrl} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          </View>
+        )}
+
+        {/* Stats */}
+        <View style={{ flexDirection: "row", gap: 8 * s }}>
+          {p.trasaKm != null && (
+            <View style={{ flex: 1, alignItems: "center", padding: `${6 * s}px ${4 * s}px`, backgroundColor: "rgba(255,255,255,0.06)", borderRadius: 2, borderWidth: 0.5, borderColor: "rgba(255,255,255,0.1)" }}>
+              <Text style={{ fontSize: 14 * s, fontWeight: 700, color: acc }}>{p.trasaKm} km</Text>
+              <Text style={{ fontSize: 6 * s, color: txt, opacity: 0.55, textTransform: "uppercase", letterSpacing: 1 }}>Délka</Text>
+            </View>
+          )}
+          {p.trasaPrevyseni != null && (
+            <View style={{ flex: 1, alignItems: "center", padding: `${6 * s}px ${4 * s}px`, backgroundColor: "rgba(255,255,255,0.06)", borderRadius: 2, borderWidth: 0.5, borderColor: "rgba(255,255,255,0.1)" }}>
+              <Text style={{ fontSize: 14 * s, fontWeight: 700, color: acc }}>{p.trasaPrevyseni} m</Text>
+              <Text style={{ fontSize: 6 * s, color: txt, opacity: 0.55, textTransform: "uppercase", letterSpacing: 1 }}>Převýšení</Text>
+            </View>
+          )}
+          {p.trasaNarocnost && (
+            <View style={{ flex: 1, alignItems: "center", padding: `${6 * s}px ${4 * s}px`, backgroundColor: "rgba(255,255,255,0.06)", borderRadius: 2, borderWidth: 0.5, borderColor: "rgba(255,255,255,0.1)", gap: 3 * s }}>
+              <View style={{ flexDirection: "row", gap: 2 * s }}>
+                {[1, 2, 3].map(i => (
+                  <View key={i} style={{ width: 5 * s, height: 5 * s, borderRadius: 3 * s, backgroundColor: i <= (NAROCNOST_DOTS[p.trasaNarocnost!] || 2) ? NAROCNOST_COLORS[p.trasaNarocnost!] || acc : "rgba(255,255,255,0.2)" }} />
+                ))}
+              </View>
+              <Text style={{ fontSize: 6 * s, color: NAROCNOST_COLORS[p.trasaNarocnost] || acc, fontWeight: 700 }}>{NAROCNOST_LABELS[p.trasaNarocnost] || ""}</Text>
+              <Text style={{ fontSize: 5 * s, color: txt, opacity: 0.5, textTransform: "uppercase", letterSpacing: 1 }}>Náročnost</Text>
+            </View>
+          )}
+        </View>
+
+        {/* Povrch + typ */}
+        {(p.trasaPovrch || p.trasaTyp) && (
+          <View style={{ flexDirection: "row", gap: 16 * s }}>
+            {p.trasaPovrch && <Text style={{ fontSize: 9 * s, color: txt, opacity: 0.7 }}>🛤 {p.trasaPovrch}</Text>}
+            {p.trasaTyp && <Text style={{ fontSize: 9 * s, color: txt, opacity: 0.7 }}>🔄 {p.trasaTyp}</Text>}
+          </View>
+        )}
+
+        {p.popis && (
+          <Text style={{ fontSize: 9 * s, color: txt, opacity: 0.7, lineHeight: 1.55 }}>{p.popis}</Text>
+        )}
+
+        <View style={{ flex: 1 }} />
+
+        {/* QR kód */}
+        {p.qrDataUrl && (
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 10 * s, padding: `${8 * s}px`, backgroundColor: acc + "18", borderRadius: 2, borderWidth: 0.5, borderColor: acc + "33" }}>
+            <Image src={p.qrDataUrl} style={{ width: 40 * s, height: 40 * s, borderRadius: 1 }} />
+            <View>
+              <Text style={{ fontSize: 8 * s, color: acc, fontWeight: 700, marginBottom: 3 * s }}>Načti trasu do mobilu</Text>
+              <Text style={{ fontSize: 7 * s, color: txt, opacity: 0.55 }}>usimaka.cz/api/trasa/{p.trasaCislo}</Text>
+            </View>
+          </View>
+        )}
+      </View>
+
+      {p.zobrazitPaticku && <FooterPDF s={s} acc={acc} txt={txt} />}
+    </Page>
+  );
+
+  // ── Strana B — zadní ──
+  const stranaB = (
+    <Page size={[pageW, pageH]} style={{ backgroundColor: bg, fontFamily: "Roboto", padding: 0 }}>
+      <View style={{ height: 2 * s, backgroundColor: acc }} />
+
+      <View style={{ flex: 1, flexDirection: "row", paddingHorizontal: pad * 0.8, paddingVertical: pad * 0.7, paddingBottom: (pad * 0.7) + footerH, gap: 14 * s }}>
+
+        {/* Velká mapa */}
+        {p.mapaTrasyUrl && (
+          <View style={{ width: pageW * 0.52, borderRadius: 2, overflow: "hidden", borderWidth: 0.5, borderColor: acc + "44" }}>
+            <Image src={p.mapaTrasyUrl} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          </View>
+        )}
+
+        {/* Zastávky */}
+        <View style={{ flex: 1, flexDirection: "column" }}>
+          <Text style={{ fontSize: 8 * s, color: acc, letterSpacing: 2, textTransform: "uppercase", marginBottom: 12 * s, fontWeight: 700 }}>
+            Zastávky na trase
+          </Text>
+
+          {zastavky.length === 0 && (
+            <Text style={{ fontSize: 9 * s, color: txt, opacity: 0.4, fontStyle: "italic" }}>—</Text>
+          )}
+
+          {zastavky.slice(0, 8).map((z, i) => (
+            <View key={i} style={{ flexDirection: "row", gap: 6 * s, marginBottom: 8 * s, alignItems: "flex-start" }}>
+              <View style={{ width: 12 * s, height: 12 * s, borderRadius: 6 * s, backgroundColor: acc, alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: s }}>
+                <Text style={{ fontSize: 6.5 * s, fontWeight: 700, color: bg }}>{i + 1}</Text>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 9 * s, fontWeight: 700, color: txt, lineHeight: 1.2 }}>{z.nazev}</Text>
+                {z.popis && (
+                  <Text style={{ fontSize: 7.5 * s, color: txt, opacity: 0.62, lineHeight: 1.5, marginTop: 1.5 * s }}>
+                    {z.popis.length > 120 ? z.popis.slice(0, 120) + "…" : z.popis}
+                  </Text>
+                )}
+                {z.gps && (
+                  <Text style={{ fontSize: 6 * s, color: acc, opacity: 0.6, marginTop: s }}>📍 {z.gps}</Text>
+                )}
+              </View>
+            </View>
+          ))}
+
+          <View style={{ flex: 1 }} />
+
+          {/* Hotel promo */}
+          <View style={{ borderTopWidth: 0.5, borderTopColor: acc + "44", paddingTop: 8 * s, flexDirection: "row", gap: 6 * s, alignItems: "center" }}>
+            <View>
+              <Text style={{ fontSize: 7.5 * s, color: acc, fontWeight: 700 }}>Ubytování na trase</Text>
+              <Text style={{ fontSize: 7 * s, color: txt, opacity: 0.7 }}>{HOTEL.name}</Text>
+              <Text style={{ fontSize: 6.5 * s, color: txt, opacity: 0.5 }}>{HOTEL.address} · {HOTEL.phone}</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+
+      {p.zobrazitPaticku && <FooterPDF s={s} acc={acc} txt={txt} />}
+    </Page>
+  );
+
+  return <>{stranaA}{stranaB}</>;
+}
+
 // ─── Main export ──────────────────────────────────────────────────────────────
 
 export function BrozuraPDF(p: BrozuraPDFProps) {
@@ -272,10 +444,10 @@ export function BrozuraPDF(p: BrozuraPDFProps) {
 
   return (
     <Document>
-      {layout === "MAGAZIN"  && <LayoutMagazinPDF  {...lp}/>}
-      {layout === "MINIMA"   && <LayoutMinimaPDF   {...lp}/>}
-      {layout === "SIROKY"   && <LayoutSirokyPDF   {...lp}/>}
-      {/* All other layouts use Klasicky for PDF (VINTAGE, SPLIT etc are complex with CSS features) */}
+      {layout === "MAGAZIN"     && <LayoutMagazinPDF  {...lp}/>}
+      {layout === "MINIMA"      && <LayoutMinimaPDF   {...lp}/>}
+      {layout === "SIROKY"      && <LayoutSirokyPDF   {...lp}/>}
+      {layout === "CYKLOTRASA"  && <LayoutCykloTrasaPDF p={p} s={s} pageW={pageW} pageH={pageH} footerH={footerH}/>}
       {(layout === "KLASICKY" || layout === "VINTAGE" || layout === "SVETLY_CARD" || layout === "SPLIT" || layout === "MIKROMINIMA") && <LayoutKlasickyPDF {...lp}/>}
     </Document>
   );
