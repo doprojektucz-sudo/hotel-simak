@@ -1,14 +1,10 @@
-// Satori JSX layouty — identické s BrozuraNahled.tsx
-// Satori podporuje inline styles (subset CSS), žádné třídy
-// Místo <img> používáme src přímo, místo <canvas> předáváme qr jako data URL
+import React from "react";
 
 export const HOTEL_INFO = {
   name: "Hotel a Restaurace U Šimáka",
   phone: "728 490 498",
   email: "hotresrad@seznam.cz",
   address: "Radostín 95, 591 01 Žďár nad Sázavou",
-  facebook: "facebook.com/hotelsimak",
-  instagram: "@hotel_u_simaka",
 };
 
 const SABLONA_LABELS: Record<string, string> = {
@@ -28,12 +24,9 @@ const NARC_LABELS: Record<string, string> = {
   LEHKA: "Lehká", STREDNI: "Střední", TEZKA: "Těžká",
 };
 
-// Rozměry v px (satori pracuje v px, my používáme mm → px při 96dpi)
-// 1mm = 3.7795px
-const MM = 2.8346; // 72dpi: 1pt = 1mm*(72/25.4)
+const MM = 2.8346;
 
 export interface SatoriLayoutProps {
-  // Brožura data
   bg: string;
   txt: string;
   acc: string;
@@ -50,15 +43,12 @@ export interface SatoriLayoutProps {
   cena?: string | null;
   kontakt?: string | null;
   web?: string | null;
-  // Obrázky jako base64 data URL
   fotoBase64?: string | null;
   logoBase64?: string | null;
   qrBase64?: string | null;
   mapBase64?: string | null;
-  // Rozměry stránky
-  w: number; // px
-  h: number; // px
-  // Cyklotrasa
+  w: number;
+  h: number;
   trasaKm?: number | null;
   trasaNarocnost?: string | null;
   trasaPrevyseni?: number | null;
@@ -73,21 +63,19 @@ export interface SatoriLayoutProps {
 // ─── Sdílené komponenty ───────────────────────────────────────────────────────
 
 function Footer(p: SatoriLayoutProps) {
-  const isDark = ["TMAVE", "MODRE", "ZELENE"].some(t =>
-    p.bg.startsWith("#1") || p.bg.startsWith("#0")
-  );
+  const isDark = p.bg.startsWith("#1") || p.bg.startsWith("#0") || p.bg.startsWith("#2");
   return (
-    <div style={{ display: "flex",
-      position: "absolute", bottom: 0, left: 0, right: 0,
+    <div style={{
+      display: "flex", flexDirection: "row", alignItems: "center",
+      flexShrink: 0,
       borderTop: `0.5px solid ${p.acc}`,
       background: isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.06)",
-      padding: `${3 * MM}px ${8 * MM}px`,
-      display: "flex", flexDirection: "row", alignItems: "center",
-      gap: `${5 * MM}px`,
+      paddingTop: `${2.5 * MM}px`, paddingBottom: `${2.5 * MM}px`,
+      paddingLeft: `${8 * MM}px`, paddingRight: `${8 * MM}px`,
     }}>
-      <span style={{ display: "flex", color: p.txt, fontSize: 7 * MM, opacity: 0.75 }}>📞 {HOTEL_INFO.phone}</span>
-      <span style={{ display: "flex", color: p.txt, fontSize: 7 * MM, opacity: 0.75 }}>✉ {HOTEL_INFO.email}</span>
-      <span style={{ display: "flex", color: p.txt, fontSize: 7 * MM, opacity: 0.75 }}>📍 {HOTEL_INFO.address}</span>
+      <span style={{ display: "flex", color: p.txt, fontSize: 6.5 * MM, opacity: 0.75, marginRight: `${6 * MM}px` }}>📞 {HOTEL_INFO.phone}</span>
+      <span style={{ display: "flex", color: p.txt, fontSize: 6.5 * MM, opacity: 0.75, marginRight: `${6 * MM}px` }}>✉ {HOTEL_INFO.email}</span>
+      <span style={{ display: "flex", color: p.txt, fontSize: 6.5 * MM, opacity: 0.75 }}>📍 {HOTEL_INFO.address}</span>
     </div>
   );
 }
@@ -113,14 +101,14 @@ function InfoGrid(p: SatoriLayoutProps & { compact?: boolean }) {
   ].filter(i => i.val);
 
   if (!items.length) return null;
-  const fs = p.compact ? 9 * MM : 11 * MM;
+  const fSize = p.compact ? 9 * MM : 11 * MM;
 
   return (
     <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", marginBottom: `${3 * MM}px` }}>
       {items.map(({ icon, val }) => (
         <div key={val} style={{ display: "flex", flexDirection: "row", alignItems: "center", width: "50%", marginBottom: `${3 * MM}px` }}>
-          <span style={{ display: "flex", fontSize: fs * 1.1 }}>{icon}</span>
-          <span style={{ display: "flex", color: p.txt, fontSize: fs, opacity: 0.82, marginLeft: `${2 * MM}px` }}>{val}</span>
+          <span style={{ display: "flex", fontSize: fSize * 1.1 }}>{icon}</span>
+          <span style={{ display: "flex", color: p.txt, fontSize: fSize, opacity: 0.82, marginLeft: `${2 * MM}px` }}>{val}</span>
         </div>
       ))}
     </div>
@@ -133,7 +121,7 @@ function QRRow(p: SatoriLayoutProps & { compact?: boolean }) {
   return (
     <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
       <img src={p.qrBase64} width={sz} height={sz} style={{ borderRadius: MM }} />
-      <div style={{ display: "flex", marginLeft: `${4 * MM}px` }}>
+      <div style={{ display: "flex", flexDirection: "column", marginLeft: `${4 * MM}px` }}>
         <div style={{ display: "flex", color: p.acc, fontSize: 7.5 * MM, textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: `${MM}px` }}>Více info</div>
         <div style={{ display: "flex", color: p.txt, fontSize: 7 * MM, opacity: 0.5 }}>{p.web}</div>
       </div>
@@ -151,21 +139,18 @@ export function LayoutKlasicky(p: SatoriLayoutProps) {
 
   return (
     <div style={{ display: "flex", width: w, height: h, background: bg, fontFamily: "Roboto", position: "relative", overflow: "hidden" }}>
-      {/* Dekorativní rámečky */}
       <div style={{ display: "flex", position: "absolute", top: 4 * MM, left: 4 * MM, right: 4 * MM, bottom: 4 * MM, border: `0.6px solid ${acc}`, opacity: 0.35 }} />
       <div style={{ display: "flex", position: "absolute", top: 6.5 * MM, left: 6.5 * MM, right: 6.5 * MM, bottom: 6.5 * MM, border: `0.4px solid ${acc}`, opacity: 0.15 }} />
 
-      {/* Logo */}
       {p.zobrazitLogo && p.logoBase64 && (
-        <div style={{ position: "absolute", top: 8 * MM, left: 0, right: 0, display: "flex", justifyContent: "center" }}>
+        <div style={{ display: "flex", position: "absolute", top: 8 * MM, left: 0, right: 0, justifyContent: "center" }}>
           <img src={p.logoBase64} height={18 * MM} style={{ objectFit: "contain" }} />
         </div>
       )}
 
-      {/* Obsah */}
-      <div style={{ display: "flex",
-        position: "absolute", top: pad + logoH, left: pad, right: pad, bottom: pad + footerH,
+      <div style={{
         display: "flex", flexDirection: "column", alignItems: "center",
+        position: "absolute", top: pad + logoH, left: pad, right: pad, bottom: pad + footerH,
       }}>
         <div style={{ display: "flex", color: acc, fontSize: 8.5 * MM, letterSpacing: "0.25em", textTransform: "uppercase", marginBottom: 2.5 * MM }}>Hotel U Šimáka</div>
         <div style={{ display: "flex", width: 25 * MM, height: 0.4 * MM, background: acc, opacity: 0.45, marginBottom: 5 * MM }} />
@@ -227,7 +212,6 @@ export function LayoutMagazin(p: SatoriLayoutProps) {
 
   return (
     <div style={{ display: "flex", width: w, height: h, background: bg, fontFamily: "Roboto", position: "relative", overflow: "hidden" }}>
-      {/* Hero */}
       <div style={{ display: "flex", position: "absolute", top: 0, left: 0, right: 0, height: heroH }}>
         {p.fotoBase64
           ? <img src={p.fotoBase64} width="100%" height="100%" style={{ objectFit: "cover" }} />
@@ -235,12 +219,12 @@ export function LayoutMagazin(p: SatoriLayoutProps) {
         <div style={{ display: "flex", position: "absolute", top: 0, left: 0, right: 0, bottom: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.1) 30%, rgba(0,0,0,0.75))" }} />
 
         {p.zobrazitLogo && p.logoBase64 && (
-          <div style={{ position: "absolute", top: 8 * MM, left: 0, right: 0, display: "flex", justifyContent: "center" }}>
+          <div style={{ display: "flex", position: "absolute", top: 8 * MM, left: 0, right: 0, justifyContent: "center" }}>
             <img src={p.logoBase64} height={16 * MM} style={{ objectFit: "contain" }} />
           </div>
         )}
 
-        <div style={{ display: "flex", position: "absolute", bottom: pad, left: pad, right: pad }}>
+        <div style={{ display: "flex", flexDirection: "column", position: "absolute", bottom: pad, left: pad, right: pad }}>
           <div style={{ display: "flex", color: acc, fontSize: 8 * MM, letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 2 * MM }}>
             {SABLONA_LABELS[p.sablona] || "Hotel U Šimáka"}
           </div>
@@ -248,8 +232,7 @@ export function LayoutMagazin(p: SatoriLayoutProps) {
         </div>
       </div>
 
-      {/* Content */}
-      <div style={{ position: "absolute", top: heroH, left: 0, right: 0, bottom: footerH, padding: `${pad}px`, display: "flex", flexDirection: "column" }}>
+      <div style={{ display: "flex", flexDirection: "column", position: "absolute", top: heroH, left: 0, right: 0, bottom: footerH, padding: `${pad}px` }}>
         {p.podnadpis && <div style={{ display: "flex", color: txt, fontSize: 11 * MM, fontStyle: "italic", opacity: 0.78, marginBottom: 3.5 * MM }}>{p.podnadpis}</div>}
         <div style={{ display: "flex", width: 18 * MM, height: 1.5 * MM, background: acc, borderRadius: MM, marginBottom: 3.5 * MM }} />
         {p.popis && <div style={{ display: "flex", color: txt, fontSize: 9 * MM, opacity: 0.72, lineHeight: 1.55, marginBottom: 3.5 * MM }}>{p.popis}</div>}
@@ -274,17 +257,18 @@ export function LayoutMinima(p: SatoriLayoutProps) {
   const { bg, txt, acc, w, h } = p;
   const pad = 14 * MM;
   const logoOff = p.zobrazitLogo && p.logoBase64 ? 20 * MM : 0;
-  const footerH = p.zobrazitPaticku ? 12 * MM : 0;
 
   return (
     <div style={{ width: w, height: h, background: bg, fontFamily: "Roboto", display: "flex", flexDirection: "column", overflow: "hidden" }}>
-      <div style={{ display: "flex", height: 3 * MM, background: acc }} />
+      <div style={{ display: "flex", height: 3 * MM, background: acc, flexShrink: 0 }} />
+
       {p.zobrazitLogo && p.logoBase64 && (
-        <div style={{ position: "absolute", top: 8 * MM, left: 0, right: 0, display: "flex", justifyContent: "center" }}>
+        <div style={{ display: "flex", position: "absolute", top: 8 * MM, left: 0, right: 0, justifyContent: "center" }}>
           <img src={p.logoBase64} height={16 * MM} style={{ objectFit: "contain" }} />
         </div>
       )}
-      <div style={{ flexGrow: 1, flexShrink: 1, flexBasis: "0%", padding: `${pad}px`, paddingTop: pad + logoOff, paddingBottom: pad, display: "flex", flexDirection: "column" }}>
+
+      <div style={{ flexGrow: 1, flexShrink: 1, flexBasis: "0%", display: "flex", flexDirection: "column", paddingLeft: pad, paddingRight: pad, paddingTop: pad + logoOff, paddingBottom: pad }}>
         <div style={{ display: "flex", color: acc, fontSize: 8 * MM, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 6 * MM, fontWeight: 700 }}>Hotel U Šimáka</div>
         <div style={{ display: "flex", color: txt, fontSize: 23 * MM, fontWeight: 900, lineHeight: 1.1, marginBottom: 3.5 * MM }}>{p.nadpis}</div>
         {p.podnadpis && <div style={{ display: "flex", color: acc, fontSize: 10 * MM, fontWeight: 700, marginBottom: 5 * MM, textTransform: "uppercase" }}>{p.podnadpis}</div>}
@@ -303,9 +287,10 @@ export function LayoutMinima(p: SatoriLayoutProps) {
         <InfoGrid {...p} compact />
         <QRRow {...p} compact />
       </div>
+
       {p.zobrazitPaticku
         ? <Footer {...p} />
-        : <div style={{ display: "flex", height: 1.5 * MM, background: acc, opacity: 0.4 }} />}
+        : <div style={{ display: "flex", height: 1.5 * MM, background: acc, opacity: 0.4, flexShrink: 0 }} />}
     </div>
   );
 }
@@ -315,11 +300,9 @@ export function LayoutMinima(p: SatoriLayoutProps) {
 export function LayoutSiroky(p: SatoriLayoutProps) {
   const { bg, txt, acc, w, h } = p;
   const pad = 12 * MM;
-  const footerH = p.zobrazitPaticku ? 12 * MM : 0;
 
   return (
     <div style={{ width: w, height: h, background: bg, fontFamily: "Roboto", display: "flex", flexDirection: "row", overflow: "hidden" }}>
-      {/* Foto vlevo */}
       <div style={{ display: "flex", width: "44%", position: "relative", flexShrink: 0 }}>
         {p.fotoBase64
           ? <img src={p.fotoBase64} width="100%" height="100%" style={{ objectFit: "cover", position: "absolute", top: 0, left: 0 }} />
@@ -331,8 +314,8 @@ export function LayoutSiroky(p: SatoriLayoutProps) {
           </div>
         )}
       </div>
-      {/* Obsah vpravo */}
-      <div style={{ flexGrow: 1, flexShrink: 1, flexBasis: "0%", padding: `${pad}px`, paddingBottom: pad, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+
+      <div style={{ flexGrow: 1, flexShrink: 1, flexBasis: "0%", display: "flex", flexDirection: "column", justifyContent: "space-between", paddingLeft: pad, paddingRight: pad, paddingTop: pad, paddingBottom: pad }}>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ display: "flex", color: acc, fontSize: 8 * MM, letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 3.5 * MM }}>{SABLONA_LABELS[p.sablona] || ""}</div>
           <div style={{ display: "flex", color: txt, fontSize: 20 * MM, fontWeight: 700, lineHeight: 1.2, marginBottom: 3.5 * MM }}>{p.nadpis}</div>
@@ -350,6 +333,7 @@ export function LayoutSiroky(p: SatoriLayoutProps) {
           <QRRow {...p} compact />
         </div>
       </div>
+
       {p.zobrazitPaticku && <Footer {...p} />}
     </div>
   );
@@ -367,20 +351,16 @@ export function LayoutCykloA(p: SatoriLayoutProps) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", width: w, height: h, background: bg, fontFamily: "Roboto" }}>
-      {/* Top bar */}
       <div style={{ display: "flex", height: 1.5 * MM, background: acc, flexShrink: 0 }} />
 
-      {/* Logo */}
       {p.zobrazitLogo && p.logoBase64 && (
         <div style={{ display: "flex", justifyContent: "center", paddingTop: `${3 * MM}px`, paddingBottom: `${2 * MM}px`, flexShrink: 0 }}>
           <img src={p.logoBase64} height={16 * MM} style={{ objectFit: "contain" }} />
         </div>
       )}
 
-      {/* Main scrollable content */}
       <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, flexShrink: 1, flexBasis: "0%", paddingLeft: `${pad}px`, paddingRight: `${pad}px`, overflow: "hidden" }}>
 
-        {/* Série + název */}
         <div style={{ display: "flex", flexDirection: "column", marginBottom: `${3 * MM}px` }}>
           {p.trasaCislo != null && (
             <div style={{ display: "flex", color: acc, fontSize: 6 * MM, letterSpacing: "0.25em", textTransform: "uppercase", marginBottom: `${1.5 * MM}px`, opacity: 0.9 }}>
@@ -389,17 +369,15 @@ export function LayoutCykloA(p: SatoriLayoutProps) {
           )}
           <div style={{ display: "flex", color: txt, fontSize: 14 * MM, fontWeight: 700, lineHeight: 1.1 }}>{p.nadpis}</div>
           {p.podnadpis && (
-            <div style={{ display: "flex", color: txt, fontSize: 8 * MM, fontStyle: "italic", opacity: 0.68, marginTop: `${1 * MM}px` }}>{p.podnadpis}</div>
+            <div style={{ display: "flex", color: txt, fontSize: 8 * MM, fontStyle: "italic", opacity: 0.68, marginTop: `${MM}px` }}>{p.podnadpis}</div>
           )}
         </div>
 
-        {/* Mapa okruhu */}
         {p.mapaMiniBase64 && (
           <img src={p.mapaMiniBase64} width={w - pad * 2} height={Math.round(h * 0.22)}
             style={{ objectFit: "cover", borderWidth: "0.3px", borderStyle: "solid", borderColor: acc, marginBottom: `${3 * MM}px`, flexShrink: 0 }} />
         )}
 
-        {/* Stats */}
         <div style={{ display: "flex", flexDirection: "row", marginBottom: `${3 * MM}px`, flexShrink: 0 }}>
           {p.trasaKm != null && (
             <div style={{ flexGrow: 1, flexShrink: 1, flexBasis: "0%", display: "flex", flexDirection: "column", alignItems: "center", paddingTop: `${4 * MM}px`, paddingBottom: `${4 * MM}px`, marginRight: `${2 * MM}px`, borderWidth: "0.4px", borderStyle: "solid", borderColor: acc }}>
@@ -442,24 +420,23 @@ export function LayoutCykloA(p: SatoriLayoutProps) {
 
         <div style={{ display: "flex", flexGrow: 1 }} />
 
-        {/* QR */}
         {p.qrBase64 && (
           <div style={{ display: "flex", flexDirection: "row", alignItems: "center", paddingTop: `${3 * MM}px`, paddingBottom: `${3 * MM}px`, paddingLeft: `${3 * MM}px`, paddingRight: `${3 * MM}px`, borderWidth: "0.4px", borderStyle: "solid", borderColor: acc, marginBottom: `${2 * MM}px`, flexShrink: 0 }}>
             <img src={p.qrBase64} width={13 * MM} height={13 * MM} style={{ marginRight: `${4 * MM}px` }} />
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <div style={{ display: "flex", color: acc, fontWeight: 700, fontSize: 7 * MM, marginBottom: `${1 * MM}px` }}>Načti trasu do mobilu</div>
+              <div style={{ display: "flex", color: acc, fontWeight: 700, fontSize: 7 * MM, marginBottom: `${MM}px` }}>Načti trasu do mobilu</div>
               <div style={{ display: "flex", color: txt, fontSize: 6 * MM, opacity: 0.55 }}>usimaka.cz/api/trasa/{p.trasaCislo}</div>
             </div>
           </div>
         )}
       </div>
 
-      {/* Footer jako normální flow element — ne absolutní */}
       {p.zobrazitPaticku && <Footer {...p} />}
     </div>
   );
 }
 
+// ─── CYKLOTRASA Strana B ──────────────────────────────────────────────────────
 
 export function LayoutCykloB(p: SatoriLayoutProps) {
   const { bg, txt, acc, w, h } = p;
@@ -472,13 +449,12 @@ export function LayoutCykloB(p: SatoriLayoutProps) {
 
       <div style={{ display: "flex", flexDirection: "row", flexGrow: 1, flexShrink: 1, flexBasis: "0%", paddingLeft: `${pad}px`, paddingRight: `${pad}px`, paddingTop: `${pad}px`, paddingBottom: `${pad}px`, overflow: "hidden" }}>
 
-        {/* Velká mapa */}
         {p.mapaTrasyBase64 && (
-          <img src={p.mapaTrasyBase64} width={Math.round(w * 0.48)} height={h - 1.5 * MM - pad * 2 - (p.zobrazitPaticku ? 12 * MM : 0)}
+          <img src={p.mapaTrasyBase64} width={Math.round(w * 0.48)}
+            height={h - 1.5 * MM - pad * 2 - (p.zobrazitPaticku ? 12 * MM : 0)}
             style={{ objectFit: "cover", borderWidth: "0.3px", borderStyle: "solid", borderColor: acc, marginRight: `${4 * MM}px`, flexShrink: 0 }} />
         )}
 
-        {/* Zastávky */}
         <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, flexShrink: 1, flexBasis: "0%" }}>
           <div style={{ display: "flex", color: acc, fontSize: 6.5 * MM, letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: `${3.5 * MM}px`, fontWeight: 700 }}>
             Zastávky na trase
@@ -508,7 +484,7 @@ export function LayoutCykloB(p: SatoriLayoutProps) {
 
           <div style={{ display: "flex", flexDirection: "column", borderTop: `0.3px solid ${acc}`, paddingTop: `${2.5 * MM}px` }}>
             <div style={{ display: "flex", fontSize: 6.5 * MM, color: acc, fontWeight: 700, marginBottom: `${1.5 * MM}px` }}>Ubytování na trase</div>
-            <div style={{ display: "flex", fontSize: 6 * MM, color: txt, opacity: 0.7, marginBottom: `${1 * MM}px` }}>Hotel a Restaurace U Šimáka</div>
+            <div style={{ display: "flex", fontSize: 6 * MM, color: txt, opacity: 0.7, marginBottom: `${MM}px` }}>Hotel a Restaurace U Šimáka</div>
             <div style={{ display: "flex", fontSize: 5.5 * MM, color: txt, opacity: 0.5 }}>Radostín 95 · 728 490 498</div>
           </div>
         </div>
@@ -519,16 +495,15 @@ export function LayoutCykloB(p: SatoriLayoutProps) {
   );
 }
 
-
 // ─── Dispatcher ───────────────────────────────────────────────────────────────
 
-export function getLayout(layout: string) {
-  const map: Record<string, (p: SatoriLayoutProps) => JSX.Element> = {
+export function getLayout(layout: string): (p: SatoriLayoutProps) => React.ReactElement {
+  const map: Record<string, (p: SatoriLayoutProps) => React.ReactElement> = {
     KLASICKY:    LayoutKlasicky,
     MAGAZIN:     LayoutMagazin,
     MINIMA:      LayoutMinima,
     SIROKY:      LayoutSiroky,
-    VINTAGE:     LayoutKlasicky,   // fallback na Klasicky
+    VINTAGE:     LayoutKlasicky,
     SVETLY_CARD: LayoutKlasicky,
     SPLIT:       LayoutKlasicky,
     MIKROMINIMA: LayoutMinima,

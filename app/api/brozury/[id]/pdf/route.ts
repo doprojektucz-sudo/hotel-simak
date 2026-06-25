@@ -16,10 +16,11 @@ async function toBase64(src: string | null | undefined): Promise<string | null> 
     if (src.startsWith("/")) {
       const filePath = path.join(process.cwd(), "public", src);
       if (!fs.existsSync(filePath)) return null;
-      let buf = fs.readFileSync(filePath);
+      let buf: Buffer = Buffer.from(fs.readFileSync(filePath));
       const ext = path.extname(src).slice(1).toLowerCase();
       if (["webp", "gif", "avif"].includes(ext)) {
-        buf = await sharp(buf).jpeg({ quality: 90 }).toBuffer();
+        // Fix 1: Buffer type cast for sharp
+        buf = Buffer.from(await sharp(buf as Buffer).jpeg({ quality: 90 }).toBuffer()) as Buffer;
         return `data:image/jpeg;base64,${buf.toString("base64")}`;
       }
       const mime = ext === "png" ? "image/png" : "image/jpeg";
@@ -30,10 +31,11 @@ async function toBase64(src: string | null | undefined): Promise<string | null> 
     const res = await fetch(src, { signal: ctrl.signal });
     clearTimeout(timer);
     if (!res.ok) return null;
-    let buf = Buffer.from(await res.arrayBuffer());
+    // Fix 2: explicit Buffer.from for arrayBuffer
+    let buf = Buffer.from(await res.arrayBuffer()) as Buffer;
     const ct = res.headers.get("content-type") || "";
     if (ct.includes("webp") || ct.includes("gif")) {
-      buf = await sharp(buf).jpeg({ quality: 90 }).toBuffer();
+      buf = Buffer.from(await sharp(buf).jpeg({ quality: 90 }).toBuffer()) as Buffer;
       return `data:image/jpeg;base64,${buf.toString("base64")}`;
     }
     const mime = ct.includes("png") ? "image/png" : "image/jpeg";
@@ -53,7 +55,6 @@ export async function GET(
   });
   if (!b) return NextResponse.json({ error: "Nenalezena" }, { status: 404 });
 
-  // QR zdroj — relativní cesta vždy rozšíříme na usimaka.cz
   const rawQr = (b as any).gpxUrl || b.web;
   const qrSource = rawQr?.startsWith("/") ? `${BASE_URL}${rawQr}` : rawQr;
 
@@ -69,32 +70,32 @@ export async function GET(
   ]);
 
   try {
-    const stream = await ReactPDF.renderToStream(
-      React.createElement(BrozuraPDF, {
-        nazev: b.nazev, sablona: b.sablona, format: b.format,
-        orientace: b.orientace, layout: b.layout,
-        barvaPozadi: b.barvaPozadi, barvaText: b.barvaText, barvaAkcentu: b.barvaAkcentu,
-        zobrazitLogo: b.zobrazitLogo, zobrazitPaticku: b.zobrazitPaticku,
-        nadpis: b.nadpis, podnadpis: b.podnadpis, popis: b.popis,
-        datum: b.datum, cas: b.cas, misto: b.misto, cena: b.cena,
-        kontakt: b.kontakt, web: b.web,
-        fotoUrl: fotoBase64,
-        logoBase64,
-        mapUrl: mapBase64,
-        qrDataUrl,
-        // Cyklotrasa
-        trasaKm: (b as any).trasaKm,
-        trasaNarocnost: (b as any).trasaNarocnost,
-        trasaPrevyseni: (b as any).trasaPrevyseni,
-        trasaPovrch: (b as any).trasaPovrch,
-        trasaTyp: (b as any).trasaTyp,
-        trasaCislo: (b as any).trasaCislo,
-        gpxUrl: (b as any).gpxUrl,
-        mapaMiniUrl: mapaMiniBase64,
-        mapaTrasyUrl: mapaTrasyBase64,
-        zastavky: (b as any).zastavky || [],
-      } as any)
-    );
+    // Fix 3: cast to any to satisfy ReactPDF's DocumentProps type
+    const element = React.createElement(BrozuraPDF, {
+      nazev: b.nazev, sablona: b.sablona, format: b.format,
+      orientace: b.orientace, layout: b.layout,
+      barvaPozadi: b.barvaPozadi, barvaText: b.barvaText, barvaAkcentu: b.barvaAkcentu,
+      zobrazitLogo: b.zobrazitLogo, zobrazitPaticku: b.zobrazitPaticku,
+      nadpis: b.nadpis, podnadpis: b.podnadpis, popis: b.popis,
+      datum: b.datum, cas: b.cas, misto: b.misto, cena: b.cena,
+      kontakt: b.kontakt, web: b.web,
+      fotoUrl: fotoBase64,
+      logoBase64,
+      mapUrl: mapBase64,
+      qrDataUrl,
+      trasaKm: (b as any).trasaKm,
+      trasaNarocnost: (b as any).trasaNarocnost,
+      trasaPrevyseni: (b as any).trasaPrevyseni,
+      trasaPovrch: (b as any).trasaPovrch,
+      trasaTyp: (b as any).trasaTyp,
+      trasaCislo: (b as any).trasaCislo,
+      gpxUrl: (b as any).gpxUrl,
+      mapaMiniUrl: mapaMiniBase64,
+      mapaTrasyUrl: mapaTrasyBase64,
+      zastavky: (b as any).zastavky || [],
+    } as any) as any;
+
+    const stream = await ReactPDF.renderToStream(element);
 
     const chunks: Buffer[] = [];
     await new Promise<void>((resolve, reject) => {
