@@ -35,7 +35,8 @@ export function CykloFormSekce({ initial, onChange }: CykloFormSekceProps) {
     zastavky:       initial?.zastavky || [],
   });
 
-  // Propaguj změny do rodiče přes useEffect — vyhne se setState-during-render
+  const [copied, setCopied] = useState(false);
+
   useEffect(() => {
     onChange(data);
   }, [data]); // onChange záměrně vynecháno z deps
@@ -44,8 +45,13 @@ export function CykloFormSekce({ initial, onChange }: CykloFormSekceProps) {
     setData(prev => ({ ...prev, [key]: value }));
   }, []);
 
-  // Zkrácená URL pro QR kód — jen relativní cesta, funguje na localhostu i produkci
+  // Krátká URL jen pro zobrazení a QR — NIKDY se neukládá do gpxUrl
   const shortUrl = data.trasaCislo ? `/api/trasa/${data.trasaCislo}` : null;
+
+  // gpxUrl je dlouhá URL z Mapy.cz/Komoot — to je to co se ukládá
+  const longUrl = data.gpxUrl || "";
+  // Co se použije pro QR: pokud máme trasaCislo → krátká URL, jinak dlouhá
+  const qrUrl = shortUrl || longUrl;
 
   // ── Zastávky ────────────────────────────────────────────────────────────────
 
@@ -155,8 +161,6 @@ export function CykloFormSekce({ initial, onChange }: CykloFormSekceProps) {
             <strong className="text-gray-700"> Miniatura</strong> = přehledový obrázek okruhu pro přední stranu.
             <strong className="text-gray-700"> Detailní mapa</strong> = mapa se zakreslenou trasou pro zadní stranu.
           </p>
-          <input type="hidden" name="mapaMiniUrl"  value={data.mapaMiniUrl  || ""} />
-          <input type="hidden" name="mapaTrasyUrl" value={data.mapaTrasyUrl || ""} />
           <GaleriePicker
             label="Miniatura okruhu (přední strana)"
             value={data.mapaMiniUrl || ""}
@@ -176,59 +180,24 @@ export function CykloFormSekce({ initial, onChange }: CykloFormSekceProps) {
       <Section title="📲 QR kód — odkaz na trasu">
         <div className="space-y-4">
 
-          {/* Automatická krátká URL */}
-          {shortUrl && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4 space-y-2">
-              <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <span className="text-sm font-medium text-green-800">Krátká URL pro QR kód</span>
-              </div>
-              <div className="flex gap-2 items-center">
-                <code className="flex-1 text-sm text-green-900 bg-green-100 rounded px-3 py-1.5 font-mono">
-                  {shortUrl}
-                </code>
-                <button
-                  type="button"
-                  onClick={() => {
-                    upd("gpxUrl", shortUrl);
-                    // Do schránky zkopíruj plnou URL pro sdílení
-                    navigator.clipboard.writeText(window.location.origin + shortUrl).catch(() => {});
-                  }}
-                  className="text-xs bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 transition-colors whitespace-nowrap"
-                >
-                  Použít jako QR →
-                </button>
-              </div>
-              <p className="text-xs text-green-700">
-                Relativní cesta — funguje na localhostu i produkci. Do schránky se zkopíruje plná URL pro sdílení.
-              </p>
-            </div>
-          )}
-
-          {!shortUrl && (
-            <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-xs text-amber-700">
-              💡 Vyplň číslo trasy výše a automaticky se vygeneruje krátká URL pro QR kód.
-            </div>
-          )}
-
-          {/* Dlouhá URL trasy pro archiv / přesměrování */}
+          {/* Dlouhá URL — primární pole */}
           <div>
             <Label>
               URL trasy — Mapy.cz / Komoot / Wikiloc
-              <span className="ml-1 text-xs font-normal text-gray-400">(pro přesměrování z QR kódu)</span>
+              <span className="ml-1 text-xs font-normal text-gray-400">(sem vlož dlouhou URL trasy)</span>
             </Label>
-            <input type="hidden" name="gpxUrl" value={data.gpxUrl || ""} />
             <input
-              value={data.gpxUrl || ""}
+              value={longUrl}
               onChange={e => upd("gpxUrl", e.target.value)}
-              placeholder="https://mapy.cz/… nebo /api/trasa/1"
+              placeholder="https://mapy.cz/s/xxxxx nebo https://www.komoot.com/tour/…"
               className="input-field font-mono text-sm"
             />
             <p className="text-xs text-gray-400 mt-1">
-              Pokud použiješ krátkou URL výše, toto pole obsahuje tu krátkou. Pokud vložíš dlouhou URL z Mapy.cz,
-              API route <code className="bg-gray-100 px-1 rounded">/api/trasa/[číslo]</code> na ni přesměruje.
+              Vlož URL z Mapy.cz, Komoot, Wikiloc nebo Strava.
+              QR kód na brožuře bude přes zkrácenou cestu{" "}
+              {shortUrl
+                ? <><code className="bg-gray-100 px-1 rounded">{shortUrl}</code> přesměrovat sem.</>
+                : <>přesměrovávat sem (po vyplnění čísla trasy).</>}
             </p>
           </div>
 
@@ -245,6 +214,44 @@ export function CykloFormSekce({ initial, onChange }: CykloFormSekceProps) {
               </a>
             ))}
           </div>
+
+          {/* Automatická krátká URL — jen informativní, nemění gpxUrl */}
+          {shortUrl && (
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 space-y-2">
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span className="text-sm font-medium text-green-800">Zkrácená URL pro QR kód na brožuře</span>
+              </div>
+              <div className="flex gap-2 items-center">
+                <code className="flex-1 text-sm text-green-900 bg-green-100 rounded px-3 py-1.5 font-mono">
+                  {shortUrl}
+                </code>
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(window.location.origin + shortUrl).catch(() => {});
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  }}
+                  className="text-xs bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 transition-colors whitespace-nowrap"
+                >
+                  {copied ? "Zkopírováno ✓" : "Kopírovat →"}
+                </button>
+              </div>
+              <p className="text-xs text-green-700">
+                Tato krátká URL se použije pro QR kód na brožuře a přesměruje na dlouhou URL výše.
+                {!longUrl && <strong className="text-amber-700"> ⚠ Vlož dlouhou URL trasy výše, jinak přesměrování nebude fungovat.</strong>}
+              </p>
+            </div>
+          )}
+
+          {!shortUrl && (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-xs text-amber-700">
+              💡 Vyplň číslo trasy výše a automaticky se vygeneruje zkrácená URL pro QR kód.
+            </div>
+          )}
         </div>
       </Section>
 

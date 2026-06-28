@@ -90,11 +90,11 @@ export function CykloStranaA({ data, cyklo, w, h, s, qrRef, logoRef }: LayoutPro
         top: pad + logoH,
         left: pad, right: pad,
         bottom: pad + footerH,
-        display: "flex", flexDirection: "column", gap: 4 * s,
+        display: "flex", flexDirection: "column",
       }}>
 
         {/* Header: série + název */}
-        <div>
+        <div style={{ marginBottom: 3 * s, flexShrink: 0 }}>
           {cyklo.trasaCislo && (
             <div style={{ color: acc, fontSize: 2.8 * s, letterSpacing: "0.25em", textTransform: "uppercase", marginBottom: 1.5 * s, opacity: 0.85 }}>
               Cyklotrasa č. {cyklo.trasaCislo}
@@ -113,14 +113,15 @@ export function CykloStranaA({ data, cyklo, w, h, s, qrRef, logoRef }: LayoutPro
         {/* Mini mapa okruhu */}
         {cyklo.mapaMiniUrl ? (
           <div style={{
-            width: "100%", flex: "0 0 auto",
-            height: h * 0.3,
+            width: "100%", flexShrink: 0,
+            height: h * 0.24,
+            marginBottom: 3 * s,
             borderRadius: 2 * s, overflow: "hidden",
             border: `${0.5 * s}px solid ${acc}`,
             opacity: 0.95,
             position: "relative",
           }}>
-            <img src={cyklo.mapaMiniUrl} alt="Mapa okruhu" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            <img src={cyklo.mapaMiniUrl} alt="Mapa okruhu" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }} />
             {/* Compass */}
             <div style={{
               position: "absolute", top: 2 * s, right: 2 * s,
@@ -132,17 +133,17 @@ export function CykloStranaA({ data, cyklo, w, h, s, qrRef, logoRef }: LayoutPro
           </div>
         ) : (
           <div style={{
-            height: h * 0.28, borderRadius: 2 * s,
+            height: h * 0.22, borderRadius: 2 * s,
             border: `${0.5 * s}px dashed ${acc}`,
             display: "flex", alignItems: "center", justifyContent: "center",
-            opacity: 0.4,
+            opacity: 0.4, flexShrink: 0, marginBottom: 4 * s,
           }}>
             <span style={{ color: txt, fontSize: 3.5 * s }}>🗺 Mapa okruhu</span>
           </div>
         )}
 
         {/* Stats grid */}
-        <div style={{ display: "flex", gap: 2.5 * s }}>
+        <div style={{ display: "flex", gap: 2.5 * s, marginBottom: 3 * s, flexShrink: 0 }}>
           {cyklo.trasaKm && (
             <StatBox icon="🚴" value={`${cyklo.trasaKm} km`} label="Délka" s={s} txt={txt} acc={acc} />
           )}
@@ -166,7 +167,7 @@ export function CykloStranaA({ data, cyklo, w, h, s, qrRef, logoRef }: LayoutPro
         </div>
 
         {/* Extra info */}
-        <div style={{ display: "flex", gap: 6 * s }}>
+        <div style={{ display: "flex", gap: 6 * s, marginBottom: 3 * s, flexShrink: 0 }}>
           {cyklo.trasaPovrch && (
             <div style={{ display: "flex", alignItems: "center", gap: 2 * s }}>
               <span style={{ fontSize: 3.5 * s }}>🛤</span>
@@ -183,7 +184,7 @@ export function CykloStranaA({ data, cyklo, w, h, s, qrRef, logoRef }: LayoutPro
 
         {/* Description */}
         {data.popis && (
-          <div style={{ color: txt, fontSize: 3 * s, opacity: 0.72, lineHeight: 1.6 }}>
+          <div style={{ color: txt, fontSize: 3 * s, opacity: 0.72, lineHeight: 1.6, marginBottom: 3 * s, flexShrink: 0 }}>
             {data.popis}
           </div>
         )}
@@ -198,17 +199,14 @@ export function CykloStranaA({ data, cyklo, w, h, s, qrRef, logoRef }: LayoutPro
             background: `${acc}18`,
             borderRadius: 2 * s,
             border: `${0.5 * s}px solid ${acc}33`,
+            flexShrink: 0,
           }}>
-            <canvas ref={qrRef} style={{ width: 18 * s, height: 18 * s, borderRadius: s, flexShrink: 0 }} />
+            <canvas ref={qrRef} width={Math.round(20 * s)} height={Math.round(20 * s)} style={{ width: 20 * s, height: 20 * s, minWidth: 20 * s, minHeight: 20 * s, borderRadius: s, flexShrink: 0, display: "block" }} />
             <div>
               <div style={{ color: acc, fontSize: 3 * s, fontWeight: 700, marginBottom: 1.5 * s }}>
                 Načti trasu do mobilu
               </div>
-              <div style={{ color: txt, fontSize: 2.5 * s, opacity: 0.6 }}>
-                {(cyklo.gpxUrl || data.web || "").startsWith("/")
-                  ? `usimaka.cz${cyklo.gpxUrl || data.web}`
-                  : (cyklo.gpxUrl || data.web)}
-              </div>
+              
             </div>
           </div>
         ) : null}
@@ -227,94 +225,46 @@ export function CykloStranaB({ data, cyklo, w, h, s, logoRef }: LayoutProps & { 
   const pad = 10 * s;
   const zastavky = cyklo.zastavky || [];
   const hasMap = !!cyklo.mapaTrasyUrl;
-
-  // Split: mapa vlevo, zastávky vpravo (nebo mapa nahoře + zastávky dole)
-  const mapW = hasMap ? w * 0.52 : 0;
+  const mapH = h * 0.45;
 
   return (
     <div style={{ width: w, height: h, background: bg, fontFamily: "'Arial', sans-serif", overflow: "hidden", position: "relative" }}>
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2 * s, background: acc }} />
 
-      <div style={{
-        position: "absolute",
-        top: pad, left: pad, right: pad,
-        bottom: pad + footerH,
-        display: "flex", gap: 5 * s,
-      }}>
+      <div style={{ position: "absolute", top: 2 * s, left: 0, right: 0, bottom: footerH, display: "flex", flexDirection: "column" }}>
 
-        {/* Velká mapa trasy */}
-        {hasMap && (
-          <div style={{
-            width: mapW - pad,
-            flexShrink: 0,
-            borderRadius: 2 * s,
-            overflow: "hidden",
-            border: `${0.5 * s}px solid ${acc}44`,
-            position: "relative",
-          }}>
-            <img
-              src={cyklo.mapaTrasyUrl}
-              alt="Mapa trasy"
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
-            {/* Numbered markers overlay */}
-            {zastavky.slice(0, 8).map((z, i) => (
-              <div key={i} style={{
-                position: "absolute",
-                // Evenly distribute markers as visual hint (actual GPS not used in preview)
-                top: `${15 + i * (65 / Math.max(zastavky.length, 1))}%`,
-                left: `${20 + (i % 2) * 35}%`,
-                width: 5 * s, height: 5 * s,
-                borderRadius: "50%",
-                background: acc,
-                border: `${s}px solid #fff`,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 2.5 * s, color: "#000", fontWeight: 900,
-                boxShadow: "0 1px 4px rgba(0,0,0,0.5)",
-              }}>
-                {i + 1}
-              </div>
-            ))}
+        {/* Mapa nahoře — celá šířka */}
+        {hasMap ? (
+          <div style={{ width: "100%", height: mapH, flexShrink: 0, overflow: "hidden", position: "relative", borderBottom: `${0.5 * s}px solid ${acc}44` }}>
+            <img src={cyklo.mapaTrasyUrl} alt="Mapa trasy" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }} />
+            <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 8 * s, background: `linear-gradient(to bottom, transparent, ${bg})` }} />
           </div>
+        ) : (
+          <div style={{ height: 6 * s, flexShrink: 0 }} />
         )}
 
-        {/* Zastávky */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 0 }}>
-          <div style={{ color: acc, fontSize: 3 * s, letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 4 * s, fontWeight: 700 }}>
+        {/* Zastávky pod mapou */}
+        <div style={{ flex: 1, paddingLeft: pad, paddingRight: pad, paddingTop: 4 * s, paddingBottom: pad, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+          <div style={{ color: acc, fontSize: 3 * s, letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: 3 * s, fontWeight: 700, flexShrink: 0 }}>
             Zastávky na trase
           </div>
 
           {zastavky.length === 0 && (
-            <div style={{ color: txt, fontSize: 3 * s, opacity: 0.4, fontStyle: "italic" }}>
-              Zastávky budou doplněny…
-            </div>
+            <div style={{ color: txt, fontSize: 3 * s, opacity: 0.4, fontStyle: "italic" }}>Zastávky budou doplněny…</div>
           )}
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 3 * s, overflow: "hidden" }}>
+          {/* 2 sloupce pokud zastávek je víc než 4 */}
+          <div style={{ display: "flex", flexWrap: "wrap", flex: 1, overflow: "hidden" }}>
             {zastavky.slice(0, 8).map((z, i) => (
-              <div key={i} style={{ display: "flex", gap: 3 * s, alignItems: "flex-start" }}>
-                {/* Number badge */}
-                <div style={{
-                  width: 6 * s, height: 6 * s, borderRadius: "50%",
-                  background: acc, flexShrink: 0,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 3 * s, fontWeight: 900, color: bg,
-                  marginTop: 0.5 * s,
-                }}>
+              <div key={i} style={{ width: zastavky.length > 4 ? "50%" : "100%", display: "flex", gap: 2.5 * s, alignItems: "flex-start", marginBottom: 2.5 * s, paddingRight: 3 * s }}>
+                <div style={{ width: 5.5 * s, height: 5.5 * s, borderRadius: "50%", background: acc, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 2.8 * s, fontWeight: 900, color: bg, marginTop: 0.3 * s }}>
                   {i + 1}
                 </div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ color: txt, fontSize: 3.5 * s, fontWeight: 700, lineHeight: 1.2 }}>
-                    {z.nazev}
-                  </div>
+                  <div style={{ color: txt, fontSize: 3 * s, fontWeight: 700, lineHeight: 1.2 }}>{z.nazev}</div>
                   {z.popis && (
-                    <div style={{ color: txt, fontSize: 2.8 * s, opacity: 0.65, lineHeight: 1.5, marginTop: 0.8 * s }}>
-                      {z.popis.length > 120 ? z.popis.slice(0, 120) + "…" : z.popis}
-                    </div>
-                  )}
-                  {z.gps && (
-                    <div style={{ color: acc, fontSize: 2.3 * s, opacity: 0.6, marginTop: 0.5 * s }}>
-                      📍 {z.gps}
+                    <div style={{ color: txt, fontSize: 2.5 * s, opacity: 0.6, lineHeight: 1.4, marginTop: 0.5 * s }}>
+                      {z.popis.length > 80 ? z.popis.slice(0, 80) + "…" : z.popis}
                     </div>
                   )}
                 </div>
@@ -322,14 +272,8 @@ export function CykloStranaB({ data, cyklo, w, h, s, logoRef }: LayoutProps & { 
             ))}
           </div>
 
-          <div style={{ flex: 1 }} />
-
-          {/* Hotel promo na zadní straně */}
-          <div style={{
-            borderTop: `${0.5 * s}px solid ${acc}44`,
-            paddingTop: 3 * s,
-            display: "flex", alignItems: "center", gap: 3 * s,
-          }}>
+          {/* Hotel promo */}
+          <div style={{ borderTop: `${0.5 * s}px solid ${acc}44`, paddingTop: 2.5 * s, flexShrink: 0, display: "flex", alignItems: "center", gap: 3 * s }}>
             <div style={{ fontSize: 3 * s }}>🏨</div>
             <div>
               <div style={{ color: acc, fontSize: 2.8 * s, fontWeight: 700 }}>Ubytování na trase</div>
@@ -345,7 +289,6 @@ export function CykloStranaB({ data, cyklo, w, h, s, logoRef }: LayoutProps & { 
   );
 }
 
-// ─── Preview wrapper — obě strany vedle sebe ─────────────────────────────────
 
 interface CykloNahledProps {
   data: import("@/components/BrozuraNahled").BrozuraData;

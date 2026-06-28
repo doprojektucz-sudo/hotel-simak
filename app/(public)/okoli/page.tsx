@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import NatureAttractionsSection from "@/components/NatureAttractions";
 import SportsSection from "@/components/SportsSection";
+import { CyklotrasySection } from "@/components/okoli/CyklotrasySection";
+
 
 export default function OkoliClient() {
   const parallaxRef = useRef<HTMLDivElement>(null);
@@ -196,6 +198,9 @@ export default function OkoliClient() {
             </div>
           </section>
         )}
+
+        {/* Cyklotrasy */}
+       <CyklotrasySection />
 
         {/* CTA */}
         <section className="py-20 bg-gradient-to-br from-secondary-600 via-secondary-700 to-secondary-800 text-white relative overflow-hidden">

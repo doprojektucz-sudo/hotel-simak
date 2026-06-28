@@ -29,9 +29,17 @@ export async function GET(
     return NextResponse.json({ error: "Trasa nemá nastavenou URL" }, { status: 404 });
   }
 
+
   // Relativní URL by neměla nastat (ukládáme je jen pro QR), ale pro jistotu
   if (url.startsWith("/")) {
     return NextResponse.redirect(new URL(url, request.nextUrl.origin));
+  }
+
+  if (url.startsWith("/api/")) {
+    return NextResponse.json(
+      { error: `Pole URL trasy obsahuje interní cestu "${url}" místo externí URL. Oprav to v adminu.` },
+      { status: 400 }
+    );
   }
 
   return NextResponse.redirect(url, { status: 302 });
