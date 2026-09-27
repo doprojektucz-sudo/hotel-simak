@@ -1,3 +1,5 @@
+import SeasonalEventsSection from "@/components/events/SeasonalEventsSection";
+import { getActiveSeasonalEvents } from "@/lib/data/seasonal-events";
 import Hero from "@/components/Hero";
 import LuxuryDrinks from "@/components/drinks/LuxuryDrinks";
 import { OpeningHoursDisplay } from "@/components/OpeningHoursDisplay";
@@ -24,7 +26,10 @@ export const metadata: Metadata = {
     },
 };
 
+export const revalidate = 3600;
+
 export default async function RestauracePage() {
+    const seasonalEvents = getActiveSeasonalEvents();
     const [menuItems, menuCategories, drinks, drinkCategories] = await Promise.all([
         prisma.menuItem.findMany({
             where: { isActive: true },
@@ -56,6 +61,13 @@ export default async function RestauracePage() {
                         text: "Rezervovat stůl",
                         href: "/kontakt",
                     }}
+                />
+
+                {/* Dočasné sezónní akce */}
+                <SeasonalEventsSection
+                    events={seasonalEvents}
+                    heading="Speciální nabídka kuchyně"
+                    subheading="Tradiční listopadové hody – husa i zvěřina jen na pár dní v roce."
                 />
 
                 {/* Info cards */}

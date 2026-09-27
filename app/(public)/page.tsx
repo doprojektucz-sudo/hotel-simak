@@ -3,6 +3,7 @@ import LocationSection from "@/components/home/LocationSection";
 import CTASection from "@/components/home/CTASection";
 import { DailyMenuSection } from "@/components/DailyMenuSection";
 import AboutFeaturesSection from "@/components/home/AboutFeaturesSection";
+import { getActiveSeasonalEvents } from "@/lib/data/seasonal-events";
 
 import type { Metadata } from "next";
 
@@ -22,10 +23,14 @@ export const metadata: Metadata = {
     },
 };
 
+export const revalidate = 3600;
+
 export default function Home() {
+    const events = getActiveSeasonalEvents();
+
     return (
         <main>
-            <HeroCarousel />
+            <HeroCarousel events={events} />
             <DailyMenuSection />
             <AboutFeaturesSection />
             <CTASection />

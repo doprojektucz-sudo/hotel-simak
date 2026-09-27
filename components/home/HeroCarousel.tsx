@@ -1,13 +1,15 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronDown, Phone } from "lucide-react";
+import { ChevronDown, Phone, CalendarDays, Maximize2, ArrowRight } from "lucide-react";
 import { contactInfo } from "@/lib/data/contact";
+import { telHref, type SeasonalEvent } from "@/lib/data/seasonal-events";
+import PosterLightbox from "@/components/events/PosterLightbox";
 
 interface Slide {
-    id: number;
+    id: number | string;
     title: string;
     subtitle: string;
     description: string;
@@ -22,7 +24,7 @@ interface Slide {
     };
 }
 
-const slides: Slide[] = [
+const baseSlides: Slide[] = [
     {
         id: 1,
         title: "Vítejte v Hotelu U Šimáka",
@@ -55,8 +57,23 @@ const slides: Slide[] = [
     },
 ];
 
-export default function HeroCarousel() {
+/** Snímek je buď klasický (fotka + text), nebo sezónní akce (plakát). */
+type AnySlide = ({ kind: "base" } & Slide) | ({ kind: "event"; id: string } & { event: SeasonalEvent });
+
+interface HeroCarouselProps {
+    /** Aktivní sezónní akce – zobrazí se jako první snímky */
+    events?: SeasonalEvent[];
+}
+
+export default function HeroCarousel({ events = [] }: HeroCarouselProps) {
+    const slides: AnySlide[] = [
+        ...events.map((event) => ({ kind: "event" as const, id: `event-${event.slug}`, event })),
+        ...baseSlides.map((s) => ({ kind: "base" as const, ...s })),
+    ];
+
     const [currentSlide, setCurrentSlide] = useState(0);
+    const [lightboxEvent, setLightboxEvent] = useState<SeasonalEvent | null>(null);
+    const closeLightbox = useCallback(() => setLightboxEvent(null), []);
     const [progress, setProgress] = useState(0);
     const touchStartX = useRef<number>(0);
     const touchEndX = useRef<number>(0);
@@ -64,6 +81,8 @@ export default function HeroCarousel() {
 
     useEffect(() => {
         setProgress(0);
+        // Při otevřeném plakátu se carousel zastaví
+        if (lightboxEvent) return;
         const progressInterval = setInterval(() => {
             setProgress((prev) => (prev >= 100 ? 0 : prev + 1));
         }, 100);
@@ -74,7 +93,7 @@ export default function HeroCarousel() {
             clearInterval(progressInterval);
             clearTimeout(slideTimer);
         };
-    }, [currentSlide]);
+    }, [currentSlide, lightboxEvent]);
 
     const handleNextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
     const handlePrevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
@@ -108,6 +127,26 @@ export default function HeroCarousel() {
                             }`}
                     >
                         <div className="relative w-full h-full overflow-hidden">
+                            {slide.kind === "event" ? (
+                                <>
+                                    {/* Rozmazaný plakát jako atmosférické pozadí */}
+                                    <Image
+                                        src={slide.event.poster.src}
+                                        alt=""
+                                        aria-hidden
+                                        fill
+                                        priority={index === 0}
+                                        loading={index === 0 ? undefined : "lazy"}
+                                        className="object-cover object-bottom scale-125 blur-2xl"
+                                        sizes="50vw"
+                                        quality={40}
+                                    />
+                                    <div
+                                        className="absolute inset-0 opacity-60 mix-blend-multiply"
+                                        style={{ backgroundColor: slide.event.accent }}
+                                    />
+                                </>
+                            ) : (
                             <Image
                                 src={slide.image}
                                 alt={slide.title}
@@ -121,6 +160,7 @@ export default function HeroCarousel() {
                                 // ✅ snížená kvalita pro hero (viditelný rozdíl minimální, úspora ~30%)
                                 quality={75}
                             />
+                            )}
                         </div>
                     </div>
                 ))}
@@ -132,7 +172,14 @@ export default function HeroCarousel() {
                 <div className="container-custom">
                     <div className="text-center max-w-4xl mx-auto">
                         {slides.map((slide, index) =>
-                            index === currentSlide ? (
+                            index === currentSlide && slide.kind === "event" ? (
+                                <EventSlideContent
+                                    key={slide.id}
+                                    event={slide.event}
+                                    isFirst={index === 0}
+                                    onOpenPoster={() => setLightboxEvent(slide.event)}
+                                />
+                            ) : index === currentSlide && slide.kind === "base" ? (
                                 <div key={slide.id} className="animate-fade-in-up">
                                     <div className="flex justify-center gap-1 mb-6">
                                         {[...Array(5)].map((_, i) => (
@@ -226,6 +273,8 @@ export default function HeroCarousel() {
                 </div>
             </a>
 
+            <PosterLightbox event={lightboxEvent} onClose={closeLightbox} />
+
             {/* Scroll Down */}
             <button
                 onClick={scrollToContent}
@@ -235,5 +284,88 @@ export default function HeroCarousel() {
                 <ChevronDown className="w-10 h-10" />
             </button>
         </section>
+    );
+}
+
+/* ------------------------------------------------------------------ */
+/* Snímek sezónní akce                                                 */
+/* ------------------------------------------------------------------ */
+
+function EventSlideContent({
+    event,
+    isFirst,
+    onOpenPoster,
+}: {
+    event: SeasonalEvent;
+    isFirst: boolean;
+    onOpenPoster: () => void;
+}) {
+    return (
+        // Rozšíří se mimo max-w-4xl rodiče, aby se vešel plakát vedle textu
+        <div className="relative left-1/2 -translate-x-1/2 w-[min(100vw_-_2rem,72rem)] pt-20 md:pt-16">
+            <div className="grid md:grid-cols-[1fr_auto] items-center gap-6 md:gap-14 animate-fade-in-up">
+                {/* Text */}
+                <div className="order-2 md:order-1 text-center md:text-left">
+                    <span className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/25 text-primary-200 text-xs md:text-sm font-semibold uppercase tracking-[0.2em] px-4 py-2 rounded-full mb-4 md:mb-6">
+                        <CalendarDays className="w-4 h-4" />
+                        {event.dateLabel}
+                    </span>
+                    <h4 className="text-primary-300 font-semibold mb-2 md:mb-3 text-base md:text-xl uppercase tracking-widest animate-fade-in-up animation-delay-200">
+                        {event.tagline}
+                    </h4>
+                    <h2 className="text-white text-4xl md:text-6xl lg:text-7xl font-bold mb-4 md:mb-6 leading-[1.05] animate-fade-in-up animation-delay-400">
+                        {event.title}
+                    </h2>
+                    <p className="hidden sm:block text-white/90 text-lg md:text-xl mb-8 leading-relaxed max-w-xl md:mx-0 mx-auto animate-fade-in-up animation-delay-600">
+                        {event.description}
+                    </p>
+                    {event.note && (
+                        <p className="sm:hidden text-white/90 text-sm font-semibold uppercase tracking-wider mb-5">
+                            {event.note}
+                        </p>
+                    )}
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start animate-fade-in-up animation-delay-800">
+                        <a
+                            href={telHref(event.phone)}
+                            className="inline-flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold py-4 px-8 uppercase text-sm tracking-widest transition-all duration-300 hover:scale-105"
+                        >
+                            <Phone className="w-4 h-4" />
+                            Rezervovat {event.phone}
+                        </a>
+                        <Link
+                            href={`/akce#${event.slug}`}
+                            className="inline-flex items-center justify-center gap-2 border border-white/60 hover:bg-white hover:text-gray-900 text-white font-semibold py-4 px-8 uppercase text-sm tracking-widest transition-all duration-300"
+                        >
+                            Více o akci
+                            <ArrowRight className="w-4 h-4" />
+                        </Link>
+                    </div>
+                </div>
+
+                {/* Plakát */}
+                <button
+                    type="button"
+                    onClick={onOpenPoster}
+                    className="order-1 md:order-2 group relative mx-auto block cursor-zoom-in"
+                    aria-label={`Zobrazit plakát: ${event.title}`}
+                >
+                    <div className="relative h-[30vh] sm:h-[36vh] md:h-[62vh] max-h-[640px] aspect-[2/3] md:rotate-2 group-hover:rotate-0 transition-transform duration-500 shadow-[0_25px_60px_-10px_rgba(0,0,0,0.7)] ring-1 ring-white/20">
+                        <Image
+                            src={event.poster.src}
+                            alt={event.poster.alt}
+                            fill
+                            priority={isFirst}
+                            className="object-cover"
+                            sizes="(max-width: 768px) 40vw, 420px"
+                            quality={85}
+                        />
+                        <span className="absolute bottom-3 right-3 hidden md:inline-flex items-center gap-1.5 bg-black/60 backdrop-blur text-white text-xs font-medium px-3 py-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Maximize2 className="w-3.5 h-3.5" />
+                            Zvětšit
+                        </span>
+                    </div>
+                </button>
+            </div>
+        </div>
     );
 }

@@ -23,6 +23,8 @@ import {
     Calendar,
 } from "lucide-react";
 import Link from "next/link";
+import SeasonalEventsSection from "@/components/events/SeasonalEventsSection";
+import { getActiveSeasonalEvents } from "@/lib/data/seasonal-events";
 
 import type { Metadata } from "next";
 
@@ -117,7 +119,11 @@ const additionalServices = [
     },
 ];
 
+export const revalidate = 3600;
+
 export default function AkcePage() {
+    const seasonalEvents = getActiveSeasonalEvents();
+
     return (
         <>
             <main>
@@ -176,6 +182,10 @@ export default function AkcePage() {
                         </div>
                     </div>
                 </section>
+
+                {/* Dočasné sezónní akce (skryjí se automaticky po skončení) */}
+
+                <SeasonalEventsSection events={seasonalEvents} className="mt-16" />
 
                 {/* Event Types - Bento Grid Style */}
                 <section className="py-24 mt-8">
