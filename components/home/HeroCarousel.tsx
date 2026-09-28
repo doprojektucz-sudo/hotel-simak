@@ -316,14 +316,9 @@ function EventSlideContent({
                     <h2 className="text-white text-4xl md:text-6xl lg:text-7xl font-bold mb-4 md:mb-6 leading-[1.05] animate-fade-in-up animation-delay-400">
                         {event.title}
                     </h2>
-                    <p className="hidden sm:block text-white/90 text-lg md:text-xl mb-8 leading-relaxed max-w-xl md:mx-0 mx-auto animate-fade-in-up animation-delay-600">
+                    <p className="text-white/90 text-base sm:text-lg md:text-xl mb-6 md:mb-8 leading-relaxed max-w-xl md:mx-0 mx-auto animate-fade-in-up animation-delay-600">
                         {event.description}
                     </p>
-                    {event.note && (
-                        <p className="sm:hidden text-white/90 text-sm font-semibold uppercase tracking-wider mb-5">
-                            {event.note}
-                        </p>
-                    )}
                     <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start animate-fade-in-up animation-delay-800">
                         <a
                             href={telHref(event.phone)}

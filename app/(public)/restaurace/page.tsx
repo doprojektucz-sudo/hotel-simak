@@ -67,7 +67,7 @@ export default async function RestauracePage() {
                 <SeasonalEventsSection
                     events={seasonalEvents}
                     heading="Speciální nabídka kuchyně"
-                    subheading="Tradiční listopadové hody – husa i zvěřina jen na pár dní v roce."
+                    subheading="Pět dní v listopadu, kdy v naší kuchyni hraje hlavní roli zvěřina z Vysočiny."
                 />
 
                 {/* Info cards */}

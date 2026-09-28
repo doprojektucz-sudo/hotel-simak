@@ -2,14 +2,15 @@
  * DOČASNÉ SEZÓNNÍ AKCE
  * ------------------------------------------------------------------
  * Akce se zobrazují automaticky:
- *  - v HeroCarouselu na úvodní stránce (jako první snímky),
+ *  - v HeroCarouselu na úvodní stránce (jako první snímek),
  *  - v sekci "Sezónní akce" na stránkách /akce a /restaurace.
  *
  * Každá akce se sama skryje den po `endDate` (počítáno v čase Europe/Prague).
  * Stránky se regenerují každou hodinu (export const revalidate = 3600),
  * takže po skončení akce není potřeba nic mazat ani nasazovat.
  *
- * Až budou obě akce za námi, stačí nechat pole prázdné: []
+ * Až bude akce za námi, stačí nechat pole prázdné: []
+ * Další akci přidáte jako nový objekt do pole (zobrazí se vedle / po sobě).
  */
 
 export interface SeasonalEvent {
@@ -20,9 +21,13 @@ export interface SeasonalEvent {
     startDate: string;         // YYYY-MM-DD
     endDate: string;           // YYYY-MM-DD (včetně)
     showFrom?: string;         // YYYY-MM-DD – od kdy akci ukazovat (výchozí: hned)
-    description: string;
-    highlights: string[];      // odrážky v sekci na /akce
-    note?: string;             // zvýrazněná poznámka (např. "Pouze na objednávku")
+    description: string;       // krátký text do HeroCarouselu
+    paragraphs?: string[];     // delší text do sekce na /akce a /restaurace
+    highlights?: string[];     // odrážky (volitelné)
+    meats?: string[];          // štítky – druhy masa
+    location?: string;
+    note?: string;             // zvýrazněná poznámka (např. doporučení rezervace)
+    closing?: string;          // závěrečná věta
     vouchers?: string[];       // dárkové poukázky
     poster: {
         src: string;
@@ -37,41 +42,25 @@ export interface SeasonalEvent {
 
 export const seasonalEvents: SeasonalEvent[] = [
     {
-        slug: "svatomartinska-husa",
-        title: "Svatomartinská husa",
-        tagline: "Podzimní tradice U Šimáka",
-        dateLabel: "13. – 15. 11. 2026",
-        startDate: "2026-11-13",
-        endDate: "2026-11-15",
-        description:
-            "Křupavá pečená husa s červeným i bílým zelím a nadýchanými knedlíky. Oslavte svatého Martina u nás.",
-        highlights: [
-            "Pečená husa se zelím a knedlíky",
-            "Tři dny tradiční svatomartinské nabídky",
-        ],
-        note: "Pouze na objednávku",
-        poster: {
-            src: "/husa.jpg",
-            width: 1024,
-            height: 1536,
-            alt: "Plakát Svatomartinská husa 13. – 15. 11. 2026 – Restaurace a hotel U Šimáka",
-        },
-        phone: "720 417 130",
-        accent: "#6e1f2b",
-    },
-    {
         slug: "zverinove-hody",
         title: "Zvěřinové hody",
         tagline: "Chuť naší přírody",
         dateLabel: "18. – 22. 11. 2026",
         startDate: "2026-11-18",
         endDate: "2026-11-22",
+        // Krátký text – zobrazuje se v HeroCarouselu
         description:
-            "Pět dní věnovaných zvěřině – tradiční česká kuchyně tak, jak ji máme rádi.",
-        highlights: [
-            "Speciality ze zvěřiny",
-            "Doporučujeme rezervaci stolu předem",
+            "Od středy 18. do neděle 22. listopadu pro vás připravíme speciální menu plné zvěřinových specialit.",
+        // Delší text – zobrazuje se v sekci na /akce a /restaurace
+        paragraphs: [
+            "Zveme vás do Restaurace a hotelu U Šimáka v Radostíně na tradiční Zvěřinové hody. Od středy 18. do neděle 22. listopadu pro vás připravíme speciální menu plné zvěřinových specialit.",
+            "Chybět nebude kančí paštika, poctivé polévky, řízečky, medailonky, steaky, guláš ani tradiční zvěřina na smetaně. A samozřejmě nebude chybět ani něco sladkého na závěr.",
         ],
+        meats: ["Kančí", "Jelení", "Srnčí", "Daňčí", "Bažantí", "Zaječí", "Mufloní", "Křepelčí"],
+        location: "Restaurace a hotel U Šimáka, Radostín u Velkého Dářka",
+        note: "Doporučujeme rezervaci stolu předem, zejména na pátek, sobotu a neděli.",
+        closing:
+            "Přijeďte ochutnat podzimní Vysočinu tak, jak ji máme nejraději – s poctivou kuchyní a zvěřinou v hlavní roli.",
         vouchers: ["1 000 Kč", "2 000 Kč", "3 000 Kč"],
         poster: {
             src: "/zverinove-hody.jpg",
