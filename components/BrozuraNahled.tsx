@@ -37,7 +37,7 @@ export interface BrozuraData {
 
 export const HOTEL_INFO = {
   name: "Hotel a Restaurace U Šimáka",
-  phone: "728 490 498",
+  phone: "720 417 130",
   email: "hotresrad@seznam.cz",
   address: "Radostín 95, 591 01 Žďár nad Sázavou",
   facebook: "facebook.com/hotelsimak",

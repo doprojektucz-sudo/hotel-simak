@@ -7,7 +7,7 @@ export const contactInfo = {
         zip: "591 01",
         full: "Radostín 95, 591 01 Žďár nad Sázavou"
     },
-    phone: "728 490 498",
+    phone: "720 417 130",
     email: "hotresrad@seznam.cz",
     gps: {
         lat: "49°39'17.079\"N",

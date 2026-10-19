@@ -431,7 +431,7 @@ export default function AkcePage() {
                                                 Zavolejte nám
                                             </p>
                                             <p className="text-2xl font-bold text-gray-900">
-                                                728 490 498
+                                                720 417 130
                                             </p>
                                         </div>
                                     </div>

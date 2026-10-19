@@ -192,7 +192,7 @@ export const CustomerConfirmationEmail = ({
                                                 <td style="padding: 5px 0;">
                                                     <span style="color: #666666; font-size: 16px;">📞</span>
                                                     <strong style="color: #333333; margin-left: 10px;">Telefon:</strong>
-                                                    <a href="tel:+420728490498" style="color: #8B4513; text-decoration: none; margin-left: 10px;">728 490 498</a>
+                                                    <a href="tel:+420728490498" style="color: #8B4513; text-decoration: none; margin-left: 10px;">720 417 130</a>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -229,7 +229,7 @@ export const CustomerConfirmationEmail = ({
                             </p>
                             <p style="margin: 0; color: #666666; font-size: 13px; line-height: 1.5;">
                                 Radostín 95, 591 01 Žďár nad Sázavou<br>
-                                <a href="tel:+420728490498" style="color: #8B4513; text-decoration: none;">728 490 498</a> | 
+                                <a href="tel:+420728490498" style="color: #8B4513; text-decoration: none;">720 417 130</a> | 
                                 <a href="mailto:hotresrad@seznam.cz" style="color: #8B4513; text-decoration: none;">hotresrad@seznam.cz</a>
                             </p>
                         </td>

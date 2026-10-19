@@ -40,7 +40,7 @@ const FORMAT_PT: Record<string, [number, number]> = {
 
 const HOTEL = {
   name: "Hotel a Restaurace U Šimáka",
-  phone: "728 490 498", email: "hotresrad@seznam.cz",
+  phone: "720 417 130", email: "hotresrad@seznam.cz",
   address: "Radostín 95, 591 01 Žďár nad Sázavou",
   logo: "/images/logo.webp",
 };

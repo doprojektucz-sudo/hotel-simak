@@ -498,7 +498,7 @@ export default function UbytovaniPage() {
                                     href="tel:728490498"
                                     className="group inline-flex items-center justify-center gap-3 bg-white text-primary-700 hover:bg-primary-50 font-semibold py-4 px-8 rounded-xl transition-all shadow-lg hover:shadow-xl"
                                 >
-                                    <span className="text-lg">728 490 498</span>
+                                    <span className="text-lg">720 417 130</span>
                                 </a>
                                 {/* <a
                                     href="https://www.booking.com"

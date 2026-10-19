@@ -105,7 +105,7 @@ export default function LocationSection() {
                   className="flex items-center gap-3 text-white/80 hover:text-primary-400 transition-colors"
                 >
                   <Phone className="w-5 h-5 text-primary-400" />
-                  <span>+420 728 490 498</span>
+                  <span>+420 720 417 130</span>
                 </a>
                 <a
                   href="mailto:info@hotelusimakaradostin.cz"

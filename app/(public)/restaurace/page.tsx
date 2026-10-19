@@ -123,7 +123,7 @@ export default async function RestauracePage() {
                                 href="tel:728490498"
                                 className="inline-flex items-center justify-center bg-white text-primary-700 hover:bg-primary-50 font-semibold py-3 px-8 rounded-lg transition-colors"
                             >
-                                Zavolat: 728 490 498
+                                Zavolat: 720 417 130
                             </a>
                             <a
                                 href="/kontakt"

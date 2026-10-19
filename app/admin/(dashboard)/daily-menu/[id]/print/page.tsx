@@ -197,7 +197,7 @@ export default async function PrintMenuPage({ params }: PrintMenuPageProps) {
         <div className="footer">
           <p>Přejeme dobrou chuť!</p>
           <p style={{ marginTop: "5px" }}>
-            Tel: 728 490 498 | usimaka.cz
+            Tel: 720 417 130 | usimaka.cz
           </p>
         </div>
       </div>

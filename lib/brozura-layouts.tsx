@@ -2,7 +2,7 @@ import React from "react";
 
 export const HOTEL_INFO = {
   name: "Hotel a Restaurace U Šimáka",
-  phone: "728 490 498",
+  phone: "720 417 130",
   email: "hotresrad@seznam.cz",
   address: "Radostín 95, 591 01 Žďár nad Sázavou",
 };
@@ -485,7 +485,7 @@ export function LayoutCykloB(p: SatoriLayoutProps) {
           <div style={{ display: "flex", flexDirection: "column", borderTop: `0.3px solid ${acc}`, paddingTop: `${2.5 * MM}px` }}>
             <div style={{ display: "flex", fontSize: 6.5 * MM, color: acc, fontWeight: 700, marginBottom: `${1.5 * MM}px` }}>Ubytování na trase</div>
             <div style={{ display: "flex", fontSize: 6 * MM, color: txt, opacity: 0.7, marginBottom: `${MM}px` }}>Hotel a Restaurace U Šimáka</div>
-            <div style={{ display: "flex", fontSize: 5.5 * MM, color: txt, opacity: 0.5 }}>Radostín 95 · 728 490 498</div>
+            <div style={{ display: "flex", fontSize: 5.5 * MM, color: txt, opacity: 0.5 }}>Radostín 95 · 720 417 130</div>
           </div>
         </div>
       </div>

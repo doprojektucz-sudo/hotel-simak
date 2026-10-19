@@ -387,7 +387,7 @@ export default function ChataMilundaClient() {
                                         </div>
                                         <div>
                                             <p className="text-sm text-gray-500 mb-1">Zavolejte nám</p>
-                                            <p className="text-2xl font-bold text-gray-900">728 490 498</p>
+                                            <p className="text-2xl font-bold text-gray-900">720 417 130</p>
                                         </div>
                                     </div>
                                     <div className="mt-4 flex items-center gap-2 text-secondary-600 font-medium">

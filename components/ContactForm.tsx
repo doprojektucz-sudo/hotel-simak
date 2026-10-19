@@ -299,7 +299,7 @@ export default function ContactForm() {
                     <p className="font-semibold">Nepodařilo se odeslat zprávu.</p>
                     <p className="text-sm">
                         {errorMessage ||
-                            "Zkuste to prosím později nebo nás kontaktujte přímo telefonicky na 728 490 498."}
+                            "Zkuste to prosím později nebo nás kontaktujte přímo telefonicky na 720 417 130."}
                     </p>
                 </div>
             )}

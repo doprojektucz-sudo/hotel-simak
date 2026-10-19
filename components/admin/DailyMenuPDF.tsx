@@ -415,7 +415,7 @@ export function DailyMenuPDF({
                 <View style={styles.footer}>
                     <Text style={styles.footerText}>Přejeme dobrou chuť!</Text>
                     <Text style={styles.footerContact}>
-                        Tel: 728 490 498 | www.usimaka.cz
+                        Tel: 720 417 130 | www.usimaka.cz
                     </Text>
                 </View>
             </Page>

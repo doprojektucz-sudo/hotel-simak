@@ -17,7 +17,7 @@ const FORMAT_MM: Record<string, { w: number; h: number }> = {
 };
 
 const HOTEL_INFO = {
-  phone: "728 490 498",
+  phone: "720 417 130",
   email: "hotresrad@seznam.cz",
   address: "Radostín 95, 591 01 Žďár nad Sázavou",
 };
@@ -365,7 +365,7 @@ function CykloStranaB({ b, mmW, mmH }: {
           <div style={{ borderTop: `0.3mm solid ${acc}`, paddingTop: "3mm" }}>
             <div style={{ fontSize: "2.2mm", color: acc, fontWeight: 700, marginBottom: "1mm" }}>Ubytování na trase</div>
             <div style={{ fontSize: "2mm", color: txt, opacity: 0.7, marginBottom: "0.5mm" }}>Hotel a Restaurace U Šimáka</div>
-            <div style={{ fontSize: "1.8mm", color: txt, opacity: 0.5 }}>Radostín 95 · 728 490 498</div>
+            <div style={{ fontSize: "1.8mm", color: txt, opacity: 0.5 }}>Radostín 95 · 720 417 130</div>
           </div>
         </div>
       </div>
