@@ -68,7 +68,7 @@ export const seasonalEvents: SeasonalEvent[] = [
             height: 1492,
             alt: "Plakát Zvěřinové hody 18. – 22. 11. 2026 – Restaurace a hotel U Šimáka",
         },
-        phone: "720 417 130",
+        phone: "728 490 498",
         accent: "#5b3a1f",
     },
 ];
